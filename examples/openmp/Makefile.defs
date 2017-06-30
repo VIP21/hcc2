@@ -1,0 +1,75 @@
+ifeq ($(LIBAMDGCN),)
+  $(info    WARNING! LIBAMDGCN environment variable not set, using /opt/rocm/libamdgcn)
+  LIBAMDGCN = /opt/rocm/libamdgcn
+else
+  $(info LIBAMDGCN environment variable using $(LIBAMDGCN) )
+endif
+ifeq ($(AMDLLVM),)
+  $(info    WARNING! AMDLLVM environment variable not set, using /opt/amd/llvm)
+  AMDLLVM = /opt/amd/llvm
+else
+  $(info AMDLLVM environment variable using $(AMDLLVM))
+endif
+ifeq ($(OMPRT),)
+  $(info    WARNING! OMPRT environment variable not set, using AMDLLVM instead)
+  OMPRT = $(AMDLLVM)
+else
+  $(info OMPRT environment variable using $(OMPRT))
+endif
+
+ifeq ($(HOST_TARGET),)
+  HOST_TARGET = x86_64-pc-linux-gnu 
+endif
+ifeq ($(UNAMEP),)
+  UNAMEP=x86_64
+endif
+ifeq ($(GFXNAME),)
+  GFXNAME = gfx803
+endif
+ifeq ($(TARGET),)
+  TARGET  =  -fopenmp-targets=nvptx64-nvidia-cuda --cuda-gpu-arch=sm_30
+  TARGET  =  -fopenmp-targets=amdgcn--cuda --cuda-gpu-arch=$(GFXNAME)
+endif
+ifeq ($(OFFLOAD_DEBUG),1)
+  $(info    DEBUG Mode ON)
+  DEBUG   = -debug
+endif
+ifeq ($(VERBOSE),1)
+  $(info    Compilation VERBOSE Mode ON)
+  VERBOSE = -v
+endif
+
+CUDA      = /usr/local/cuda
+
+RUNPROF =  $(CUDA)/bin/nvprof 
+RUNPROF =  
+
+# Check if the OMPRT is a local build
+ifneq ("$(wildcard $(OMPRT)/runtime)","")
+OMPRT_INC    = $(OMPRT)/runtime/src
+endif
+
+# Check if the OMPRT is a local build
+ifneq ("$(wildcard $(OMPRT)/libomptarget)","")
+OMPRT_LIB    = $(OMPRT)/libomptarget/plugins/x86_64:$(OMPRT)/libomptarget/plugins/hsa:$(OMPRT)/libomptarget/plugins/cuda:$(OMPRT)/libomptarget:$(OMPRT)/runtime/src
+OMPRT_LIB_BC = $(OMPRT)/libomptarget/deviceRTLs/amdgcn:$(OMPRT)/libomptarget/deviceRTLs/nvptx:$(OMPRT)/cugcn/libdevice
+endif
+
+# OMPRT is not a local build
+ifeq ($(OMPRT_INC),)
+OMPRT_LIB    = $(OMPRT)/lib$(DEBUG)
+OMPRT_LIB_BC = $(OMPRT)/lib$(DEBUG)/libdevice
+OMPRT_INC    = $(OMPRT)/include
+endif
+
+# Compilation and link require at LIBRARY_PATH
+_LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib:$(LIBAMDGCN)/$(GFXNAME)/lib
+SETENV   = env LIBRARY_PATH=$(_LIBPATH) PATH=$(PATH):$(AMDLLVM)/bin
+
+# The ATMI and LOCH libraries are needed for dynamic runtime linking.
+_LDPATH  = $(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib
+RUNENV   = env LD_LIBRARY_PATH=$(_LDPATH):$(LD_LIBRARY_PATH)
+
+CFLAGS = -O2 -I$(OMPRT_INC) $(EXTRA_CFLAGS)
+OMP_FLAGS = -target $(HOST_TARGET) -fopenmp $(TARGET) 
+LINK_FLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC) -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart

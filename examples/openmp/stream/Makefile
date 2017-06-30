@@ -1,0 +1,15 @@
+include ../Makefile.defs
+
+TESTNAME     = stream
+TESTSRC_MAIN = main.cpp
+TESTSRC_AUX  = OMP45Stream.cpp
+TESTSRC_ALL  = $(TESTSRC_MAIN) $(TESTSRC_AUX)
+
+CLANG        = clang++
+OMP_BIN      = $(AMDLLVM)/bin/$(CLANG)
+CC           = $(OMP_BIN) $(VERBOSE)
+CFLAGS       = -O3 -I$(OMPRT_INC) -DOMP45 -std=c++11
+#-ccc-print-phases
+#"-\#\#\#"
+
+include ../Makefile.rules

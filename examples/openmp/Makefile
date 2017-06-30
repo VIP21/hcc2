@@ -1,0 +1,85 @@
+include Makefile.defs
+
+TESTS_DIR = \
+    DeclareSharedMemory \
+    assertok_error \
+    atomic \
+    class \
+    collapse \
+    devices \
+    firstprivate \
+    function \
+    helloworld \
+    nativetests \
+    pfspecifier \
+    reduce \
+    reduction \
+    schedule \
+    simd \
+    stream \
+    teams \
+    test \
+    threads \
+    veccopy \
+    vmuldemo \
+    vmulsum
+
+all:
+	@for test_dir in $(TESTS_DIR); do \
+	  echo; \
+	  test_name=`grep "TESTNAME *=" $$test_dir/Makefile | sed "s/.*= *//"`; \
+	  echo "TEST_DIR: $$test_dir\tTEST_NAME: $$test_name"; \
+	  $(MAKE) -C $$test_dir; \
+	done
+
+run run_obin run_sbin run_llbin clean clean_log llbin sbin obin:
+	@for test_dir in $(TESTS_DIR); do \
+	  echo $$nnn; \
+	  test_name=`grep "TESTNAME *=" $$test_dir/Makefile | sed "s/.*= *//"`; \
+	  echo "TEST_DIR: $$test_dir\tTEST_NAME: $$test_name"; \
+	  $(MAKE) -C $$test_dir $@; \
+	done
+
+help:
+	@echo 
+	@echo "Runtime Library:	$(OMPRT_LIB)"
+	@echo "OpenMP BC Libs:		$(OMPRT_LIB_BC)"
+	@echo "Device BC Libs:		$(LIBAMDGCN)/$(GFXNAME)/lib"
+	@echo "LLLVM Tool Chain:	$(AMDLLVM)/bin"
+	@echo "Offload Targets: 	$(TARGET)"
+	@echo "Host Targe:		$(HOST_TARGET)"
+	@echo "Application Dirs:	$(TESTS_DIR)"
+	@echo 
+	@echo "This Makefile supports the following flags:"
+	@echo 
+	@echo "	make llbin      // Link pass only"
+	@echo "	make run_llbin  // Execute llbin"
+	@echo 
+	@echo "	make sbin       // Link pass only"
+	@echo "	make run_sbin   // Execute sbin"
+	@echo 
+	@echo "	make obin       // Link pass only"
+	@echo "	make run_obin   // Execute obin"
+	@echo 
+	@echo "	make            // All passes, build all examples from Application Dirs"
+	@echo "	make run        // Execute all binaries from Application Dirs"
+	@echo 
+	@echo "	make clean"
+	@echo "	make clean_log"
+	@echo "	make help"
+	@echo 
+	@echo " Environment variables to control compilation & execution"
+	@echo "    VERBOSE=1        See lots of compiler messages and driver actions"
+	@echo "    OFFLOAD_DEBUG=1  See Runtime diagnostics for each call to libomptarget API"
+	@echo "    TARGET=          Override Makefile target"
+	@echo
+	@echo " Compile Environment:  $(SETENV)"
+	@echo
+	@echo " Run Environment:      $(RUNENV)"
+	@echo
+	@echo " Compile Flags:        $(CFLAGS)"
+	@echo
+	@echo " OMP Compile Flags:    $(OMP_FLAGS)"
+	@echo
+	@echo " Link Flags:           $(LINK_FLAGS)"
+	@echo
