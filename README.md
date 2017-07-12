@@ -85,7 +85,7 @@ The master branch of this repository is a clone of the HCC development branch cl
 The development and release branches contains significant changes to support OpenMP 4.5. OpenMP 4.5 changes were taken from the IBM coral compiler (clang repository). This compiler supports nvptx64 backend.   Then significant changes were made to support Radeon GPUs (amdgcn).  Both nvptx64 and amdgcn targets are supported by HCC2. 
 
 
-### hcc2-clang
+### hcc2-llvm
 https:/github.com/ROCM-Developer-Tools/hcc2-llvm
 ```
 Original: 		https://github.com/radeonOpenCompute/llvm   branch:amd-hcc
@@ -93,7 +93,7 @@ Master Branch:  	master
 Current Release Branch: none
 Current Dev Branch:  	0.3-6
 ```
-The master branch of this repository is a clone of the HCC development branch amd-hcc taken on June 27, 2017.  It containes the amdgcn backend to support the new address space scheme (Generic-is-zero) and alloca in address space 5 (local).  The only updates we need for hcc2 are to accept the osname "cuda" in the triple to trigger the new address space scheme.
+The master branch of this repository is a clone of the HCC development branch amd-hcc taken on June 27, 2017.  It containes the amdgcn backend to support the new address space scheme (Generic-is-zero) and alloca in address space 5 (local).  The only llvm repository updates we need for hcc2 are to accept the osname "cuda" in the triple to trigger the new address space scheme.  Both OpenMP offloading and Cuda Clang languages require the osname "cuda".  The Nvidia CUDA operating environment is only needed when specifying an nvptx64 target. 
 
 
 ### hcc2-lld
