@@ -24,6 +24,7 @@ Table of contents
 - [Repositories](#Repositories)
 - [Examples](examples)
 - [Install](bin/README)
+- [Limitations](#Limitations)
 
 ## Copyright and Disclaimer
 
@@ -79,19 +80,20 @@ Master Branch :  	master
 Current Release Branch: none
 Current Dev Branch:  	0.3-6
 ```
-The master branch of this repository is a clone of the HCC development branch clang_tot_upgrade.  It containes the amdgcn the support the new address space and alloca in address space 5 (local). 
-The development branch 0.3-6 contains significant changes to support OpenMP 4.5 partially taken from the IBM coral compiler as well as additional support for amdgcn. 
+The master branch of this repository is a clone of the HCC development branch clang_tot_upgrade. That clone containes support for the new address space and alloca in address space 5 (local). 
+
+The development and release branches contains significant changes to support OpenMP 4.5. OpenMP 4.5 changes were taken from the IBM coral compiler (clang repository). This compiler supports nvptx64 backend.   Then significant changes were made to support Radeon GPUs (amdgcn).  Both nvptx64 and amdgcn targets are supported by HCC2. 
 
 
 ### hcc2-clang
 https:/github.com/ROCM-Developer-Tools/hcc2-llvm
 ```
 Original: 		https://github.com/radeonOpenCompute/llvm   branch:amd-hcc
-Master Branch:  	master This is a copy of amd-hcc as of June 27
+Master Branch:  	master 
 Current Release Branch: none
 Current Dev Branch:  	0.3-6
 ```
-The master branch of this repository is a clone of the HCC development branch amd-hcc.  It containes the amdgcn backend to support the new address space and alloca in address space 5 (local).  The only updates we need for hcc2 are to accept the osname "cuda" in the triple to trigger the new address space scheme. 
+The master branch of this repository is a clone of the HCC development branch amd-hcc taken on June 27, 2017.  It containes the amdgcn backend to support the new address space scheme (Generic-is-zero) and alloca in address space 5 (local).  The only updates we need for hcc2 are to accept the osname "cuda" in the triple to trigger the new address space scheme.
 
 
 ### hcc2-lld
@@ -114,3 +116,7 @@ Current Release Branch: none
 Current Dev Branch:  	0.3-6
 ```
 This repository is a clone of the IBM Coral compiler openmp runtime with significant updates to support AMDGCN. 
+
+## HCC2 Limitations
+<A NAME="Limitations">
+Too many to mention at this time.  Hey, this is a prototype.
