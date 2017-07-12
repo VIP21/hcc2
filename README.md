@@ -25,12 +25,9 @@ Table of contents
 - [Examples](examples)
 - [Install](bin/README)
 
-
+## Copyright and Disclaimer
 
 <A NAME="Copyright">
-# Copyright and Disclaimer
-------------------------
-
 Copyright (c) 2016 ADVANCED MICRO DEVICES, INC.  
 
 AMD is granting you permission to use this software and documentation (if any) (collectively, the 
@@ -69,9 +66,9 @@ Materials by the Government constitutes acknowledgement of AMD's proprietary rig
 EXPORT RESTRICTIONS: The Materials may be subject to export restrictions as stated in the 
 Software License Agreement.
 
-<A NAME="Repositories">
 ## HCC2 Repositories
------------------
+
+<A NAME="Repositories">
 The hcc2 compiler is an LLVM and CLANG 5 compiler.  It requires a number of repositories to build
 
 ### hcc2-clang
@@ -96,6 +93,7 @@ Current Dev Branch:  	0.3-6
 ```
 The master branch of this repository is a clone of the HCC development branch amd-hcc.  It containes the amdgcn backend to support the new address space and alloca in address space 5 (local).  The only updates we need for hcc2 are to accept the osname "cuda" in the triple to trigger the new address space scheme. 
 
+
 ### hcc2-lld
 https:/github.com/ROCM-Developer-Tools/hcc2-lld
 ```
@@ -105,6 +103,7 @@ Current Release Branch: none
 Current Dev Branch:  	0.3-6
 ```
 The master branch of this repository is a clone of the HCC development branch amd-hcc.   There are no changes to lld to support hcc2.  So the develoment branch is identical to the master branch. 
+
 
 ### hcc2-rt
 https:/github.com/ROCM-Developer-Tools/hcc2-rt
