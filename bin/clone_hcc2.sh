@@ -6,7 +6,9 @@
 #
 GITROC="https://github.com/radeonopencompute"
 GITROCDEV="https://github.com/ROCm-Developer-Tools"
+STASH_BEFORE_PULL=${STASH_BEFORE_PULL:-YES}
 
+# Set the directory location for all REPOS
 ROC_REPOS=${ROC_REPOS:-/home/$USER/git/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
 ATMI_REPOS=${ATMI_REPOS:-/home/$USER/git/hcc2}
@@ -14,15 +16,20 @@ ATMI_REPOS=${ATMI_REPOS:-/home/$USER/git/hcc2}
 function clone_or_pull(){
 repodirname=$basedir/$reponame
 echo
-echo --- Repo $reponame ----
 if [ -d $repodirname  ] ; then 
+   echo "--- Pulling updates to existing dir $repodirname ----"
+   echo "    We assume this came from an earlier clone of $repo_web_location/$reponame"
    echo "cd $repodirname ; git checkout $COBRANCH"
    cd $repodirname
-   #git stash -u
+   if [ "$STASH_BEFORE_PULL" == "YES" ] ; then
+      git stash -u
+   fi
+   echo git checkout $COBRANCH
    git checkout $COBRANCH
    echo "cd $repodirname ; git pull "
    git pull 
 else 
+   echo --- NEW CLONE of repo $reponame to $repodirname ----
    cd $basedir
    echo git clone $repo_web_location/$reponame
    git clone $repo_web_location/$reponame
