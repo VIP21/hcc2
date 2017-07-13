@@ -6,7 +6,7 @@ TESTSRC_AUX  = OMP45Stream.cpp
 TESTSRC_ALL  = $(TESTSRC_MAIN) $(TESTSRC_AUX)
 
 CLANG        = clang++
-OMP_BIN      = $(AMDLLVM)/bin/$(CLANG)
+OMP_BIN      = $(HCC2)/bin/$(CLANG)
 CC           = $(OMP_BIN) $(VERBOSE)
 CFLAGS       = -O3 -I$(OMPRT_INC) -DOMP45 -std=c++11
 #-ccc-print-phases
