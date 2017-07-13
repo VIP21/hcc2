@@ -21,7 +21,7 @@ build_rt.sh        -  Builds the OpenMP libraries for hcc2.
 build_libamdgcn.sh -  Builds the amd bc libraries from rocm-device-libs needed by hcc2.
                       It installs in /opt/rocm/libamdgcn (or $LIBAMDGCN)
 
-clone_coral2.sh    -  A script to make sure all the necessary repositories are up to date.
+clone_hcc2.sh      -  A script to make sure the necessary repos are cloned and  up to date.
                       See below for a list of these libraries.
 
 The repositories and branches needed by HCC2 are: 
