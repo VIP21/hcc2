@@ -80,6 +80,5 @@ clone_or_pull
 # This is the ATMI repo for ATMI 0.4 in development
 basedir=$ATMI_REPOS
 reponame="atmi-staging"
-basedir="$HOME/git"
 COBRANCH="0.4"
 clone_or_pull
