@@ -4,15 +4,15 @@ ifeq ($(LIBAMDGCN),)
 else
   $(info LIBAMDGCN environment variable using $(LIBAMDGCN) )
 endif
-ifeq ($(AMDLLVM),)
-  $(info    WARNING! AMDLLVM environment variable not set, using /opt/amd/llvm)
-  AMDLLVM = /opt/amd/llvm
+ifeq ($(HCC2),)
+  $(info    WARNING! HCC2 environment variable not set, using /opt/amd/llvm)
+  HCC2 = /opt/amd/llvm
 else
-  $(info AMDLLVM environment variable using $(AMDLLVM))
+  $(info HCC2 environment variable using $(HCC2))
 endif
 ifeq ($(OMPRT),)
-  $(info    WARNING! OMPRT environment variable not set, using AMDLLVM instead)
-  OMPRT = $(AMDLLVM)
+  $(info    WARNING! OMPRT environment variable not set, using HCC2 instead)
+  OMPRT = $(HCC2)
 else
   $(info OMPRT environment variable using $(OMPRT))
 endif
@@ -64,7 +64,7 @@ endif
 
 # Compilation and link require at LIBRARY_PATH
 _LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib:$(LIBAMDGCN)/$(GFXNAME)/lib
-SETENV   = env LIBRARY_PATH=$(_LIBPATH) PATH=$(PATH):$(AMDLLVM)/bin
+SETENV   = env LIBRARY_PATH=$(_LIBPATH) PATH=$(PATH):$(HCC2)/bin
 
 # The ATMI and LOCH libraries are needed for dynamic runtime linking.
 _LDPATH  = $(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib
