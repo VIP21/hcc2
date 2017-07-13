@@ -136,7 +136,7 @@ fi
 
 cd $BUILD_DIR/build_lib
 echo
-echo " -----Running make for openmp ---- " 
+echo " -----Running make for $BUILD_DIR/build_lib ---- "
 make -j $NUM_THREADS
 if [ $? != 0 ] ; then 
       echo " "
@@ -148,11 +148,16 @@ if [ $? != 0 ] ; then
 fi
 
 cd $BUILD_DIR/build_debug
-echo " -----Running make for lib-debug ---- " 
+echo " -----Running make for $BUILD_DIR/build_debug ---- "
 make -j $NUM_THREADS
 if [ $? != 0 ] ; then 
       echo "ERROR make -j $NUM_THREADS failed"
       exit 1
+else
+      echo
+      echo "Successful build of ./build_rt.sh .  Please run:"
+      echo "./build_rt.sh install"
+      echo
 fi
 
 #  ----------- Install only if asked  ----------------------------

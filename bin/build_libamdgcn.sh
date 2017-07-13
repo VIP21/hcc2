@@ -5,7 +5,7 @@
 #
 
 # Do not change these values. Set the environment variables to override these defaults
-HCC2=${HCC2:-/opt/amd/llvm}
+HCC2=${HCC2:-/opt/rocm/hcc2}
 LIBAMDGCN=${LIBAMDGCN:-/opt/rocm/libamdgcn}
 LIBAMDGCN_REPOS=${LIBAMDGCN_REPOS:-/home/$USER/git/hcc2}
 BUILD_LIBAMDGCN=${BUILD_LIBAMDGCN:-$LIBAMDGCN_REPOS}
@@ -33,7 +33,10 @@ SOURCEDIR=$LIBAMDGCN_REPOS/$LIBAMDGCN_REPO_NAME
 
 MCPU_LIST=${GFXLIST:-"gfx700 gfx701 gfx800 gfx801 gfx803 gfx900 gfx901"}
 
-MYCMAKEOPTS="-DLLVM_DIR=$LLVM_BUILD -DAMDHSACOD=$HSA_DIR/bin/amdhsacod -DGENERIC_IS_ZERO=ON -DCUDA_TRIPLE=ON"
+MYCMAKEOPTS="-DLLVM_DIR=$LLVM_BUILD -DGENERIC_IS_ZERO=ON -DCUDA_TRIPLE=ON -DBUILD_HC_LIB=ON -DROCM_DEVICELIB_INCLUDE_TESTS=OFF"
+
+#  Use the following CMAKEOPTS to turn on testing
+#MYCMAKEOPTS="-DLLVM_DIR=$LLVM_BUILD -DAMDHSACOD=$HSA_DIR/bin/amdhsacod -DGENERIC_IS_ZERO=ON -DCUDA_TRIPLE=ON -DBUILD_HC_LIB=ON -DROCM_DEVICELIB_INCLUDE_TESTS=ON"
 
 if [ ! -L $LIBAMDGCN ] ; then 
   if [ -d $LIBAMDGCN ] ; then 
@@ -143,7 +146,7 @@ if [ "$1" != "install" ] ; then
    fi
    echo 
    echo "  Done with all makes"
-   echo "  Please run ./build_libamdgcn install "
+   echo "  Please run ./build_libamdgcn.sh install "
    echo 
 
    if [ "$SKIPTEST" != "YES" ] ; then 
