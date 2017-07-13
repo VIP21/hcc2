@@ -28,23 +28,23 @@ The repositories and branches needed by HCC2 are:
 
 DIRECTORY NAME *                  HCC2 REPOSITORY **       BRANCH
 -------------------------------   ---------------------    ------
-$HOME/git/hcc2/hcc2               $rocdev/hcc2             master ***
-$HOME/git/hcc2/hcc2-clang         $rocdev/hcc2-clang       0.3-6  ***
-$HOME/git/hcc2/hcc2-rt            $rocdev/hcc2-rt          0.3-6  ***
-$HOME/git/hcc2/hcc2-llvm          $rocdev/hcc2-llvm        0.3-6     
-$HOME/git/hcc2/hcc2-lld           $rocdev/hcc2-lld         0.3-6 
-$HOME/git/hcc2/rocm-device-libs   $roc/rocm-device-libs    master
-$HOME/git/atmi-staging            $roc/atmi-staging        0.4
-$HOME/git/cudaclang-rt            $roc/cudaclang-rt        master
+$HOME/git/hcc2/hcc2               %rocdev/hcc2             master ***
+$HOME/git/hcc2/hcc2-clang         %rocdev/hcc2-clang       0.3-6  ***
+$HOME/git/hcc2/hcc2-rt            %rocdev/hcc2-rt          0.3-6  ***
+$HOME/git/hcc2/hcc2-llvm          %rocdev/hcc2-llvm        0.3-6     
+$HOME/git/hcc2/hcc2-lld           %rocdev/hcc2-lld         0.3-6 
+$HOME/git/hcc2/rocm-device-libs   %roc/rocm-device-libs    master
+$HOME/git/hcc2/atmi-staging       %roc/atmi-staging        0.4
+$HOME/git/hcc2/cudaclang-rt       %roc/cudaclang-rt        master
 
    * Clone your repositories here or override with environment variables.
-  ** Replace $roc with https://github.com/RadeonOpenCompute
-  ** Replace $rocdev with https://github.com/ROCm-Developer-Tools
- *** These are the primary development repositories. They are updated often.
+  ** Replace %roc with "https://github.com/RadeonOpenCompute"
+  ** Replace %rocdev with "https://github.com/ROCm-Developer-Tools"
+ *** These are the primary development repositories for HCC2. They are updated often.
 
-The scripts and makefiles use these environment variables and these defaults 
-if they are not set. This is not a complete list.  See the script headers
-for other environment variables that you may set including repo names. 
+The scripts and example makefiles use these environment variables and these 
+defaults if they are not set. This is not a complete list.  See the script headers
+for other environment variables that you may override including repo names. 
 
 HCC2              /opt/rocm/hcc2           *
 LIBAMDGCN         /opt/rocm/libamdgcn      *
@@ -63,8 +63,8 @@ the values in your .bashrc or .bash_profile to build your HOME directory.
 Here is a sample for your .bash_profile
 
 SUDO="disable"
-HCC2=$HOME/LOCH/hcc2
-LIBAMDGCN=$HOME/LOCH/libamdgcn
+HCC2=$HOME/hcc2
+LIBAMDGCN=$HOME/libamdgcn
 BUILD_TYPE=Debug
 NVPTXGPU_DEFAULT=50
 export SUDO HCC2 LIBAMDGCN NVPTXGPU_DEFAULT BUILD_TYPE
@@ -88,19 +88,20 @@ To build all components, run the scripts in the following order:
 	./build_libamdgcn.sh install
 
 The scripts do not automatically install in case their is a build failure. 
-In case of failure, you can restart the build by running "make" in the build directory. 
+After all, this is a development project.  In case of a build failure, you 
+can restart the build by running "make" or "make install" in the build directory. 
 
 The compiler created by build_hcc2.sh is needed by build_rt.sh 
 and build_libamdgcn.sh to build device libraries.  So you must have 
-built and installed hcc2 before building the libraries. 
+built and installed hcc2 before building the libraries.
 
 -------- Optional ------
 For some people access to git repositories in HOME directory is slow. 
 The build scripts have an optional feature that will rsync a copy of each of the 
-necessary repositories to another directory that may have faster access.
-In the past, this was not an optional feature.  This feature could also be useful if
-you are making lots of testing changes that you do not want in your git repository. 
-To trigger this copy set these environment variables: 
+necessary repositories to another directory that may have faster access 
+such as /tmp.  This feature could also be useful if you are making lots of 
+testing changes that you do not want in your git repository. 
+To trigger this feature, set these environment variables: 
 
 export BUILD_HCC2=/tmp/$USER/hcc2
 export BUILD_LIBAMDGCN=/tmp/$USER/libamdgcn
