@@ -90,6 +90,10 @@ if [ "$1" != "install" ] ; then
    LASTMCPU="fiji"
    sedfile1=$BUILD_DIR/$LIBAMDGCN_REPO_NAME/OCL.cmake
    sedfile2=$BUILD_DIR/$LIBAMDGCN_REPO_NAME/CMakeLists.txt
+   origsedfile2=$BUILD_DIR/$LIBAMDGCN_REPO_NAME/CMakeLists.txt.orig
+   if [ ! $COPYSOURCE ] ; then 
+     cp $sedfile2 $origsedfile2 
+   fi
    for MCPU in $MCPU_LIST  ; do 
       builddir_mcpu=$BUILD_DIR/build_libamdgcn_$MCPU
       if [ -d $builddir_mcpu ] ; then 
@@ -122,7 +126,7 @@ if [ "$1" != "install" ] ; then
             #  Put the cmake files in repository back to original condition.
             cd $BUILD_DIR/$LIBAMDGCN_REPO_NAME
             git checkout $sedfile1
-            git checkout $sedfile2
+            cp $origsedfile2 $sedfile2
          fi
          exit 1
       fi
@@ -133,7 +137,7 @@ if [ "$1" != "install" ] ; then
             #  Put the cmake files in repository back to original condition.
             cd $BUILD_DIR/$LIBAMDGCN_REPO_NAME
             git checkout $sedfile1
-            git checkout $sedfile2
+            cp $origsedfile2 $sedfile2
          fi
          exit 1
       fi
@@ -142,7 +146,8 @@ if [ "$1" != "install" ] ; then
       #  Put the cmake files in repository back to original condition.
       cd $BUILD_DIR/$LIBAMDGCN_REPO_NAME
       git checkout $sedfile1
-      git checkout $sedfile2
+      cp $origsedfile2 $sedfile2
+      rm $origsedfile2 
    fi
    echo 
    echo "  Done with all makes"
@@ -174,8 +179,8 @@ if [ "$1" == "install" ] ; then
       installdir_codename=$INSTALL_DIR/${codename}
       echo "running make install from $builddir_mcpu"
       cd $builddir_mcpu
-      echo $SUDO make install
-      $SUDO make install
+      echo $SUDO make -j $NUM_THREADS install
+      $SUDO make -j $NUM_THREADS install
       if [ -L $installdir_codename ] ; then 
          $SUDO rm $installdir_codename
       fi
