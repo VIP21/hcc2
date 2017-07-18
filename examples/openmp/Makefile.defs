@@ -5,8 +5,8 @@ else
   $(info LIBAMDGCN environment variable using $(LIBAMDGCN) )
 endif
 ifeq ($(HCC2),)
-  $(info    WARNING! HCC2 environment variable not set, using /opt/amd/llvm)
-  HCC2 = /opt/amd/llvm
+  $(info    WARNING! HCC2 environment variable not set, using /opt/rocm/hcc2)
+  HCC2 = /opt/rocm/hcc2
 else
   $(info HCC2 environment variable using $(HCC2))
 endif
