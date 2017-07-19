@@ -11,12 +11,12 @@ int main() {
       // need to pass the total device number to all devices, per module load
       int num_threads = omp_get_num_threads();
       int num_teams   = omp_get_num_teams();
-      int num_devices = 1;//omp_get_num_devices(); // not legal in 4.5
+      int num_devices = omp_get_num_devices(); // not legal in 4.5
 
       // need to pass the device id to the device starting the kernel
       int thread_id   = omp_get_thread_num();
       int team_id     = omp_get_team_num();
-      int device_id   = 1;//omp_get_device_num();  // no API in omp 4.5
+      int device_id   = omp_get_device_num();  // no API in omp 4.5
 
       // assume we have homogeneous devices
       int total_threads = num_devices * num_teams * num_threads;
