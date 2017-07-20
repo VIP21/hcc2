@@ -13,6 +13,35 @@ ROC_REPOS=${ROC_REPOS:-/home/$USER/git/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
 ATMI_REPOS=${ATMI_REPOS:-/home/$USER/git/hcc2}
 
+# Get the HCC2_VERSION_STRING from a file in this directory 
+function getdname(){
+   local __DIRN=`dirname "$1"`
+   if [ "$__DIRN" = "." ] ; then
+      __DIRN=$PWD;
+   else
+      if [ ${__DIRN:0:1} != "/" ] ; then
+         if [ ${__DIRN:0:2} == ".." ] ; then
+               __DIRN=`dirname $PWD`/${__DIRN:3}
+         else
+            if [ ${__DIRN:0:1} = "." ] ; then
+               __DIRN=$PWD/${__DIRN:2}
+            else
+               __DIRN=$PWD/$__DIRN
+            fi
+         fi
+      fi
+   fi
+   echo $__DIRN
+}
+thisdir=$(getdname $0)
+[ ! -L "$0" ] || thisdir=$(getdname `readlink "$0"`)
+if [ -f $thisdir/HCC2_VERSION_STRING ] ; then 
+   HCC2_VERSION_STRING=`cat $thisdir/HCC2_VERSION_STRING`
+else 
+   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.3-6"}
+fi
+export HCC2_VERSION_STRING
+
 function clone_or_pull(){
 repodirname=$basedir/$reponame
 echo
@@ -52,19 +81,19 @@ COBRANCH="master"
 clone_or_pull
 
 reponame="hcc2-rt"
-COBRANCH="0.3-6"
+COBRANCH="$HCC2_VERSION_STRING"
 clone_or_pull
 
 reponame="hcc2-llvm"
-COBRANCH="0.3-6"
+COBRANCH="$HCC2_VERSION_STRING"
 clone_or_pull
 
 reponame="hcc2-clang"
-COBRANCH="0.3-6"
+COBRANCH="$HCC2_VERSION_STRING"
 clone_or_pull
 
 reponame="hcc2-lld"
-COBRANCH="0.3-6"
+COBRANCH="$HCC2_VERSION_STRING"
 clone_or_pull 
 
 # ---------------------------------------

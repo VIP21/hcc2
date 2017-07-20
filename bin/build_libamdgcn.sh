@@ -24,10 +24,36 @@ if [ "$BUILD_DIR" != "$LIBAMDGCN_REPOS" ] ; then
    COPYSOURCE=true
 fi
 
-LIBAMDGCN_VERSION=0.3
-LIBAMDGCN_MOD=6
+# Get the HCC2_VERSION_STRING from a file in this directory 
+function getdname(){
+   local __DIRN=`dirname "$1"`
+   if [ "$__DIRN" = "." ] ; then
+      __DIRN=$PWD;
+   else
+      if [ ${__DIRN:0:1} != "/" ] ; then
+         if [ ${__DIRN:0:2} == ".." ] ; then
+               __DIRN=`dirname $PWD`/${__DIRN:3}
+         else
+            if [ ${__DIRN:0:1} = "." ] ; then
+               __DIRN=$PWD/${__DIRN:2}
+            else
+               __DIRN=$PWD/$__DIRN
+            fi
+         fi
+      fi
+   fi
+   echo $__DIRN
+}
+thisdir=$(getdname $0)
+[ ! -L "$0" ] || thisdir=$(getdname `readlink "$0"`)
+if [ -f $thisdir/HCC2_VERSION_STRING ] ; then 
+   HCC2_VERSION_STRING=`cat $thisdir/HCC2_VERSION_STRING`
+else 
+   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.3-6"}
+fi
+export HCC2_VERSION_STRING
+INSTALL_DIR="${HCC2}_${HCC2_VERSION_STRING}"
 
-INSTALL_DIR="${LIBAMDGCN}_${LIBAMDGCN_VERSION}-${LIBAMDGCN_MOD}"
 LLVM_BUILD=$HCC2
 SOURCEDIR=$LIBAMDGCN_REPOS/$LIBAMDGCN_REPO_NAME
 

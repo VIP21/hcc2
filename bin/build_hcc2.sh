@@ -12,11 +12,13 @@
 # Simply set the environment variables to override these defaults
 HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
+HCC2RT_REPOS=${HCC2RT_REPOS:-/home/$USER/git/hcc2}
 BUILD_TYPE=${BUILD_TYPE:-Release}
 SUDO=${SUDO:-set}
 CLANG_REPO_NAME=${CLANG_REPO_NAME:-hcc2-clang}
 LLD_REPO_NAME=${LLD_REPO_NAME:-hcc2-lld}
 LLVM_REPO_NAME=${LLVM_REPO_NAME:-hcc2-llvm}
+RT_REPO_NAME=${RT_REPO_NAME:-hcc2-rt}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 
 if [ $SUDO == "set" ] ; then 
@@ -32,13 +34,37 @@ if [ "$BUILD_DIR" != "$HCC2_REPOS" ] ; then
   COPYSOURCE=true
 fi
 
-HCC2_VERSION=0.3
-HCC2_MOD=6
-WEBSITE="http\:\/\/github.com\/ROCm-Developer-Tools\/hcc2"
-HCC2_VERSION_STRING="$HCC2_VERSION-$HCC2_MOD"
+# Get the HCC2_VERSION_STRING from a file in this directory
+function getdname(){
+   local __DIRN=`dirname "$1"`
+   if [ "$__DIRN" = "." ] ; then
+      __DIRN=$PWD;
+   else
+      if [ ${__DIRN:0:1} != "/" ] ; then
+         if [ ${__DIRN:0:2} == ".." ] ; then
+               __DIRN=`dirname $PWD`/${__DIRN:3}
+         else
+            if [ ${__DIRN:0:1} = "." ] ; then
+               __DIRN=$PWD/${__DIRN:2}
+            else
+               __DIRN=$PWD/$__DIRN
+            fi
+         fi
+      fi
+   fi
+   echo $__DIRN
+}
+thisdir=$(getdname $0)
+[ ! -L "$0" ] || thisdir=$(getdname `readlink "$0"`)
+if [ -f $thisdir/HCC2_VERSION_STRING ] ; then
+   HCC2_VERSION_STRING=`cat $thisdir/HCC2_VERSION_STRING`
+else
+   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.3-6"}
+fi
 export HCC2_VERSION_STRING
+INSTALL_DIR="${HCC2}_${HCC2_VERSION_STRING}"
 
-INSTALL_DIR="${HCC2}_${HCC2_VERSION}-${HCC2_MOD}"
+WEBSITE="http\:\/\/github.com\/ROCm-Developer-Tools\/hcc2"
 
 PROC=`uname -p`
 GCC=`which gcc`
@@ -48,7 +74,7 @@ if [ "$PROC" == "ppc64le" ] ; then
 else
    COMPILERS="-DCMAKE_C_COMPILER=$GCC -DCMAKE_CXX_COMPILER=$GCPLUSCPLUS"
 fi
-MYCMAKEOPTS="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DLLVM_ENABLE_ASSERTIONS=ON -DLLVM_TARGETS_TO_BUILD=AMDGPU;X86;NVPTX;PowerPC $COMPILERS -DHCC2_VERSION_STRING=$HCC2_VERSION_STRING"
+MYCMAKEOPTS="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DLLVM_ENABLE_ASSERTIONS=ON -DLLVM_TARGETS_TO_BUILD=AMDGPU;X86;NVPTX;PowerPC;AArch64 $COMPILERS -DHCC2_VERSION_STRING=$HCC2_VERSION_STRING"
 
 if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then 
   echo " "
@@ -120,18 +146,28 @@ if [ ! -L $HCC2 ] ; then
   fi
 fi
 
-if [ ! -d $HCC2_REPOS/$LLVM_REPO_NAME ] ; then 
-   echo "ERROR:  Missing repository $HCC2_REPOS/$LLVM_REPO_NAME"
-   exit 1
-fi
-if [ ! -d $HCC2_REPOS/$CLANG_REPO_NAME ] ; then 
-   echo "ERROR:  Missing repository $HCC2_REPOS/$CLANG_REPO_NAME"
-   exit 1
-fi
-if [ ! -d $HCC2_REPOS/$LLD_REPO_NAME ] ; then 
-   echo "ERROR:  Missing repository $HCC2_REPOS/$LLD_REPO_NAME"
-   exit 1
-fi
+#  Check the repositories exist and are on the correct branch
+function checkrepo(){
+   cd $REPO_DIR
+   COBRANCH=`git branch --list | grep "\*" | cut -d" " -f2`
+   if [ "$COBRANCH" != "$HCC2_VERSION_STRING" ] ; then
+      echo "ERROR:  The repository at $REPODIR is not on branch $HCC2_VERSION_STRING"
+      echo "        It is on branch $COBRANCH"
+      exit 1
+   fi
+   if [ ! -d $REPO_DIR ] ; then
+      echo "ERROR:  Missing repository directory $REPO_DIR"
+      exit 1
+   fi
+}
+REPO_DIR=$HCC2_REPOS/$LLVM_REPO_NAME
+checkrepo
+REPO_DIR=$HCC2_REPOS/$CLANG_REPO_NAME
+checkrepo
+REPO_DIR=$HCC2_REPOS/$LLD_REPO_NAME
+checkrepo
+REPO_DIR=$HCC2RT_REPOS/$RT_REPO_NAME
+checkrepo
 
 # Make sure we can update the install directory
 if [ "$1" == "install" ] ; then 
@@ -151,11 +187,11 @@ cd $HCC2_REPOS/$CLANG_REPO_NAME
 CLANGID=`git log | grep -m1 commit | cut -d" " -f2`
 cd $HCC2_REPOS/$LLD_REPO_NAME
 LLDID=`git log | grep -m1 commit | cut -d" " -f2`
-SOURCEID="Source ID:$HCC2_VERSION-$HCC2_MOD-$LLVMID-$CLANGID-$LLDID"
+SOURCEID="Source ID:$HCC2_VERSION_STRING-$LLVMID-$CLANGID-$LLDID"
 TEMPCLFILE="/tmp/clfile$$.cpp"
 ORIGCLFILE="$HCC2_REPOS/$LLVM_REPO_NAME/lib/Support/CommandLine.cpp"
 BUILDCLFILE="$BUILD_DIR/$LLVM_REPO_NAME/lib/Support/CommandLine.cpp"
-sed "s/LLVM (http:\/\/llvm\.org\/):/HCC2-${HCC2_VERSION}-$HCC2_MOD ($WEBSITE):\\\n $SOURCEID/" $ORIGCLFILE > $TEMPCLFILE
+sed "s/LLVM (http:\/\/llvm\.org\/):/HCC2-${HCC2_VERSION_STRING} ($WEBSITE):\\\n $SOURCEID/" $ORIGCLFILE > $TEMPCLFILE
 if [ $? != 0 ] ; then 
    echo "ERROR sed command to fix CommandLine.cpp failed."
    exit 1

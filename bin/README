@@ -24,15 +24,17 @@ build_libamdgcn.sh -  Builds the amd bc libraries from rocm-device-libs needed b
 clone_hcc2.sh      -  A script to make sure the necessary repos are cloned and  up to date.
                       See below for a list of these libraries.
 
+HCC2_VERSION_STRING - File to set the version of HCC2 to clone and build . 
+
 The repositories and branches needed by HCC2 are: 
 
 DIRECTORY NAME *                  HCC2 REPOSITORY **       BRANCH
 -------------------------------   ---------------------    ------
 $HOME/git/hcc2/hcc2               %rocdev/hcc2             master ***
-$HOME/git/hcc2/hcc2-clang         %rocdev/hcc2-clang       0.3-6  ***
-$HOME/git/hcc2/hcc2-rt            %rocdev/hcc2-rt          0.3-6  ***
-$HOME/git/hcc2/hcc2-llvm          %rocdev/hcc2-llvm        0.3-6     
-$HOME/git/hcc2/hcc2-lld           %rocdev/hcc2-lld         0.3-6 
+$HOME/git/hcc2/hcc2-clang         %rocdev/hcc2-clang       HCC2_VERSION_STRING  ***
+$HOME/git/hcc2/hcc2-rt            %rocdev/hcc2-rt          HCC2_VERSION_STRING  ***
+$HOME/git/hcc2/hcc2-llvm          %rocdev/hcc2-llvm        HCC2_VERSION_STRING    
+$HOME/git/hcc2/hcc2-lld           %rocdev/hcc2-lld         HCC2_VERSION_STRING
 $HOME/git/hcc2/rocm-device-libs   %roc/rocm-device-libs    master
 $HOME/git/hcc2/atmi-staging       %roc/atmi-staging        0.4
 $HOME/git/hcc2/cudaclang-rt       %roc/cudaclang-rt        master
