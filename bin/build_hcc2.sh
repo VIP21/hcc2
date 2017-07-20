@@ -21,7 +21,7 @@ LLVM_REPO_NAME=${LLVM_REPO_NAME:-hcc2-llvm}
 RT_REPO_NAME=${RT_REPO_NAME:-hcc2-rt}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 
-if [ $SUDO == "set" ] ; then 
+if [ "$SUDO" == "set" ] ; then 
    SUDO="sudo"
 else 
    SUDO=""

@@ -17,6 +17,7 @@ TESTS_DIR = \
     schedule \
     simd \
     stream \
+    target-in-other-source \
     teams \
     test \
     threads \
