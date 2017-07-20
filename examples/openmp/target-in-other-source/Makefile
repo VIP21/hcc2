@@ -1,12 +1,12 @@
 include ../Makefile.defs
 
-TESTNAME     = vmul
-TESTSRC_MAIN = target.c vmul.c
-TESTSRC_AUX  =
+TESTNAME     = target-in-other-source
+TESTSRC_MAIN = vmul.c
+TESTSRC_AUX  = target.c
 TESTSRC_ALL  = $(TESTSRC_MAIN) $(TESTSRC_AUX)
 
 CLANG        = clang
-OMP_BIN      = $(AMDLLVM)/bin/$(CLANG)
+OMP_BIN      = $(HCC2)/bin/$(CLANG)
 CC           = $(OMP_BIN) $(VERBOSE)
 #-ccc-print-phases
 #"-\#\#\#"
