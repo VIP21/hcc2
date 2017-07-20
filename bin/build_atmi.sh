@@ -9,7 +9,7 @@ ATMI_REPO_NAME=${ATMI_REPO_NAME:-atmi-staging}
 BUILD_ATMI=${BUILD_ATMI:-$ATMI_REPOS}
 
 SUDO=${SUDO:-set}
-if [ $SUDO == "set" ] ; then 
+if [ "$SUDO" == "set" ] ; then 
    SUDO="sudo"
 else 
    SUDO=""

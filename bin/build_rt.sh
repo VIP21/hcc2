@@ -12,7 +12,7 @@ RT_REPO_NAME=${RT_REPO_NAME:-hcc2-rt}
 NVPTXGPU_DEFAULT=${NVPTXGPU_DEFAULT:-30}
 SUDO=${SUDO:-set}
 
-if [ $SUDO == "set" ] ; then 
+if [ "$SUDO" == "set" ] ; then 
    SUDO="sudo"
 else 
    SUDO=""
