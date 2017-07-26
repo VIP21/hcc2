@@ -11,7 +11,7 @@ TESTS_DIR = \
     function \
     helloworld \
     nativetests \
-    nested_llop \
+    nested_loop \
     pfspecifier \
     reduce \
     reduction \
