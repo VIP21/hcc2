@@ -29,6 +29,9 @@ int main()
       printf ("Wrong varlue: a[%d]=%d\n", i, a[i]);
     }
 
+  if (!rc)
+    printf("Success\n");
+
   return rc;
 }
 
