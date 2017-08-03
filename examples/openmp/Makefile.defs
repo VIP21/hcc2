@@ -83,10 +83,6 @@ RUNENV   = env LD_LIBRARY_PATH=$(_LDPATH):$(LD_LIBRARY_PATH)
 
 CFLAGS = -O2 -I$(OMPRT_INC) $(EXTRA_CFLAGS)
 
-ifeq ($(VERBOSE), 1)
-CFLAGS += -v
-endif
-
 ifeq ($(TEMPS), 1)
 CFLAGS += -save-temps
 endif
