@@ -17,19 +17,30 @@ else
   $(info OMPRT environment variable using $(OMPRT))
 endif
 
-ifeq ($(HOST_TARGET),)
-  HOST_TARGET = x86_64-pc-linux-gnu 
-endif
 ifeq ($(UNAMEP),)
   UNAMEP=x86_64
+endif
+ifeq ($(HOST_TARGET),)
+  HOST_TARGET = x86_64-pc-linux-gnu
+endif
+ifeq ($(DEVICE_TARGET),)
+  DEVICE_TARGET = nvptx64-nvidia-cuda
+  DEVICE_TARGET = amdgcn--cuda
+endif
+ifeq ($(SMNAME),)
+  SMNAME = sm_30
 endif
 ifeq ($(GFXNAME),)
   GFXNAME = gfx803
 endif
-ifeq ($(TARGET),)
-  TARGET  =  -fopenmp-targets=nvptx64-nvidia-cuda --cuda-gpu-arch=sm_30
-  TARGET  =  -fopenmp-targets=amdgcn--cuda --cuda-gpu-arch=$(GFXNAME)
+ifeq ($(DEVICE_ARCH),)
+  DEVICE_ARCH = $(SMNAME)
+  DEVICE_ARCH = $(GFXNAME)
 endif
+ifeq ($(TARGET),)
+  TARGET  =  -fopenmp-targets=$(DEVICE_TARGET) --cuda-gpu-arch=$(DEVICE_ARCH)
+endif
+
 ifeq ($(OFFLOAD_DEBUG),1)
   $(info    DEBUG Mode ON)
   DEBUG   = -debug
@@ -71,5 +82,10 @@ _LDPATH  = $(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib
 RUNENV   = env LD_LIBRARY_PATH=$(_LDPATH):$(LD_LIBRARY_PATH)
 
 CFLAGS = -O2 -I$(OMPRT_INC) $(EXTRA_CFLAGS)
-OMP_FLAGS = -target $(HOST_TARGET) -fopenmp $(TARGET) 
+
+ifeq ($(TEMPS), 1)
+CFLAGS += -save-temps
+endif
+
+OMP_FLAGS = -target $(HOST_TARGET) -fopenmp $(TARGET)
 LINK_FLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC) -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart
