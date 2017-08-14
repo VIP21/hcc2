@@ -151,9 +151,8 @@ function checkrepo(){
    cd $REPO_DIR
    COBRANCH=`git branch --list | grep "\*" | cut -d" " -f2`
    if [ "$COBRANCH" != "$HCC2_VERSION_STRING" ] ; then
-      echo "ERROR:  The repository at $REPODIR is not on branch $HCC2_VERSION_STRING"
-      echo "        It is on branch $COBRANCH"
-      exit 1
+      echo "WARNING:  The repository at $REPO_DIR is not on branch $HCC2_VERSION_STRING"
+      echo "          It is on branch $COBRANCH"
    fi
    if [ ! -d $REPO_DIR ] ; then
       echo "ERROR:  Missing repository directory $REPO_DIR"
