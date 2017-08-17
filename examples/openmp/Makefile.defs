@@ -44,6 +44,7 @@ endif
 ifeq ($(OFFLOAD_DEBUG),1)
   $(info    DEBUG Mode ON)
   DEBUG   = -debug
+  SET_DEVICE_DEBUG = DEVICE_DEBUG=1
 endif
 ifeq ($(VERBOSE),1)
   $(info    Compilation VERBOSE Mode ON)
@@ -79,7 +80,7 @@ SETENV   = env LIBRARY_PATH=$(_LIBPATH) PATH=$(PATH):$(HCC2)/bin
 
 # The ATMI and LOCH libraries are needed for dynamic runtime linking.
 _LDPATH  = $(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib
-RUNENV   = env LD_LIBRARY_PATH=$(_LDPATH):$(LD_LIBRARY_PATH)
+RUNENV   = env LD_LIBRARY_PATH=$(_LDPATH):$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
 
 CFLAGS = -O2 -I$(OMPRT_INC) $(EXTRA_CFLAGS)
 
