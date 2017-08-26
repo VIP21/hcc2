@@ -71,12 +71,12 @@ help:
 	@echo "	make obin       // Link pass only"
 	@echo "	make run_obin   // Execute obin"
 	@echo 
-	@echo " make .ll        // Compile pass only             : -c -S -emit-llvm"
-	@echo " make .ll.s      // Backend pass only             : -c -S"
-	@echo " make .ll.o      // Assemble pass only            : -c"
-	@echo " make .s         // Compile & Backend passes      : -c -S"
-	@echo " make .s.o       // Assemble pass only            : -c"
-	@echo " make .o         // Compile, Backend, Assemble    : -c"
+	@echo "	make .ll        // Compile pass only             : -c -S -emit-llvm"
+	@echo "	make .ll.s      // Backend pass only             : -c -S"
+	@echo "	make .ll.o      // Assemble pass only            : -c"
+	@echo "	make .s         // Compile & Backend passes      : -c -S"
+	@echo "	make .s.o       // Assemble pass only            : -c"
+	@echo "	make .o         // Compile, Backend, Assemble    : -c"
 	@echo 
 	@echo "	make            // All passes, build all examples from Application Dirs"
 	@echo "	make run        // Execute all binaries from Application Dirs"
