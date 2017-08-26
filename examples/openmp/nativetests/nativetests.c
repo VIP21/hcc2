@@ -117,12 +117,36 @@ int test3() {
 #else
 int test3() { return 0;}
 #endif
+
+#if 1
+int test4() {
+#define SHIFTNUM 60
+  unsigned long long result = 1;
+  #pragma omp target parallel map(tofrom:result)
+  #pragma omp single
+  {
+    result = result << SHIFTNUM;
+  }
+
+  if (result != 1ll << SHIFTNUM) {
+    printf("shift result = %llx\n", result);
+    return 1;
+  }
+  printf("Shift test OK!\n");
+
+  return 0;
+}
+#else
+int test4() { return 0;}
+#endif
+
 int main () {
 
   int error = 0;
   error += test1();
   error += test2();
   error += test3();
+  error += test4();
 
 
   if (!error)
