@@ -150,8 +150,8 @@ fi
 function checkrepo(){
    cd $REPO_DIR
    COBRANCH=`git branch --list | grep "\*" | cut -d" " -f2`
-   if [ "$COBRANCH" != "$HCC2_VERSION_STRING" ] ; then
-      echo "WARNING:  The repository at $REPO_DIR is not on branch $HCC2_VERSION_STRING"
+   if [ "$COBRANCH" != "rel_$HCC2_VERSION_STRING" ] ; then
+      echo "WARNING:  The repository at $REPO_DIR is not on branch rel_$HCC2_VERSION_STRING"
       echo "          It is on branch $COBRANCH"
    fi
    if [ ! -d $REPO_DIR ] ; then

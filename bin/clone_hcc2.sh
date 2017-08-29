@@ -81,19 +81,19 @@ COBRANCH="master"
 clone_or_pull
 
 reponame="hcc2-rt"
-COBRANCH="$HCC2_VERSION_STRING"
+COBRANCH="rel_$HCC2_VERSION_STRING"
 clone_or_pull
 
 reponame="hcc2-llvm"
-COBRANCH="$HCC2_VERSION_STRING"
+COBRANCH="rel_$HCC2_VERSION_STRING"
 clone_or_pull
 
 reponame="hcc2-clang"
-COBRANCH="$HCC2_VERSION_STRING"
+COBRANCH="rel_$HCC2_VERSION_STRING"
 clone_or_pull
 
 reponame="hcc2-lld"
-COBRANCH="$HCC2_VERSION_STRING"
+COBRANCH="rel_$HCC2_VERSION_STRING"
 clone_or_pull 
 
 # ---------------------------------------
