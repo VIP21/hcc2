@@ -16,6 +16,7 @@ Also, add entries for features or bugs fixed here with an _X_
  ___ Get cloc.sh utility working
 
  ___ Add Debian packaging control files to this bin directory
+     for amd64, ppc64el, and aarch64
 
  ___ Fix driver to allow for multiple offload targets
 
@@ -25,4 +26,6 @@ Also, add entries for features or bugs fixed here with an _X_
 
  ___ Add the cuda clang runtime for amdgcn
 
+ ___ Remove need for ncurses lib when building set-linkage
 
+ ___ Add printf capability to hc and opencl 
