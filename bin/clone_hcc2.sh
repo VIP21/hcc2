@@ -77,7 +77,7 @@ repo_web_location=$GITROCDEV
 basedir=$HCC2_REPOS
 
 reponame="hcc2"
-COBRANCH="master"
+COBRANCH="rel_$HCC2_VERSION_STRING"
 clone_or_pull
 
 reponame="hcc2-rt"
