@@ -1,4 +1,4 @@
-HCC2 - V 0.3-6 
+HCC2 - V 0.3-7
 ==============
 
 hcc2:  Heterogeneous Compiler Collection (Version 2). 
@@ -24,6 +24,7 @@ Table of contents
 - [Repositories](#Repositories)
 - [Examples](examples)
 - [Install](bin/README)
+- [TODOs](bin/TODOs) List of TODOs for this release
 - [Limitations](#Limitations)
 
 ## Copyright and Disclaimer

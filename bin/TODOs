@@ -1,0 +1,28 @@
+
+These are the TODOs for hcc2 version 0.3-7
+Please mark an X when they are done. 
+Also, add entries for features or bugs fixed here with an _X_ 
+
+ ___ Get example simd working
+
+ ___ Get example assertok_errors working
+
+ ___ Get example target-in-other-source working
+
+ ___ Add cudaclang examples dir and example.  Nvidia only for now
+
+ ___ Add hc examples dir and an hc example.  amdgcn only for now
+
+ ___ Get cloc.sh utility working
+
+ ___ Add Debian packaging control files to this bin directory
+
+ ___ Fix driver to allow for multiple offload targets
+
+ ___ Move vprintfl to atmi device library
+
+ ___ Get a public version of the ATMI source code available
+
+ ___ Add the cuda clang runtime for amdgcn
+
+
