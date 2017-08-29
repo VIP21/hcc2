@@ -210,8 +210,9 @@ if [ "$1" == "install" ] ; then
       if [ -L $installdir_codename ] ; then 
          $SUDO rm $installdir_codename
       fi
-      echo $SUDO ln -sf $installdir_gfx $installdir_codename
-      $SUDO ln -sf $installdir_gfx $installdir_codename
+      cd $installdir_gfx/..
+      echo $SUDO ln -sf $MCPU ${codename}
+      $SUDO ln -sf $MCPU ${codename}
    done
 
    # Make sure the ocl_isa_version returns correct version
