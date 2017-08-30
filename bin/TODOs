@@ -17,7 +17,9 @@ Items marked with X below here are done in version 0.3-7
 
 005  ___ Add hc examples dir and an hc example.  amdgcn only for now
 
-006  ___ Get cloc.sh utility working, maybe snack.sh
+006  _X_ Get cloc.sh utility working. The utility is now in hcc2-rt
+         Examples for compiling OpenCL and Cuda kernels are in 
+         hcc2/examples/cloc
 
 007  ___ Add Debian packaging control files to this bin directory
          with versions for amd64, ppc64el, and aarch64
