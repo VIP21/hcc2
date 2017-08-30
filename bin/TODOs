@@ -1,7 +1,11 @@
 
-These are the TODOs for hcc2 version 0.3-7
-Please mark an X when they are done. 
-Also, add entries for features or bugs fixed here with an _X_ 
+These are the TODOs for hcc2 future versions.
+Please mark an item with an X when they are done. 
+
+Note: There is no committment to complete any or all items
+      on this list. 
+
+Items marked with X below here are done in version 0.3-7
 
 001  ___ Get example simd working
 
@@ -17,6 +21,7 @@ Also, add entries for features or bugs fixed here with an _X_
 
 007  ___ Add Debian packaging control files to this bin directory
          with versions for amd64, ppc64el, and aarch64
+         Can we make libamdgcn a noarch pachage?
 
 008  ___ Fix driver to allow for multiple offload targets
 
@@ -33,6 +38,7 @@ Also, add entries for features or bugs fixed here with an _X_
 014  ___ Move to new rocm device lib atomics for atmi services
          atomic_load_explicit(...)
          atomic_compare_exchange_strong_explicit(...)
+         needs 009
 
 015  ___ Improve fail message (in driver) if libamdgcn not installed 
          with a gfx target, or cuda not installed with sm_ target.
@@ -42,9 +48,21 @@ Also, add entries for features or bugs fixed here with an _X_
 017  ___ Merge with latest yorktown coral repos.
 
 018  ___ make utilities in hcc2-rt/utils/bin executable with package
-         install, needs 007
+         install, needs 007 
 
 019  ___ Test on carrizo and good HSA installed kaveris 
 
 020  ___ Add autodiscover of subarch/gpu for both amdgcn and nvptx
+
+021  ___ Make printf more robust, especially with large blocks 
+         where all lanes are active. Create and use a new atmi service
+         for wvprintf which works for an entire wavefront. 
+         This should also fix examples that fail when they are built 
+         with OFFLOAD_DEBUG=1 turned on. 
+
+022  ___ Run omp test suite. Also move examples/openmp to examples/test
+         and put simple useful examples in examples/openmp in self-contained
+         directories (no Makefile.defs etc.)  (Andrey)
+
+023  ___ Test SpecAccel benchmark
          
