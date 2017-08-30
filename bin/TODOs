@@ -9,11 +9,11 @@ Also, add entries for features or bugs fixed here with an _X_
 
 003  ___ Get example target-in-other-source working
 
-004 ___ Add cudaclang examples dir and example.  Nvidia only for now
+004  ___ Add cudaclang examples dir and example.  Nvidia only for now
 
 005  ___ Add hc examples dir and an hc example.  amdgcn only for now
 
-006  ___ Get cloc.sh utility working
+006  ___ Get cloc.sh utility working, maybe snack.sh
 
 007  ___ Add Debian packaging control files to this bin directory
          with versions for amd64, ppc64el, and aarch64
@@ -28,9 +28,23 @@ Also, add entries for features or bugs fixed here with an _X_
 
 012  ___ Remove need for ncurses lib when building set-linkage
 
-013  ___ Add printf capability to hc and opencl 
+013  ___ Add printf capability to hc and opencl , need 005 006
 
 014  ___ Move to new rocm device lib atomics for atmi services
          atomic_load_explicit(...)
          atomic_compare_exchange_strong_explicit(...)
 
+015  ___ Improve fail message (in driver) if libamdgcn not installed 
+         with a gfx target, or cuda not installed with sm_ target.
+
+016  ___ Reverse Makefile warnings for LIBAMDGCN and HCC2 env variables
+
+017  ___ Merge with latest yorktown coral repos.
+
+018  ___ make utilities in hcc2-rt/utils/bin executable with package
+         install, needs 007
+
+019  ___ Test on carrizo and good HSA installed kaveris 
+
+020  ___ Add autodiscover of subarch/gpu for both amdgcn and nvptx
+         
