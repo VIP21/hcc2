@@ -1,9 +1,9 @@
 
 These are the TODOs for hcc2 future versions.
-Please mark an item with an X when they are done. 
+Please mark an item with an X when they are done.
 
 Note: There is no committment to complete any or all items
-      on this list. 
+      on this list.
 
 Items marked with X below here are done in version 0.3-7
 
@@ -43,14 +43,14 @@ Items marked with X below here are done in version 0.3-7
          needs 009
 
 015  ___ Improve fail message (in driver) if libamdgcn not installed 
-         with a gfx target, or cuda not installed with sm_ target.
+         with a gfx target, or cuda not installed with sm_ target
 
-016  ___ Reverse Makefile warnings for LIBAMDGCN and HCC2 env variables
+016  ___ Reverse Makefile warnings for LIBAMDGCN and HCC2 env variables (Andrey)
 
-017  ___ Merge with latest yorktown coral repos.
+017  ___ Merge with latest yorktown coral repos
 
 018  ___ make utilities in hcc2-rt/utils/bin executable with package
-         install, needs 007 
+         install, needs 007
 
 019  ___ Test on carrizo and good HSA installed kaveris 
 
@@ -62,9 +62,10 @@ Items marked with X below here are done in version 0.3-7
          This should also fix examples that fail when they are built 
          with OFFLOAD_DEBUG=1 turned on. 
 
-022  ___ Run omp test suite. Also move examples/openmp to examples/test
-         and put simple useful examples in examples/openmp in self-contained
-         directories (no Makefile.defs etc.)  (Andrey)
+022  ___ Run omp test suite (Andrey)
 
-023  ___ Test SpecAccel benchmark
-         
+023  ___ Test SpecAccel benchmark (Andrey)
+
+024  ___ Move examples/openmp to examples/test and put simple useful 
+         examples in examples/openmp in self-contained directories 
+         (no Makefile.defs etc.) (Andrey)
