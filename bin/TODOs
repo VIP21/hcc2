@@ -7,23 +7,26 @@ Note: There is no committment to complete any or all items
 
 Items marked with X below here are done in version 0.3-7
 
-001  ___ Get example simd working
+001  ___ Get example simd working (Greg)
 
 002  ___ Get example assertok_errors working
 
 003  ___ Get example target-in-other-source working
 
 004  ___ Add cudaclang examples dir and example.  Nvidia only for now
+         Greg promoted the fixup-fatbin clang tool written by
+         Andrey so gcn examples can build. I also cleaned
+         up the cudaclang makefile and gave to Jan for testing. (Jan)
 
 005  ___ Add hc examples dir and an hc example.  amdgcn only for now
 
 006  _X_ Get cloc.sh utility working. The utility is now in hcc2-rt
          Examples for compiling OpenCL and Cuda kernels are in 
-         hcc2/examples/cloc
+         hcc2/examples/cloc (Greg)
 
 007  ___ Add Debian packaging control files to this bin directory
          with versions for amd64, ppc64el, and aarch64
-         Can we make libamdgcn a noarch pachage?
+         Can we make libamdgcn a noarch pachage? (Greg)
 
 008  ___ Fix driver to allow for multiple offload targets
 
@@ -31,11 +34,11 @@ Items marked with X below here are done in version 0.3-7
 
 010  ___ Get a public version of the ATMI source code available
 
-011  ___ Add the cuda clang runtime for amdgcn
+011  ___ Add the cuda clang runtime for amdgcn (Jan)
 
 012  ___ Remove need for ncurses lib when building set-linkage
 
-013  ___ Add printf capability to hc and opencl , need 005 006
+013  ___ Add printf capability to hc and opencl , need 005 006 (Greg)
 
 014  ___ Move to new rocm device lib atomics for atmi services
          atomic_load_explicit(...)
@@ -47,7 +50,7 @@ Items marked with X below here are done in version 0.3-7
 
 016  ___ Reverse Makefile warnings for LIBAMDGCN and HCC2 env variables (Andrey)
 
-017  ___ Merge with latest yorktown coral repos
+017  ___ Merge with latest yorktown coral repos (Greg)
 
 018  ___ make utilities in hcc2-rt/utils/bin executable with package
          install, needs 007
@@ -66,6 +69,13 @@ Items marked with X below here are done in version 0.3-7
 
 023  ___ Test SpecAccel benchmark (Andrey)
 
-024  ___ Move examples/openmp to examples/test and put simple useful 
-         examples in examples/openmp in self-contained directories 
+024  ___ Move examples/openmp to examples/test and put simple useful
+         examples in examples/openmp in self-contained directories
          (no Makefile.defs etc.) (Andrey)
+
+025  ___ Add only OS dependencies to packages. libelf-dev? libc++1
+         Do not add ROCm or CUDA dependencies. These need to be
+         part of the improved messages in 015 task. (Greg)
+
+
+Move this list to Git Issues when things slow down.
