@@ -6,7 +6,7 @@
 
 #pragma omp declare target
 const int bs = 1024;
-const int nb = 512;
+const int nb = 128;
 #pragma omp end declare target
 const int X_VAL = 99;
 const int Y_VAL = 11;
