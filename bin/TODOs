@@ -7,9 +7,9 @@ Note: There is no committment to complete any or all items
 
 Items marked with X below here are done in version 0.3-7
 
-001  ___ Get example simd working (Greg)
+001  _X_ Get example simd working (Greg)
 
-002  ___ Get example assertok_errors working
+002  ___ Get example assertok_errors working (Greg)
 
 003  ___ Get example target-in-other-source working
 
