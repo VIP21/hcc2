@@ -36,7 +36,7 @@ Items marked with X below here are done in version 0.3-7
 
 011  ___ Add the cuda clang runtime for amdgcn (Jan)
 
-012  ___ Remove need for ncurses lib when building set-linkage
+012  _X_ Remove need for ncurses lib when building set-linkage
 
 013  ___ Add printf capability to hc and opencl , need 005 006 (Greg)
 
@@ -52,7 +52,7 @@ Items marked with X below here are done in version 0.3-7
 
 017  ___ Merge with latest yorktown coral repos (Greg)
 
-018  ___ make utilities in hcc2-rt/utils/bin executable with package
+018  _X_ make utilities in hcc2-rt/utils/bin executable with package
          install, needs 007
 
 019  ___ Test on carrizo and good HSA installed kaveris 

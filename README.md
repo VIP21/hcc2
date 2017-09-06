@@ -8,10 +8,6 @@ This is README.md for https:/github.com/ROCM-Developer-Tools/hcc2 .  This is the
 HCC2 is an experimental PROTOTYPE that is intended to support multiple programming models including OpenMP 4.5+, C++ parallel extentions (original HCC), and cuda clang.  It supports offloading to multiple GPU acceleration targets(multi-target).  It also supports different host platforms such as AMD64, PPC64LE, and AARCH64. (multi-platform). 
 The bin directory of this repository contains a README and build scripts needed to build HCC2.
 
-Attention Developers!   Please only update the current development branch.  Except for the base hcc2 repository, do not update the master branch.  Do not put development source code here other than examples and build scripts.  From time to time, we will pull changes to the master from their original location and then update our development branch. Please read the section below describing the different repositories needed for HCC2. 
-
-Attention Users and Developers!  Do not build from the default branch.  You must build from the release branch or the development branch.  See the README in bin/README. 
-
 Attention Users!  Use this repository for issues. Do not put issues in the source code repositories.  Before creating an issue, you may want to see the developers list of TODOs.  See link below.
 
 Table of contents
@@ -21,14 +17,14 @@ Table of contents
 - [Software License Agreement](LICENSE)
 - [Repositories](#Repositories)
 - [Examples](examples)
-- [Install](bin/README)
+- [Install](#Install)
 - [TODOs](bin/TODOs) List of TODOs for this release
 - [Limitations](#Limitations)
 
 ## Copyright and Disclaimer
 
 <A NAME="Copyright">
-Copyright (c) 2016 ADVANCED MICRO DEVICES, INC.  
+Copyright (c) 2017 ADVANCED MICRO DEVICES, INC.
 
 AMD is granting you permission to use this software and documentation (if any) (collectively, the 
 Materials) pursuant to the terms and conditions of the Software License Agreement included with the 
@@ -66,18 +62,30 @@ Materials by the Government constitutes acknowledgement of AMD's proprietary rig
 EXPORT RESTRICTIONS: The Materials may be subject to export restrictions as stated in the 
 Software License Agreement.
 
+## HCC2 Install
+
+<A NAME="Install">
+On Ubuntu 16.04 LTS (xenial), run these commands:
+
+```
+wget http://repo.radeon.com/misc/apt/amd64/xenial/pool/main/h/hcc2/hcc2_0.3-7_amd64.deb
+wget http://repo.radeon.com/misc/apt/amd64/xenial/pool/main/liba/libamdgcn/libamdgcn_0.3-7_all.deb
+sudo dpkg -i hcc2_0.3-7_amd64.deb
+sudo dpkg -i libamdgcn_0.3-7_all.deb
+```
+
 ## HCC2 Repositories
 
 <A NAME="Repositories">
-The hcc2 compiler is an LLVM and CLANG 5 compiler.  It requires a number of repositories to build
+In addition to this base hcc2 repository, these repositories contain development and release source code. 
+The hcc2 compiler is an LLVM and CLANG 6 compiler.  It requires a number of repositories to build from source. 
 
 ### hcc2-clang
 https:/github.com/ROCM-Developer-Tools/hcc2-clang
 ```
 Original: 		https://github.com/radeonOpenCompute/hcc-clang-upgrade  branch:clang_tot_upgrade
-Master Branch :  	master
-Current Release Branch: none
-Current Dev Branch:  	0.3-7
+Master Branch:  	clang_tot_upgrade.   This is a copy of clang_tot_upgrade as of June 27
+This Release Branch:    rel_0.3-7
 ```
 The master branch of this repository is a clone of the HCC development branch clang_tot_upgrade. That clone containes support for the new address space and alloca in address space 5 (local). 
 
@@ -88,20 +96,18 @@ The development and release branches contains significant changes to support Ope
 https:/github.com/ROCM-Developer-Tools/hcc2-llvm
 ```
 Original: 		https://github.com/radeonOpenCompute/llvm   branch:amd-hcc
-Master Branch:  	master 
-Current Release Branch: none
-Current Dev Branch:  	0.3-7
+Master Branch:  	amd-hcc  This is a copy of amd-hcc as of June 27
+This Release Branch:    rel_0.3-7
 ```
-The master branch of this repository is a clone of the HCC development branch amd-hcc taken on June 27, 2017.  It containes the amdgcn backend to support the new address space scheme (Generic-is-zero) and alloca in address space 5 (local).  The only llvm repository updates we need for hcc2 are to accept the osname "cuda" in the triple to trigger the new address space scheme.  Both OpenMP offloading and Cuda Clang languages require the osname "cuda".  The Nvidia CUDA operating environment is only needed when specifying an nvptx64 target. 
+The master branch of this repository is a clone of the HCC development branch amd-hcc taken on various dates when the code for hcc2 is rebased.  It containes the amdgcn backend to support the new address space scheme (Generic-is-zero) and alloca in address space 5 (local).  The only llvm repository updates we need for hcc2 are to accept the osname "cuda" in the triple to trigger the new address space scheme.  Both OpenMP offloading and Cuda Clang languages require the osname "cuda".  The Nvidia CUDA operating environment is only needed when specifying an nvptx64 target. 
 
 
 ### hcc2-lld
 https:/github.com/ROCM-Developer-Tools/hcc2-lld
 ```
 Original: 		https://github.com/radeonOpenCompute/lld   branch:amd-hcc
-Master Branch:  	master This is a copy of amd-hcc as of June 27
-Current Release Branch: none
-Current Dev Branch:  	0.3-7
+Master Branch:  	amd-hcc  This is a copy of amd-hcc as of June 27
+This Release Branch:    rel_0.3-7
 ```
 The master branch of this repository is a clone of the HCC development branch amd-hcc.   There are no changes to lld to support hcc2.  So the develoment branch is identical to the master branch. 
 
@@ -110,12 +116,21 @@ The master branch of this repository is a clone of the HCC development branch am
 https:/github.com/ROCM-Developer-Tools/hcc2-rt
 ```
 Original: 		https://github.com/clang-ykt/openmp branch:master
-Master Branch:  	master This is a copy of original master(ykk) as of June 27)
-Current Release Branch: none
-Current Dev Branch:  	0.3-7
+Master Branch:  	master  This is a copy of original master(ykt) as of June 27)
+This Release Branch:    rel_0.3-7
 ```
 This repository is a clone of the IBM Coral compiler openmp runtime with significant updates to support AMDGCN. 
 
+### ROCm-Device-Libs
+https:/github.com/RadeonOpenCompute/ROCm-Device-Libs
+```
+Original: 		https://github.com/RadeonOpenCompute/ROCm-Device-Libs  branch:rel_0.3-7
+Master Branch:          master
+This Release Branch:    rel_0.3-7
+```
+This is a frozen branch of the ROCm-Device-libs.  It is used to build the libamdgcn package that has LLVM bitcode libraries needed linking before compilation of LLVM IR by the Lightning Compiler.
+
 ## HCC2 Limitations
+
 <A NAME="Limitations">
-Too many to mention at this time.  Hey, this is a prototype.
+There are too many to mention at this time.  Hey, this is a prototype.
