@@ -24,7 +24,7 @@ Table of contents
 ## Copyright and Disclaimer
 
 <A NAME="Copyright">
-Copyright (c) 2016 ADVANCED MICRO DEVICES, INC.  
+Copyright (c) 2017 ADVANCED MICRO DEVICES, INC.
 
 AMD is granting you permission to use this software and documentation (if any) (collectively, the 
 Materials) pursuant to the terms and conditions of the Software License Agreement included with the 
@@ -65,8 +65,7 @@ Software License Agreement.
 ## HCC2 Install
 
 <A NAME="Install">
-
-On Ubuntu 16.04 LTS (xenial), run these commands.
+On Ubuntu 16.04 LTS (xenial), run these commands:
 
 ```
 wget http://repo.radeon.com/misc/apt/amd64/xenial/pool/main/h/hcc2/hcc2_0.3-7_amd64.deb
@@ -77,10 +76,9 @@ sudo dpkg -i libamdgcn_0.3-7_all.deb
 
 ## HCC2 Repositories
 
-In addition to this base hcc2 repository, these repositories contain development and release source code. 
-
 <A NAME="Repositories">
-The hcc2 compiler is an LLVM and CLANG 5 compiler.  It requires a number of repositories to build
+In addition to this base hcc2 repository, these repositories contain development and release source code. 
+The hcc2 compiler is an LLVM and CLANG 6 compiler.  It requires a number of repositories to build from source. 
 
 ### hcc2-clang
 https:/github.com/ROCM-Developer-Tools/hcc2-clang
@@ -121,9 +119,18 @@ Original: 		https://github.com/clang-ykt/openmp branch:master
 Master Branch:  	master  This is a copy of original master(ykt) as of June 27)
 This Release Branch:    rel_0.3-7
 ```
-```
 This repository is a clone of the IBM Coral compiler openmp runtime with significant updates to support AMDGCN. 
 
+### ROCm-Device-Libs
+https:/github.com/RadeonOpenCompute/ROCm-Device-Libs
+```
+Original: 		https://github.com/RadeonOpenCompute/ROCm-Device-Libs  branch:rel_0.3-7
+Master Branch:          master
+This Release Branch:    rel_0.3-7
+```
+This is a frozen branch of the ROCm-Device-libs.  It is used to build the libamdgcn package that has LLVM bitcode libraries needed linking before compilation of LLVM IR by the Lightning Compiler.
+
 ## HCC2 Limitations
+
 <A NAME="Limitations">
-Too many to mention at this time.  Hey, this is a prototype.
+There are too many to mention at this time.  Hey, this is a prototype.
