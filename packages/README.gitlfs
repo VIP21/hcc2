@@ -9,10 +9,10 @@
 # Add packagecloud as a
 curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
 
-# only x86_64 version of git-lfs appears to be packed.  So this command must be on x86_64
+# only x86_64 version of git-lfs appears to be packaged.
 sudo apt-get install git-lfs
 
-# now assuming your hcc2 repos are in $HOME/git/hcc2 , do this 
+# now assuming your hcc2 repos are in $HOME/git/hcc2, do this
 
 cd $HOME/git/hcc2/hcc2/packages
 git checkout rel_0.3-7
