@@ -1,3 +1,4 @@
+# READEME.gitlfs
 
 
 # To download these large package files, you need to install git-lfs. 
@@ -15,3 +16,19 @@ sudo apt-get install git-lfs
 
 cd $HOME/git/hcc2/hcc2/packages
 git checkout rel_0.3-7
+
+# You should see fairly large debian files now. 
+
+# to install hcc2, install these two packages
+# You may have to uninstall earlier versions of libamdgcn, amdllvm, and amdcloc
+
+dpkg -i hcc2_0.3-7_amd64.deb
+dpkg -i libamdgcn_0.3-7_all.deb
+
+#  To test all the examples, do this
+
+cd  $HOME/git/hcc2/examples/openmp
+make 
+make run
+
+# Warning, some examples may fail.  Still developing. 
