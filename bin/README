@@ -31,10 +31,10 @@ The repositories and branches needed by HCC2 are:
 DIRECTORY NAME *                  HCC2 REPOSITORY **       BRANCH
 -------------------------------   ---------------------    ------
 $HOME/git/hcc2/hcc2               %rocdev/hcc2             master ***
-$HOME/git/hcc2/hcc2-clang         %rocdev/hcc2-clang       rel_0.3-7
-$HOME/git/hcc2/hcc2-rt            %rocdev/hcc2-rt          rel_0.3-7
-$HOME/git/hcc2/hcc2-llvm          %rocdev/hcc2-llvm        rel_0.3-7
-$HOME/git/hcc2/hcc2-lld           %rocdev/hcc2-lld         rel_0.3-7
+$HOME/git/hcc2/hcc2-clang         %rocdev/hcc2-clang       rel_0.3-8
+$HOME/git/hcc2/hcc2-rt            %rocdev/hcc2-rt          rel_0.3-8
+$HOME/git/hcc2/hcc2-llvm          %rocdev/hcc2-llvm        rel_0.3-8
+$HOME/git/hcc2/hcc2-lld           %rocdev/hcc2-lld         rel_0.3-8
 $HOME/git/hcc2/rocm-device-libs   %roc/rocm-device-libs    master
 $HOME/git/hcc2/atmi-staging       %roc/atmi-staging        0.4
 $HOME/git/hcc2/cudaclang-rt       %roc/cudaclang-rt        master
