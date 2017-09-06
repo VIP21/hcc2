@@ -1,0 +1,17 @@
+
+
+# To download these large package files, you need to install git-lfs. 
+# These commands will install git-lfs. 
+# This assumes you are on debian or ubuntu Linux distro with apt pacakge manager.
+# You must have root access to your machine to run these commands. 
+
+# Add packagecloud as a
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+
+# only x86_64 version of git-lfs appears to be packed.  So this command must be on x86_64
+sudo apt-get install git-lfs
+
+# now assuming your hcc2 repos are in $HOME/git/hcc2 , do this 
+
+cd $HOME/git/hcc2/hcc2/packages
+git checkout rel_0.3-7
