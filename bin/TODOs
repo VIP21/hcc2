@@ -76,6 +76,9 @@ Items marked with X below here are done in version 0.3-7
 025  ___ Add only OS dependencies to packages. libelf-dev? libc++1
          Do not add ROCm or CUDA dependencies. These need to be
          part of the improved messages in 015 task. (Greg)
-
+         
+026  ___ URGENT!!! Change the submit bug report message from 
+         “PLEASE submit a bug report to http://llvm.org/bugs/” to
+         “PLEASE open an issue in https://github.com/ROCm-Developer-Tools/hcc2”
 
 Move this list to Git Issues when things slow down.
