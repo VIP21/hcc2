@@ -1,9 +1,7 @@
 HCC2 - Examples to demonstrate use of cloc.sh
 ==============================================
 
-The HCC2 compiler supports several accelerated programming models.
-Launching precompiled GPU kernels written in OpenCL or Cudaclang is one of these models.   
-The cloc.sh utility does the offline compilation of cl or cu source files to create native GPU binaries for the GPU kernels defined in the source files. Examples in this directory demonstrate how to use the cloc.sh utility to compile GPU kernels to a GPU binary file.
+The HCC2 compiler supports several accelerated programming models.  Launching precompiled GPU kernels written in OpenCL or Cudaclang is one of these models.  The cloc.sh utility does the offline compilation of cl or cu source files to create native GPU binaries for the GPU kernels defined in the source files. Examples in this directory demonstrate how to use the cloc.sh utility to compile GPU kernels to a GPU binary file.
 
 The host source code in these examples load and execute the binary file using the low level HSA API.  This API expects an HSA code object.  These files typically end in the .hsaco file type. 
 
