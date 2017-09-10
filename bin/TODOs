@@ -11,14 +11,15 @@ Items marked with X below here are done in version 0.3-7
 
 002  ___ Get example assertok_errors working (Greg)
 
-003  ___ Get example target-in-other-source working
+003  ___ Get example target-in-other-source working (Greg)
 
-004  ___ Add cudaclang examples dir and example.  Nvidia only for now
+004  _X_ Add cudaclang examples dir and example.  Nvidia only for now
          Greg promoted the fixup-fatbin clang tool written by
          Andrey so gcn examples can build. I also cleaned
          up the cudaclang makefile and gave to Jan for testing. (Jan)
 
 005  ___ Add hc examples dir and an hc example.  amdgcn only for now
+         (Greg)
 
 006  _X_ Get cloc.sh utility working. The utility is now in hcc2-rt
          Examples for compiling OpenCL and Cuda kernels are in 
@@ -28,42 +29,43 @@ Items marked with X below here are done in version 0.3-7
          with versions for amd64, ppc64el, and aarch64
          Can we make libamdgcn a noarch pachage? (Greg)
 
-008  ___ Fix driver to allow for multiple offload targets
+008  ___ Fix driver to allow for multiple offload targets (Greg)
 
-009  ___ Move vprintfl to atmi device library
+009  ___ Move vprintfl to atmi 0.4 device library (Guansong)
 
-010  ___ Get a public version of the ATMI source code available
+010  ___ Get a public version of the ATMI source code available (Ashwin)
 
 011  ___ Add the cuda clang runtime for amdgcn (Jan)
 
-012  ___ Remove need for ncurses lib when building set-linkage
+012  _X_ Remove need for ncurses lib when building set-linkage
 
 013  ___ Add printf capability to hc and opencl , need 005 006 (Greg)
 
 014  ___ Move to new rocm device lib atomics for atmi services
          atomic_load_explicit(...)
          atomic_compare_exchange_strong_explicit(...)
-         needs 009
+         needs 009 (Guansong)
 
-015  ___ Improve fail message (in driver) if libamdgcn not installed 
-         with a gfx target, or cuda not installed with sm_ target
+015  ___ Create a fail message (in driver) if libamdgcn not installed 
+         when --cuda-gpu-arch=gfxXXX. Also, create a fail message when 
+         --cuda-gpu-arch=sm_XXX and cuda is not installed. (Guansong)
 
 016  ___ Reverse Makefile warnings for LIBAMDGCN and HCC2 env variables (Andrey)
 
 017  ___ Merge with latest yorktown coral repos (Greg)
 
-018  ___ make utilities in hcc2-rt/utils/bin executable with package
-         install, needs 007
+018  _X_ make utilities in hcc2-rt/utils/bin executable with package
+         install, needs 007 
 
-019  ___ Test on carrizo and good HSA installed kaveris 
+019  ___ Test on carrizo and good HSA installed kaveris  
 
-020  ___ Add autodiscover of subarch/gpu for both amdgcn and nvptx
+020  ___ Add autodiscover of subarch/gpu for both amdgcn and nvptx (Greg)
 
 021  ___ Make printf more robust, especially with large blocks 
          where all lanes are active. Create and use a new atmi service
          for wvprintf which works for an entire wavefront. 
          This should also fix examples that fail when they are built 
-         with OFFLOAD_DEBUG=1 turned on. 
+         with OFFLOAD_DEBUG=1 turned on.  (Greg)
 
 022  ___ Run omp test suite (Andrey)
 
@@ -80,5 +82,12 @@ Items marked with X below here are done in version 0.3-7
 026  ___ URGENT!!! Change the submit bug report message from 
          “PLEASE submit a bug report to http://llvm.org/bugs/” to
          “PLEASE open an issue in https://github.com/ROCm-Developer-Tools/hcc2”
+         (Guansong) 
+
+027  ___ Replace the use of macro GPUCC_AMDGC in libomptarget/deviceRTLs/amdgcn
+         with __AMDGCN__.  Do not set __AMDGCN__ in the cmake file.  This is set 
+         automatically by clang in getTargetDefines in the file 
+         hcc2-clang/lib/Basic/Targets/AMDGPU.cpp. (Guangsong)
+
 
 Move this list to Git Issues when things slow down.
