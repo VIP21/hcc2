@@ -1,4 +1,4 @@
-HCC2 - V 0.3-7
+HCC2 - V 0.3-8
 ==============
 
 hcc2:  Heterogeneous Compiler Collection (Version 2). 
@@ -77,7 +77,7 @@ https:/github.com/ROCM-Developer-Tools/hcc2-clang
 Original: 		https://github.com/radeonOpenCompute/hcc-clang-upgrade  branch:clang_tot_upgrade
 Master Branch :  	master
 Current Release Branch: none
-Current Dev Branch:  	0.3-7
+Current Dev Branch:  	0.3-8
 ```
 The master branch of this repository is a clone of the HCC development branch clang_tot_upgrade. That clone containes support for the new address space and alloca in address space 5 (local). 
 
@@ -90,7 +90,7 @@ https:/github.com/ROCM-Developer-Tools/hcc2-llvm
 Original: 		https://github.com/radeonOpenCompute/llvm   branch:amd-hcc
 Master Branch:  	master 
 Current Release Branch: none
-Current Dev Branch:  	0.3-7
+Current Dev Branch:  	0.3-8
 ```
 The master branch of this repository is a clone of the HCC development branch amd-hcc taken on June 27, 2017.  It containes the amdgcn backend to support the new address space scheme (Generic-is-zero) and alloca in address space 5 (local).  The only llvm repository updates we need for hcc2 are to accept the osname "cuda" in the triple to trigger the new address space scheme.  Both OpenMP offloading and Cuda Clang languages require the osname "cuda".  The Nvidia CUDA operating environment is only needed when specifying an nvptx64 target. 
 
@@ -101,7 +101,7 @@ https:/github.com/ROCM-Developer-Tools/hcc2-lld
 Original: 		https://github.com/radeonOpenCompute/lld   branch:amd-hcc
 Master Branch:  	master This is a copy of amd-hcc as of June 27
 Current Release Branch: none
-Current Dev Branch:  	0.3-7
+Current Dev Branch:  	0.3-8
 ```
 The master branch of this repository is a clone of the HCC development branch amd-hcc.   There are no changes to lld to support hcc2.  So the develoment branch is identical to the master branch. 
 
@@ -112,7 +112,7 @@ https:/github.com/ROCM-Developer-Tools/hcc2-rt
 Original: 		https://github.com/clang-ykt/openmp branch:master
 Master Branch:  	master This is a copy of original master(ykk) as of June 27)
 Current Release Branch: none
-Current Dev Branch:  	0.3-7
+Current Dev Branch:  	0.3-8
 ```
 This repository is a clone of the IBM Coral compiler openmp runtime with significant updates to support AMDGCN. 
 
