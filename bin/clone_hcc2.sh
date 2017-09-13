@@ -77,7 +77,7 @@ repo_web_location=$GITROCDEV
 basedir=$HCC2_REPOS
 
 reponame="hcc2"
-COBRANCH="rel_$HCC2_VERSION_STRING"
+COBRANCH="master"
 clone_or_pull
 
 reponame="hcc2-rt"
@@ -103,7 +103,7 @@ repo_web_location=$GITROC
 # This repo is used to build /opt/rocm/libamdgcn
 basedir=$ROC_REPOS
 reponame="rocm-device-libs"
-COBRANCH="rel_$HCC2_VERSION_STRING"
+COBRANCH="master"
 clone_or_pull
 
 # This is the ATMI repo for ATMI 0.4 in development
