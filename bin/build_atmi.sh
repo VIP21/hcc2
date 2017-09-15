@@ -36,7 +36,7 @@ function getdname(){
    echo $__DIRN
 }
 
-GFXLIST=${GFXLIST:-"gfx700 gfx701 gfx800 gfx801 gfx803 gfx900 gfx901"}
+GFXLIST=${GFXLIST:-gfx700;gfx701;gfx800;gfx801;gfx803;gfx900;gfx901}
 export GFXLIST
 
 thisdir=$(getdname $0)
