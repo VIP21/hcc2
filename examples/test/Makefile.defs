@@ -75,11 +75,20 @@ OMPRT_INC    = $(OMPRT)/include
 endif
 
 # Compilation and link require at LIBRARY_PATH
+ifeq ($(findstring gfx,$(TARGET)),)
 _LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib:$(LIBAMDGCN)/$(GFXNAME)/lib
+else
+_LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(LIBAMDGCN)/$(GFXNAME)/lib
+endif
+
 SETENV   = env LIBRARY_PATH=$(_LIBPATH) PATH=$(PATH):$(HCC2)/bin
 
 # The ATMI and LOCH libraries are needed for dynamic runtime linking.
+ifeq ($(findstring gfx,$(TARGET)),)
 _LDPATH  = $(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib
+else
+_LDPATH  = $(OMPRT_LIB)
+endif
 RUNENV   = env LD_LIBRARY_PATH=$(_LDPATH):$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
 
 ifeq ($(NOOPT),1)
@@ -93,7 +102,11 @@ CFLAGS += -save-temps
 endif
 
 OMP_FLAGS = -target $(HOST_TARGET) -fopenmp $(TARGET)
+ifeq ($(findstring gfx,$(TARGET)),)
 LINK_FLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC) -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart
+else
+LINK_FLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC)
+endif
 
 ifeq ($(TEMPS), 1)
 OMP_FLAGS += -save-temps
