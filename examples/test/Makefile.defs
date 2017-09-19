@@ -82,7 +82,11 @@ SETENV   = env LIBRARY_PATH=$(_LIBPATH) PATH=$(PATH):$(HCC2)/bin
 _LDPATH  = $(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib
 RUNENV   = env LD_LIBRARY_PATH=$(_LDPATH):$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
 
+ifeq ($(NOOPT),1)
+CFLAGS = -I$(OMPRT_INC) $(EXTRA_CFLAGS)
+else
 CFLAGS = -O2 -I$(OMPRT_INC) $(EXTRA_CFLAGS)
+endif
 
 ifeq ($(TEMPS), 1)
 CFLAGS += -save-temps
@@ -90,3 +94,8 @@ endif
 
 OMP_FLAGS = -target $(HOST_TARGET) -fopenmp $(TARGET)
 LINK_FLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC) -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart
+
+ifeq ($(TEMPS), 1)
+OMP_FLAGS += -save-temps
+endif
+
