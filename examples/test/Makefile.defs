@@ -76,7 +76,7 @@ endif
 
 # Compilation and link require at LIBRARY_PATH
 ifeq ($(findstring gfx,$(TARGET)),)
-_LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib:$(LIBAMDGCN)/$(GFXNAME)/lib
+_LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib
 else
 _LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(LIBAMDGCN)/$(GFXNAME)/lib
 endif
