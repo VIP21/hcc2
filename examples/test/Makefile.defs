@@ -16,10 +16,22 @@ ifeq ($(OMPRT),)
 else
   $(info OMPRT environment variable using $(OMPRT))
 endif
+ifeq ($(ATMI),)
+  ifneq ("$(wildcard $(HCC2)/include/atmi.h)","")
+    $(info    WARNING! ATMI environment variable not set, using HCC2 instead)
+    ATMI = $(HCC2)
+  else
+    $(info    WARNING! ATMI environment variable not set, using /opt/rocm/atmi)
+    ATMI = /opt/rocm/atmi
+  endif
+else
+  $(info ATMI environment variable using $(ATMI))
+endif
 
 ifeq ($(UNAMEP),)
   UNAMEP=x86_64
 endif
+
 ifeq ($(HOST_TARGET),)
   HOST_TARGET = x86_64-pc-linux-gnu
 endif
@@ -27,16 +39,19 @@ ifeq ($(DEVICE_TARGET),)
   DEVICE_TARGET = nvptx64-nvidia-cuda
   DEVICE_TARGET = amdgcn--cuda
 endif
+
 ifeq ($(SMNAME),)
   SMNAME = sm_30
 endif
 ifeq ($(GFXNAME),)
   GFXNAME = gfx803
 endif
+
 ifeq ($(DEVICE_ARCH),)
   DEVICE_ARCH = $(SMNAME)
   DEVICE_ARCH = $(GFXNAME)
 endif
+
 ifeq ($(TARGET),)
   TARGET  =  -fopenmp-targets=$(DEVICE_TARGET) --cuda-gpu-arch=$(DEVICE_ARCH)
 endif
@@ -46,6 +61,7 @@ ifeq ($(OFFLOAD_DEBUG),1)
   DEBUG   = -debug
   SET_DEVICE_DEBUG = DEVICE_DEBUG=1
 endif
+
 ifeq ($(VERBOSE),1)
   $(info    Compilation VERBOSE Mode ON)
   VERBOSE = -v
@@ -56,29 +72,31 @@ CUDA      = /usr/local/cuda
 RUNPROF =  $(CUDA)/bin/nvprof 
 RUNPROF =  
 
-# Check if the OMPRT is a local build
-ifneq ("$(wildcard $(OMPRT)/runtime)","")
-OMPRT_INC    = $(OMPRT)/runtime/src
+# Check if the OMPRT is an install or local build
+ifneq ("$(wildcard $(OMPRT)/include)","")
+  OMPRT_INC    = $(OMPRT)/include
+  OMPRT_LIB    = $(OMPRT)/lib$(DEBUG)
+  OMPRT_LIB_BC = $(OMPRT)/lib$(DEBUG)/libdevice
+else
+  OMPRT_INC    = $(OMPRT)/runtime/src
+  OMPRT_LIB    = $(OMPRT)/libomptarget/plugins/$(UNAMEP):$(OMPRT)/libomptarget/plugins/hsa:$(OMPRT)/libomptarget/plugins/cuda:$(OMPRT)/libomptarget:$(OMPRT)/runtime/src
+  OMPRT_LIB_BC = $(OMPRT)/libomptarget/deviceRTLs/amdgcn:$(OMPRT)/libomptarget/deviceRTLs/nvptx:$(OMPRT)/cugcn/libdevice
 endif
 
-# Check if the OMPRT is a local build
-ifneq ("$(wildcard $(OMPRT)/libomptarget)","")
-OMPRT_LIB    = $(OMPRT)/libomptarget/plugins/x86_64:$(OMPRT)/libomptarget/plugins/hsa:$(OMPRT)/libomptarget/plugins/cuda:$(OMPRT)/libomptarget:$(OMPRT)/runtime/src
-OMPRT_LIB_BC = $(OMPRT)/libomptarget/deviceRTLs/amdgcn:$(OMPRT)/libomptarget/deviceRTLs/nvptx:$(OMPRT)/cugcn/libdevice
-endif
-
-# OMPRT is not a local build
-ifeq ($(OMPRT_INC),)
-OMPRT_LIB    = $(OMPRT)/lib$(DEBUG)
-OMPRT_LIB_BC = $(OMPRT)/lib$(DEBUG)/libdevice
-OMPRT_INC    = $(OMPRT)/include
+# Check if the ATMI is an install or local build
+ifneq ("$(wildcard $(ATMI)/include)","")
+  ATMI_LIB    = $(ATMI)/lib$(DEBUG)
+  ATMI_LIB_BC = $(ATMI)/lib$(DEBUG)/libdevice
+else
+  ATMI_LIB    = $(ATMI)/runtime/core
+  ATMI_LIB_BC = $(ATMI)/device_runtime
 endif
 
 # Compilation and link require at LIBRARY_PATH
 ifeq ($(findstring gfx,$(TARGET)),)
 _LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib
 else
-_LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(LIBAMDGCN)/$(GFXNAME)/lib
+_LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(ATMI_LIB_BC):$(ATMI_LIB):$(LIBAMDGCN)/$(GFXNAME)/lib
 endif
 
 SETENV   = env LIBRARY_PATH=$(_LIBPATH) PATH=$(PATH):$(HCC2)/bin
@@ -87,7 +105,7 @@ SETENV   = env LIBRARY_PATH=$(_LIBPATH) PATH=$(PATH):$(HCC2)/bin
 ifeq ($(findstring gfx,$(TARGET)),)
 _LDPATH  = $(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib
 else
-_LDPATH  = $(OMPRT_LIB)
+_LDPATH  = $(OMPRT_LIB):$(ATMI_LIB)
 endif
 RUNENV   = env LD_LIBRARY_PATH=$(_LDPATH):$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
 
@@ -102,13 +120,14 @@ CFLAGS += -save-temps
 endif
 
 OMP_FLAGS = -target $(HOST_TARGET) -fopenmp $(TARGET)
+
+ifeq ($(TEMPS), 1)
+OMP_FLAGS += -save-temps
+endif
+
 ifeq ($(findstring gfx,$(TARGET)),)
 LINK_FLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC) -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart
 else
 LINK_FLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC)
-endif
-
-ifeq ($(TEMPS), 1)
-OMP_FLAGS += -save-temps
 endif
 
