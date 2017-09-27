@@ -32,7 +32,7 @@ Items marked with X below here are done in version 0.3-7
 
 008  ___ Fix driver to allow for multiple offload targets (Greg) (0.4-1)
 
-009  ___ Move vprintfl to atmi 0.4 device library (Guansong)
+009  _X_ Move vprintfl to atmi 0.4 device library (Guansong)
          (0.3-9)
 
 010  ___ Get a public version of the ATMI source code available (Ashwin)
@@ -52,11 +52,12 @@ Items marked with X below here are done in version 0.3-7
          atomic_load_explicit(...)
          atomic_compare_exchange_strong_explicit(...)
          needs 009 (Guansong)
-         (0.3-9)
+         (0.4-X)
 
 015  ___ Create a fail message (in driver) if libamdgcn not installed 
          when --cuda-gpu-arch=gfxXXX. Also, create a fail message when 
          --cuda-gpu-arch=sm_XXX and cuda is not installed. (Guansong)
+         (0.4-X)
 
 016  ___ Reverse Makefile warnings for LIBAMDGCN and HCC2 env variables (Andrey)
          (0.3-9)
@@ -105,7 +106,7 @@ Items marked with X below here are done in version 0.3-7
 027  _X_ Replace the use of macro GPUCC_AMDGC in libomptarget/deviceRTLs/amdgcn
          with __AMDGCN__.  Do not set __AMDGCN__ in the cmake file.  This is set 
          automatically by clang in getTargetDefines in the file 
-         hcc2-clang/lib/Basic/Targets/AMDGPU.cpp. (Guangsong)
+         hcc2-clang/lib/Basic/Targets/AMDGPU.cpp. (Guansong)
 
 
 Move this list to Git Issues when things slow down.
