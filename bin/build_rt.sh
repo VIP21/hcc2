@@ -1,4 +1,5 @@
-# 
+#!/bin/bash
+#
 #  build_rt.sh:  Script to build the HCC2 runtime libraries and debug libraries.  
 #                This script will install in location defined by HCC2 env variable
 #

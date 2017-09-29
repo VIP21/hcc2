@@ -1,4 +1,5 @@
-# 
+#!/bin/bash
+#
 #  build_atmi.sh:  Script to build the HCC2 atmi libraries and debug libraries.  
 #
 # Do not change these values. If you set the environment variables these defaults will changed to 
