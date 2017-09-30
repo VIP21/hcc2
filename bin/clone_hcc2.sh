@@ -38,7 +38,7 @@ thisdir=$(getdname $0)
 if [ -f $thisdir/HCC2_VERSION_STRING ] ; then 
    HCC2_VERSION_STRING=`cat $thisdir/HCC2_VERSION_STRING`
 else 
-   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.3-6"}
+   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.3-9"}
 fi
 export HCC2_VERSION_STRING
 
@@ -48,15 +48,20 @@ echo
 if [ -d $repodirname  ] ; then 
    echo "--- Pulling updates to existing dir $repodirname ----"
    echo "    We assume this came from an earlier clone of $repo_web_location/$reponame"
-   echo "cd $repodirname ; git checkout $COBRANCH"
    cd $repodirname
    if [ "$STASH_BEFORE_PULL" == "YES" ] ; then
       git stash -u
    fi
-   echo git checkout $COBRANCH
-   git checkout $COBRANCH
-   echo "cd $repodirname ; git pull "
-   git pull 
+   if [ "$reponame" == "rocm-device-libs" ] ; then
+      # This is only for release 0.3.9 
+      echo git checkout  4b1b0669164ee8167eedd1fd453c445460c0a190
+      git checkout  4b1b0669164ee8167eedd1fd453c445460c0a190
+   else
+      echo "cd $repodirname ; git checkout $COBRANCH"
+      git checkout $COBRANCH
+      echo "cd $repodirname ; git pull "
+      git pull 
+   fi
 else 
    echo --- NEW CLONE of repo $reponame to $repodirname ----
    cd $basedir
