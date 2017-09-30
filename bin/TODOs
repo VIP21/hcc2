@@ -5,13 +5,11 @@ Please mark an item with an X when they are done.
 Note: There is no committment to complete any or all items
       on this list.
 
-Items marked with X below here are done in version 0.3-7
-
 001  _X_ Get example simd working (Greg)
 
-002  ___ Get example assertok_errors working (Greg)
+002  _X_ Get example assertok_errors working (Greg)
 
-003  ___ Get example target-in-other-source working (Greg)
+003  _X_ Get example target-in-other-source working (Greg)
 
 004  _X_ Add cudaclang examples dir and example.  Nvidia only for now
          Greg promoted the fixup-fatbin clang tool written by
@@ -48,11 +46,11 @@ Items marked with X below here are done in version 0.3-7
 013  ___ Add printf capability to hc and opencl , need 005 006 (Greg)
          (0.4-X)
 
-014  ___ Move to new rocm device lib atomics for atmi services
+014  _X_ Move to new rocm device lib atomics for atmi services
          atomic_load_explicit(...)
          atomic_compare_exchange_strong_explicit(...)
          needs 009 (Guansong)
-         (0.4-X)
+         (0.3-9)
 
 015  ___ Create a fail message (in driver) if libamdgcn not installed 
          when --cuda-gpu-arch=gfxXXX. Also, create a fail message when 
@@ -107,6 +105,14 @@ Items marked with X below here are done in version 0.3-7
          with __AMDGCN__.  Do not set __AMDGCN__ in the cmake file.  This is set 
          automatically by clang in getTargetDefines in the file 
          hcc2-clang/lib/Basic/Targets/AMDGPU.cpp. (Guansong)
+
+028  ___ Fix build of libamdgcn.  Unresolved refs to __opencl_atomic ... _4
+         in the opencl.bc (Guansong)
+
+029 ___  Switch from using git branches to git tag for releases. We should 
+         then be able to attach full deb and rpms to the release without 
+         the need for gitlfs as we currently do in packages directory. 
+         (Andrey)
 
 
 Move this list to Git Issues when things slow down.

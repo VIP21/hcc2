@@ -52,16 +52,10 @@ if [ -d $repodirname  ] ; then
    if [ "$STASH_BEFORE_PULL" == "YES" ] ; then
       git stash -u
    fi
-   if [ "$reponame" == "rocm-device-libs" ] ; then
-      # This is only for release 0.3.9 
-      echo git checkout  4b1b0669164ee8167eedd1fd453c445460c0a190
-      git checkout  4b1b0669164ee8167eedd1fd453c445460c0a190
-   else
-      echo "cd $repodirname ; git checkout $COBRANCH"
-      git checkout $COBRANCH
-      echo "cd $repodirname ; git pull "
-      git pull 
-   fi
+   echo "cd $repodirname ; git checkout $COBRANCH"
+   git checkout $COBRANCH
+   echo "git pull "
+   git pull 
 else 
    echo --- NEW CLONE of repo $reponame to $repodirname ----
    cd $basedir
@@ -108,8 +102,8 @@ repo_web_location=$GITROC
 # This repo is used to build /opt/rocm/libamdgcn
 basedir=$ROC_REPOS
 reponame="rocm-device-libs"
-COBRANCH="master"
-clone_or_pull
+COBRANCH="rel_$HCC2_VERSION_STRING"
+clone_or_pull 
 
 # This is the ATMI repo for ATMI 0.4 in development
 basedir=$ATMI_REPOS
