@@ -3,9 +3,6 @@ HCC2 - V 0.3-9
 
 hcc2:  Heterogeneous Compiler Collection (Version 2). 
 
-WARNING: THIS IS 0.3-9 DEVELOPMENT AREA. The last released version is 0.3-8. Please GOTO https://github.com/ROCm-Developer-Tools/hcc2/tree/rel_0.3-8 to get the latest release. 
-
-
 This is README.md for https:/github.com/ROCM-Developer-Tools/hcc2 .  This is the base repository for HCC2,  Use this for issues, documentation, packaging, examples, build.  
 
 HCC2 is an experimental PROTOTYPE that is intended to support multiple programming models including OpenMP 4.5+, C++ parallel extentions (original HCC), and cuda clang.  It supports offloading to multiple GPU acceleration targets(multi-target).  It also supports different host platforms such as AMD64, PPC64LE, and AARCH64. (multi-platform). 
@@ -71,10 +68,19 @@ Software License Agreement.
 On Ubuntu 16.04 LTS (xenial), run these commands:
 
 ```
-wget http://repo.radeon.com/misc/apt/amd64/xenial/pool/main/h/hcc2/hcc2_0.3-9_amd64.deb
-wget http://repo.radeon.com/misc/apt/amd64/xenial/pool/main/liba/libamdgcn/libamdgcn_0.3-9_all.deb
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.3-9/hcc2_0.3-9_amd64.deb
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.3-9/libamdgcn_0.3-9_all.deb
 sudo dpkg -i hcc2_0.3-9_amd64.deb
 sudo dpkg -i libamdgcn_0.3-9_all.deb
+```
+
+For rpm based Linux system use rpm packages and run the following commands:
+
+```
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.3-9/hcc2-0.3-9.x86_64.rpm
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.3-9/libamdgcn-0.3-9.noarch.rpm
+sudo rpm -i hcc2-0.3-9.x86_64.rpm
+sudo rpm -i libamdgcn-0.3-9.noarch.rpm
 ```
 
 Warning, the above wget commands will only work AFTER the release has been packaged. If the wget fails, try another release. 
