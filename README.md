@@ -74,7 +74,7 @@ sudo dpkg -i hcc2_0.3-9_amd64.deb
 sudo dpkg -i libamdgcn_0.3-9_all.deb
 ```
 
-For rpm based Linux system, run the following commands:
+For rpm-based Linux systems, run the following commands:
 
 ```
 wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.3-9/hcc2-0.3-9.x86_64.rpm
@@ -82,8 +82,6 @@ wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.3-9/li
 sudo rpm -i hcc2-0.3-9.x86_64.rpm
 sudo rpm -i libamdgcn-0.3-9.noarch.rpm
 ```
-
-Warning, the above wget commands will only work AFTER the release has been packaged. If the wget fails, try another release. 
 
 ## HCC2 Limitations
 
