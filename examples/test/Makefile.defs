@@ -1,31 +1,27 @@
 ifeq ($(LIBAMDGCN),)
-  $(info    WARNING! LIBAMDGCN environment variable not set, using /opt/rocm/libamdgcn)
   LIBAMDGCN = /opt/rocm/libamdgcn
 else
-  $(info LIBAMDGCN environment variable using $(LIBAMDGCN) )
+  $(info    WARNING! LIBAMDGCN environment variable is set, using $(LIBAMDGCN))
 endif
 ifeq ($(HCC2),)
-  $(info    WARNING! HCC2 environment variable not set, using /opt/rocm/hcc2)
   HCC2 = /opt/rocm/hcc2
 else
-  $(info HCC2 environment variable using $(HCC2))
+  $(info    WARNING! HCC2 environment variable is set, using $(HCC2))
 endif
 ifeq ($(OMPRT),)
-  $(info    WARNING! OMPRT environment variable not set, using HCC2 instead)
   OMPRT = $(HCC2)
 else
-  $(info OMPRT environment variable using $(OMPRT))
+  $(info    WARNING! OMPRT environment is set, using $(OMPRT))
 endif
 ifeq ($(ATMI),)
   ifneq ("$(wildcard $(HCC2)/include/atmi.h)","")
-    $(info    WARNING! ATMI environment variable not set, using HCC2 instead)
     ATMI = $(HCC2)
   else
-    $(info    WARNING! ATMI environment variable not set, using /opt/rocm/atmi)
+    $(info    WARNING! No $(HCC2)/include/atmi.h and ATMI environment variable isn't set, using /opt/rocm/atmi)
     ATMI = /opt/rocm/atmi
   endif
 else
-  $(info ATMI environment variable using $(ATMI))
+  $(info    WARNING! ATMI environment variable is set, using $(ATMI))
 endif
 
 ifeq ($(UNAMEP),)

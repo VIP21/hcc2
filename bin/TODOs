@@ -57,7 +57,7 @@ Note: There is no committment to complete any or all items
          --cuda-gpu-arch=sm_XXX and cuda is not installed. (Guansong)
          (0.4-X)
 
-016  ___ Reverse Makefile warnings for LIBAMDGCN and HCC2 env variables (Andrey)
+016  _X_ Reverse Makefile warnings for LIBAMDGCN and HCC2 env variables (Andrey)
          (0.3-9)
 
 017  ___ Merge with latest yorktown coral repos (Greg)
@@ -95,7 +95,7 @@ Note: There is no committment to complete any or all items
          Do not add ROCm or CUDA dependencies. These need to be
          part of the improved messages in 015 task. (Greg)
          (0.4-X)
-         
+
 026  _X_ URGENT!!! Change the submit bug report message from 
          “PLEASE submit a bug report to http://llvm.org/bugs/” to
          “PLEASE open an issue in https://github.com/ROCm-Developer-Tools/hcc2”
