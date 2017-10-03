@@ -83,6 +83,8 @@ sudo rpm -i hcc2-0.3-9.x86_64.rpm
 sudo rpm -i libamdgcn-0.3-9.noarch.rpm
 ```
 
+Build and install from sources is possible, though due to many different repos involved it is complicated a little. For details see corresponding [README](bin/README).
+
 ## HCC2 Limitations
 
 <A NAME="Limitations">
