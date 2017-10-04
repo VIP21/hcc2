@@ -70,7 +70,7 @@ PROC=`uname -p`
 GCC=`which gcc`
 GCPLUSCPLUS=`which g++`
 if [ "$PROC" == "ppc64le" ] ; then 
-   COMPILERS="-DCMAKE_C_COMPILER=/usr/bin/gcc-5 -DCMAKE_CXX_COMPILER=/usr/bin/g++-5"
+   COMPILERS="-DCMAKE_C_COMPILER=/usr/bin/gcc-6 -DCMAKE_CXX_COMPILER=/usr/bin/g++-6"
 else
    COMPILERS="-DCMAKE_C_COMPILER=$GCC -DCMAKE_CXX_COMPILER=$GCPLUSCPLUS"
 fi
