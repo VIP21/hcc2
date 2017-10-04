@@ -13,7 +13,7 @@ int main (void)
     #pragma omp master
     a = 0;
 
-    // To avoid race conditions, add a barrier here.
+    #pragma omp barrier
 
     #pragma omp for reduction(+:a)
     for (i = 0; i < N; i++) {
