@@ -82,6 +82,16 @@ fi
 WEBSITE="https\:\/\/github.com\/RadeonOpenCompute"
 BUILDTYPE="Release"
 
+CUDAH=`find /usr/local/cuda/targets -type f -name "cuda.h" 2>/dev/null`
+if [ "$CUDAH" == "" ] ; then
+   echo
+   echo "ERROR:  THE cuda.h FILE WAS NOT FOUND"
+   echo "        A CUDA installation is necessary to build libomptarget deviceRTLs"
+   echo "        Please install CUDA to build hcc2-rt"
+   echo
+   exit 1
+fi
+
 if [ -f /usr/bin/nvidia-smi ] ; then 
    GPU=`/usr/bin/nvidia-smi -L | grep -m1 GPU | cut -d: -f2 | cut -d"(" -f1`
    if [ "$GPU" == " Quadro K4000 " ] ; then 
