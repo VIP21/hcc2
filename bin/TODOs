@@ -86,7 +86,7 @@ Note: There is no committment to complete any or all items
 023  ___ Test SpecAccel benchmark (Andrey)
          (0.4-X)
 
-024  ___ Move examples/openmp to examples/test and put simple useful
+024  _X_ Move examples/openmp to examples/test and put simple useful
          examples in examples/openmp in self-contained directories
          (no Makefile.defs etc.) (Andrey)
          (0.3-9)
