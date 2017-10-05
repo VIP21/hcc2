@@ -1,12 +1,11 @@
-// // From: https://github.com/OpenMP/Examples/blob/master/sources/Example_reduction.3.c
 #include <stdio.h>
 
-#define N   1000
+#define N   1000000ll
 #define SUM (N * (N-1)/2)
 
 int main (void)
 {
-  int a, i;
+  long long a, i;
 
   #pragma omp target parallel shared(a) private(i)
   {
@@ -24,9 +23,9 @@ int main (void)
     #pragma omp single
     {
       if (a != SUM)
-        printf ("Incorrect result = %d, expected = %d!\n", a, SUM);
+        printf ("Incorrect result = %lld, expected = %lld!\n", a, SUM);
       else
-        printf ("The result is correct = %d!\n", a);
+        printf ("The result is correct = %lld!\n", a);
     }
   }
 

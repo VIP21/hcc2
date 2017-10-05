@@ -5,13 +5,12 @@
 // 
 
 #include <stdio.h>
-//#include <unistd.h>
 
 void vmul(int*a, int*b, int*c, int N);
 void vsum(int*a, int*b, int*c, int N);
 
 int main(){
-   const int N = 100000;    
+   const int N = 100000;
    int a[N],b[N],p[N],pcheck[N],s[N],scheck[N];
    int flag=-1;
    for(int i=0;i<N;i++) {

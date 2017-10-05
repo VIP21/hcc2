@@ -3,7 +3,7 @@
 
 int main()
 {
-  int N = 10;
+  int N = 100000;
 
   int a[N];
   int b[N];
@@ -16,7 +16,7 @@ int main()
   for (i=0; i<N; i++)
     b[i]=i;
 
-#pragma omp target parallel for
+#pragma omp target parallel for map(from: a[0:N]) map(to: b[0:N])
   {
     for (int j = 0; j< N; j++)
       a[j]=b[j];
