@@ -80,7 +80,6 @@ if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then
 fi
 
 WEBSITE="https\:\/\/github.com\/RadeonOpenCompute"
-BUILDTYPE="Release"
 
 CUDAH=`find /usr/local/cuda/targets -type f -name "cuda.h" 2>/dev/null`
 if [ "$CUDAH" == "" ] ; then
@@ -91,6 +90,8 @@ if [ "$CUDAH" == "" ] ; then
    echo
    exit 1
 fi
+# I don't see now nvcc is called, but this eliminates the deprecated warnings
+export CUDAFE_FLAGS="-w"
 
 if [ -f /usr/bin/nvidia-smi ] ; then 
    GPU=`/usr/bin/nvidia-smi -L | grep -m1 GPU | cut -d: -f2 | cut -d"(" -f1`
@@ -131,6 +132,8 @@ if [ ! -z `which "getconf"` ]; then
     NUM_THREADS=$(`which "getconf"` _NPROCESSORS_ONLN)
 fi
 
+COMMON_CMAKE_OPTS="-DCMAKE_C_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_CXX_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_COMPILER=$HCC2/bin/clang -DCMAKE_CXX_COMPILER=$HCC2/bin/clang++ -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DLIBOMPTARGET_NVPTX_ENABLE_BCLIB=1 -DLIBOMPTARGET_NVPTX_CUDA_COMPILER=$HCC2/bin/clang++"
+
 if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then 
 
    echo " " 
@@ -143,10 +146,9 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
       rsync -av --exclude ".git" $HCC2RT_REPOS/$RT_REPO_NAME/ $BUILD_DIR/$RT_REPO_NAME/ 
    fi
 
-      BUILDTYPE="Release"
       echo rm -rf $BUILD_DIR/build_lib
       rm -rf $BUILD_DIR/build_lib
-      MYCMAKEOPTS="-DCMAKE_C_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_CXX_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_BUILD_TYPE=$BUILDTYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_COMPILER=$HCC2/bin/clang -DCMAKE_CXX_COMPILER=$HCC2/bin/clang++ -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU "
+      MYCMAKEOPTS="$COMMON_CMAKE_OPTS -DCMAKE_BUILD_TYPE=Release"
       mkdir -p $BUILD_DIR/build_lib
       cd $BUILD_DIR/build_lib
       echo " -----Running openmp cmake ---- " 
@@ -158,11 +160,10 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
          exit 1
       fi
 
-      BUILDTYPE="Debug"
       echo rm -rf $BUILD_DIR/build_debug
       rm -rf $BUILD_DIR/build_debug
       export OMPTARGET_DEBUG=1
-      MYCMAKEOPTS="-DCMAKE_C_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_CXX_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_BUILD_TYPE=$BUILDTYPE -DLIBOMPTARGET_NVPTX_DEBUG=1 -DLIBOMPTARGET_AMDGCN_DEBUG=1 -DOMPTARGET_DEBUG=1 -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_COMPILER=$HCC2/bin/clang -DCMAKE_CXX_COMPILER=$HCC2/bin/clang++ -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU"
+      MYCMAKEOPTS="$COMMON_CMAKE_OPTS -DLIBOMPTARGET_NVPTX_DEBUG=1 -DLIBOMPTARGET_AMDGCN_DEBUG=1 -DCMAKE_BUILD_TYPE=Debug"
       mkdir -p $BUILD_DIR/build_debug
       cd $BUILD_DIR/build_debug
       echo " -----Running openmp cmake for debug ---- " 
