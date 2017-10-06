@@ -6,6 +6,9 @@ HCC2 = Heterogenous Compute Compiler Version 2
 
 This bin directory contains scripts to build HCC2
 
+clone_hcc2.sh      -  A script to make sure the necessary repos are cloned and  up to date.
+                      See below for a list of these libraries.
+
 build_hcc2.sh      -  Build the HCC2 compiler. This compiler supports cuda clang, openmp, and 
                       the OpenCL frontend for cloc.sh to build device libraries.  It contains a 
                       recent version of the AMD Lightning compiler and the ptx backend. 
@@ -21,8 +24,9 @@ build_rt.sh        -  Builds the OpenMP libraries for hcc2.
 build_libamdgcn.sh -  Builds the amd bc libraries from rocm-device-libs needed by hcc2.
                       It installs in /opt/rocm/libamdgcn (or $LIBAMDGCN)
 
-clone_hcc2.sh      -  A script to make sure the necessary repos are cloned and  up to date.
-                      See below for a list of these libraries.
+build_deb-hcc2.sh  -  Builds debi and rpm packages after source build
+                      Read the source for all the dependencies needed. 
+debian             -  This directory is used by build-deb-hcc2.sh
 
 HCC2_VERSION_STRING - File to set the version of HCC2 to clone and build . 
 

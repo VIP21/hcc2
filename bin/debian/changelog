@@ -1,0 +1,24 @@
+hcc2 (0.3-9) UNRELEASED; urgency=medium
+
+  * Initial release of hcc2 is 0.3-2
+  *   Please see example in /opt/rocm/hcc2/examples/vmuldemo 
+  *   hcc2 requires amdllvm, amdlibgcn, cuda, and libatmi
+  * 0.3-3 Fixes data sharing constructs, include SOURCE ID in commandline
+  *   updates to libcuda2gcn.bc 
+  * 0.3-6 Major updates to support OpenMP 4.5
+  *   now with ROCm 1.6
+  *   This is now a single compiler, no need for amdllvm. 
+  * 0.3-7 cloc.sh is now part of hcc2. See examples/cloc . 
+  *   Important fix for the simd example
+  *   Change max teams limit to 128 for amdgcn
+  *   Minor driver fix so -c -S -emit-llvm only does a single pass
+  *   Added clang-fixup-fatbin tool to allow gcn images in fatbin
+  * 0.3-8 support for target regions that span mulitple source files
+  *   fixed compiler abort message to open issue on hcc2
+  * 0.3-9 fix atomics used to write to print buffer
+  *   new atmi device library 
+  *   set-linkage moved to bin for building bc libs
+  *   new GFXLIST added to build environment to help developers minimize build time
+  *   support for cuda9
+
+ -- Greg Rodgers <Gregory.Rodgers@amd.com>  Fri, 06 Oct 2017 12:33:15 -0500

@@ -1,0 +1,6 @@
+opt/rocm/hcc2_0.3-9 opt/rocm/hcc2
+opt/rocm/hcc2_0.3-9/bin/bundle.sh  /usr/bin/bundle.sh
+opt/rocm/hcc2_0.3-9/bin/unbundle.sh  /usr/bin/unbundle.sh
+opt/rocm/hcc2_0.3-9/bin/cloc.sh /usr/bin/cloc.sh
+opt/rocm/hcc2_0.3-9/bin/mymcpu  /usr/bin/mymcpu
+opt/rocm/hcc2_0.3-9/bin/mygpu  /usr/bin/mygpu
