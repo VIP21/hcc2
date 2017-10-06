@@ -24,12 +24,10 @@ else
   $(info    WARNING! ATMI environment variable is set, using $(ATMI))
 endif
 
-ifeq ($(UNAMEP),)
-  UNAMEP=x86_64
-endif
+UNAMEP=$(shell uname -p)
 
 ifeq ($(HOST_TARGET),)
-  HOST_TARGET = x86_64-pc-linux-gnu
+  HOST_TARGET = $(UNAMEP)-pc-linux-gnu
 endif
 ifeq ($(DEVICE_TARGET),)
   DEVICE_TARGET = nvptx64-nvidia-cuda
