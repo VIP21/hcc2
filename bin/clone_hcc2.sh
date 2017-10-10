@@ -80,7 +80,7 @@ COBRANCH="master"
 clone_or_pull
 
 reponame="hcc2-rt"
-COBRANCH="master"
+COBRANCH="rel_0.3-9"
 clone_or_pull
 
 reponame="hcc2-llvm"
@@ -102,9 +102,7 @@ repo_web_location=$GITROC
 # This repo is used to build /opt/rocm/libamdgcn
 basedir=$ROC_REPOS
 reponame="rocm-device-libs"
-#COBRANCH="master"
-# Working on master TOT requires update/merge of hcc2-clang
-COBRANCH=4b1b0669164ee8167eedd1fd453c445460c0a190
+COBRANCH="rel_0.3-9"
 clone_or_pull
 
 # This is the ATMI repo for ATMI 0.4 in development
