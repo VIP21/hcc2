@@ -112,3 +112,8 @@ basedir=$ATMI_REPOS
 reponame="atmi-staging"
 COBRANCH="0.4"
 clone_or_pull
+
+basedir=$ATMI_REPOS
+reponame="cudaclang-rt"
+COBRANCH="master"
+clone_or_pull
