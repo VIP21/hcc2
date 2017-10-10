@@ -109,7 +109,7 @@ Note: There is no committment to complete any or all items
 028  ___ Fix build of libamdgcn.  Unresolved refs to __opencl_atomic ... _4
          in the opencl.bc (Guansong)
 
-029 ___  Switch from using git branches to git tag for releases. We should 
+029 _X_  Switch from using git branches to git tag for releases. We should 
          then be able to attach full deb and rpms to the release without 
          the need for gitlfs as we currently do in packages directory. 
          (Andrey)

@@ -38,7 +38,7 @@ thisdir=$(getdname $0)
 if [ -f $thisdir/HCC2_VERSION_STRING ] ; then 
    HCC2_VERSION_STRING=`cat $thisdir/HCC2_VERSION_STRING`
 else 
-   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.3-9"}
+   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.4-0"}
 fi
 export HCC2_VERSION_STRING
 
@@ -80,20 +80,20 @@ COBRANCH="master"
 clone_or_pull
 
 reponame="hcc2-rt"
-COBRANCH="rel_$HCC2_VERSION_STRING"
+COBRANCH="master"
 clone_or_pull
 
 reponame="hcc2-llvm"
-COBRANCH="rel_$HCC2_VERSION_STRING"
+COBRANCH="master"
 clone_or_pull
 
 reponame="hcc2-clang"
-COBRANCH="rel_$HCC2_VERSION_STRING"
+COBRANCH="master"
 clone_or_pull
 
 reponame="hcc2-lld"
-COBRANCH="rel_$HCC2_VERSION_STRING"
-clone_or_pull 
+COBRANCH="master"
+clone_or_pull
 
 # ---------------------------------------
 # The following repos are in RadeonOpenCompute
@@ -102,8 +102,10 @@ repo_web_location=$GITROC
 # This repo is used to build /opt/rocm/libamdgcn
 basedir=$ROC_REPOS
 reponame="rocm-device-libs"
-COBRANCH="rel_$HCC2_VERSION_STRING"
-clone_or_pull 
+#COBRANCH="master"
+# Working on master TOT requires update/merge of hcc2-clang
+COBRANCH=4b1b0669164ee8167eedd1fd453c445460c0a190
+clone_or_pull
 
 # This is the ATMI repo for ATMI 0.4 in development
 basedir=$ATMI_REPOS
