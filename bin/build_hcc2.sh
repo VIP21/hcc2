@@ -15,10 +15,12 @@ HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
 HCC2RT_REPOS=${HCC2RT_REPOS:-/home/$USER/git/hcc2}
 BUILD_TYPE=${BUILD_TYPE:-Release}
 SUDO=${SUDO:-set}
+HCC2_REPO_NAME=${HCC2_REPO_NAME:-hcc2}
 CLANG_REPO_NAME=${CLANG_REPO_NAME:-hcc2-clang}
 LLD_REPO_NAME=${LLD_REPO_NAME:-hcc2-lld}
 LLVM_REPO_NAME=${LLVM_REPO_NAME:-hcc2-llvm}
 RT_REPO_NAME=${RT_REPO_NAME:-hcc2-rt}
+CUDACLANG_REPO_NAME=${CUDACLANG_REPO_NAME:-cudaclang-rt}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 
 if [ "$SUDO" == "set" ] ; then 
@@ -112,13 +114,15 @@ if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then
   echo " The listed defaults are used the environment variable is not set." 
   echo " "
   echo "    HCC2            /opt/rocm/hcc2           Where the compiler will be installed"
-  echo "    HCC2_REPOS      /home/<USER>/git/HCC2    Dir for llvm and $CLANG_REPO_NAME git repos"
+  echo "    HCC2_REPOS      /home/<USER>/git/hcc2    Directory for all git repositories"
   echo "    BUILD_TYPE      Release                  The CMAKE build type" 
   echo "    SUDO            set                      If equal to set, use sudo to install"
+  echo "    HCC2_REPO_NAME  hcc2                     The name of this hcc2 repo"
   echo "    CLANG_REPO_NAME hcc2-clang               The name of the clang repo"
   echo "    LLD_REPO_NAME   hcc2-lld                 The name of the lld repo"
   echo "    LLVM_REPO_NAME  hcc2-llvm                The name of the llvm repo"
-  echo "    BUILD_HCC2      same as HCC2_REPOS       Forces build from other than HCC2_REPOS"
+  echo "    CUDACLANG_REPO_NAME  cudaclang-rt        The name of the cuda clang runtime repo"
+  echo "    BUILD_HCC2      same as HCC2_REPOS       Directory to build if other than HCC2_REPOS"
   echo "  "
   echo " We recommend that you do NOT set BUILD_HCC2 unless access to your repositories is very slow. "
   echo " If you set BUILD_HCC2 to something other than $HCC2_REPOS, (e.g. /tmp/hcc2), the source repositories"
@@ -151,14 +155,20 @@ function checkrepo(){
    cd $REPO_DIR
    COBRANCH=`git branch --list | grep "\*" | cut -d" " -f2`
    if [ "$COBRANCH" != "rel_$HCC2_VERSION_STRING" ] ; then
-      echo "WARNING:  The repository at $REPO_DIR is not on branch rel_$HCC2_VERSION_STRING"
-      echo "          It is on branch $COBRANCH"
+      if [ "$COBRANCH" == "master" ] ; then 
+        echo "WARNING:  Repository $REPO_DIR is on development branch: master"
+      else 
+        echo "WARNING:  The repository at $REPO_DIR is not on branch rel_$HCC2_VERSION_STRING"
+        echo "          It is on branch $COBRANCH"
+     fi
    fi
    if [ ! -d $REPO_DIR ] ; then
       echo "ERROR:  Missing repository directory $REPO_DIR"
       exit 1
    fi
 }
+REPO_DIR=$HCC2_REPOS/$HCC2_REPO_NAME
+checkrepo
 REPO_DIR=$HCC2_REPOS/$LLVM_REPO_NAME
 checkrepo
 REPO_DIR=$HCC2_REPOS/$CLANG_REPO_NAME
@@ -166,6 +176,8 @@ checkrepo
 REPO_DIR=$HCC2_REPOS/$LLD_REPO_NAME
 checkrepo
 REPO_DIR=$HCC2RT_REPOS/$RT_REPO_NAME
+checkrepo
+REPO_DIR=$HCC2_REPOS/$CUDACLANG_REPO_NAME
 checkrepo
 
 # Make sure we can update the install directory
