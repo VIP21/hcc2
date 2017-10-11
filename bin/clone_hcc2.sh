@@ -72,6 +72,7 @@ mkdir -p $ATMI_REPOS
 
 # ---------------------------------------
 #  The first 5 REPOS are in ROCm-Development
+# ---------------------------------------
 repo_web_location=$GITROCDEV
 basedir=$HCC2_REPOS
 
@@ -95,8 +96,13 @@ reponame="hcc2-lld"
 COBRANCH="master"
 clone_or_pull
 
+reponame="hip"
+COBRANCH="master"
+clone_or_pull
+
 # ---------------------------------------
 # The following repos are in RadeonOpenCompute
+# ---------------------------------------
 repo_web_location=$GITROC
 
 # This repo is used to build /opt/rocm/libamdgcn
