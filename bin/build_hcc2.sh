@@ -84,12 +84,14 @@ if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then
   echo "    $HCC2_REPOS/$CLANG_REPO_NAME"
   echo "    $HCC2_REPOS/$LLVM_REPO_NAME"
   echo "    $HCC2_REPOS/$LLD_REPO_NAME"
+  echo "    $HCC2_REPOS/$HCC2_REPO_NAME"
   echo " "
   echo " When you provide NO arguments to this script, it performs these actions:"
   echo " 1. mkdir $BUILD_DIR/build_hcc2"
-  echo " 2. Link clang and lld repos for in-tree build :" 
+  echo " 2. Link clang, lld, and hc tools for in-tree LLVM build :"
   echo "    ln -sf $BUILD_DIR/$CLANG_REPO_NAME $BUILD_DIR/llvm/tools/clang"
   echo "    ln -sf $BUILD_DIR/$LLD_REPO_NAME $BUILD_DIR/llvm/tools/ld"
+  echo "    ln -sf $BUILD_DIR/$HCC2_REPO_NAME/hc $BUILD_DIR/llvm/tools/hc"
   echo " 3. Run 'cmake ../$LLVM_REPO_NAME ' in :  $BUILD_DIR/build_hcc2"
   echo " 4. Run make               :  $BUILD_DIR/build_hcc2"
   echo " "
@@ -225,12 +227,19 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
    if [ $COPYSOURCE ] ; then 
       #  Copy/rsync the git repos into /tmp for faster compilation
       mkdir -p $BUILD_DIR
+      echo
+      echo "WARNING!  BUILD_DIR!=HCC2_REPOS($HCC2_REPOS)"
+      echo "SO RSYNCING HCC2_REPOS TO: $BUILD_DIR"
+      echo
       echo rsync -av --exclude ".git" --exclude "CommandLine.cpp" --delete $HCC2_REPOS/$LLVM_REPO_NAME $BUILD_DIR 2>&1 
       rsync -av --exclude ".git" --exclude "CommandLine.cpp" --delete $HCC2_REPOS/$LLVM_REPO_NAME $BUILD_DIR 2>&1 
-      echo rsync -a --exclude ".git" $HCC2_REPOS/$CLANG_REPO_NAME $BUILD_DIR
+      echo rsync -a --exclude ".git" --delete $HCC2_REPOS/$CLANG_REPO_NAME $BUILD_DIR
       rsync -av --exclude ".git" --delete $HCC2_REPOS/$CLANG_REPO_NAME $BUILD_DIR 2>&1 
       echo rsync -a --exclude ".git" $HCC2_REPOS/$LLD_REPO_NAME $BUILD_DIR
-      rsync -av --exclude ".git" $HCC2_REPOS/$LLD_REPO_NAME $BUILD_DIR 2>&1 
+      rsync -av --exclude ".git" $HCC2_REPOS/$LLD_REPO_NAME $BUILD_DIR 2>&1
+      echo rsync -a --exclude ".git" $HCC2_REPOS/$HCC2_REPO_NAME/hc $BUILD_DIR
+      mkdir -p $BUILD_DIR/$HCC2_REPO_NAME/hc
+      rsync -av --exclude ".git" $HCC2_REPOS/$HCC2_REPO_NAME/hc $BUILD_DIR/$HCC2_REPO_NAME 2>&1
       mkdir -p $BUILD_DIR/$LLVM_REPO_NAME/tools
       if [ -L $BUILD_DIR/$LLVM_REPO_NAME/tools/clang ] ; then 
         rm $BUILD_DIR/$LLVM_REPO_NAME/tools/clang
@@ -240,12 +249,20 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
          echo "ERROR link command for $CLANG_REPO_NAME to clang failed."
          exit 1
       fi
-      if [ -L $BUILD_DIR/$LLVM_REPO_NAME/tools/ld ] ; then 
+      if [ -L $BUILD_DIR/$LLVM_REPO_NAME/tools/ld ] ; then
         rm $BUILD_DIR/$LLVM_REPO_NAME/tools/ld
       fi
       ln -sf $BUILD_DIR/$LLD_REPO_NAME $BUILD_DIR/$LLVM_REPO_NAME/tools/ld
-      if [ $? != 0 ] ; then 
+      if [ $? != 0 ] ; then
          echo "ERROR link command for $LLD_REPO_NAME to ld failed."
+         exit 1
+      fi
+      if [ -L $BUILD_DIR/$LLVM_REPO_NAME/tools/hc ] ; then
+        rm $BUILD_DIR/$LLVM_REPO_NAME/tools/hc
+      fi
+      ln -sf $BUILD_DIR/$HCC2_REPO_NAME/hc $BUILD_DIR/$LLVM_REPO_NAME/tools/hc
+      if [ $? != 0 ] ; then
+         echo "ERROR link command for $HCC2_REPO_NAME/hc to hc failed."
          exit 1
       fi
    else
@@ -258,6 +275,10 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
       if [ ! -L $BUILD_DIR/$LLVM_REPO_NAME/tools/ld ] ; then
          echo ln -sf $BUILD_DIR/$LLD_REPO_NAME ld
          ln -sf $BUILD_DIR/$LLD_REPO_NAME ld
+      fi
+      if [ ! -L $BUILD_DIR/$LLVM_REPO_NAME/tools/hc ] ; then
+         echo ln -sf $BUILD_DIR/$HCC2_REPO_NAME/hc hc
+         ln -sf $BUILD_DIR/$HCC2_REPO_NAME/hc hc
       fi
    fi
 

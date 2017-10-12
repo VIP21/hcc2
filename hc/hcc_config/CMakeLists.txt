@@ -28,18 +28,8 @@ if (CODEXL_ACTIVITY_LOGGER_LIBRARY)
 endif (CODEXL_ACTIVITY_LOGGER_LIBRARY)
 endif (USE_CODEXL_ACTIVITY_LOGGER EQUAL 1)
 
-add_executable(hcc-config hcc_config.cpp)
+add_llvm_tool(hcc-config hcc_config.cpp)
+add_llvm_tool_symlink(clamp-config hcc-config)
 
-
-add_custom_command(TARGET hcc-config POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E create_symlink ./hcc-config ./clamp-config
-  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/bin
-)
-
-install(TARGETS hcc-config
-    RUNTIME DESTINATION bin
-)
-
-install(FILES ${PROJECT_BINARY_DIR}/bin/clamp-config DESTINATION bin)
 
 

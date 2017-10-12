@@ -1,11 +1,10 @@
 #!/bin/bash
 # 
-#  build_extras.sh:  Script to build the hc, hcc_config, hip, and the cudaclang
-#                    runtime components (extras) of HCC2 . This build will use 
-#                    the hcc2 compiler, so only run this after build_hcc2.sh
-#                    AND "build_hcc2.sh install"
+#  build_hip.sh:  Script to hip and cudaclang-rt with HCC2. This build will use 
+#                 the hcc2 compiler, so only run this after build_hcc2.sh
+#                 AND "build_hcc2.sh install"
 #
-# See the help text below, run 'build_extras.sh -h' for more information. 
+# See the help text below, run 'build_hip.sh -h' for more information. 
 #
 # Do not edit this script to change these values. 
 # Simply set the environment variables to override these defaults
@@ -68,26 +67,25 @@ fi
 if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then 
   echo " "
   echo " This build script uses these git repositories:"
-  echo "    $HCC2_REPOS/$HCC2_REPO_NAME"
   echo "    $HCC2_REPOS/$HIP_REPO_NAME"
   echo "    $HCC2_REPOS/$CUDACLANG_REPO_NAME"
   echo " "
   echo " When you provide NO arguments to this script, it performs these actions:"
-  echo " 1. mkdir $BUILD_DIR/build_extras"
-  echo " 2. cd $BUILD_DIR/build_extras ; cmake ../$HCC2_REPO_NAME/hc"
-  echo " 3. Run make               :  $BUILD_DIR/build_extras"
+  echo " 1. mkdir $BUILD_DIR/build_hip"
+  echo " 2. cd $BUILD_DIR/build_hip ; cmake ../$HIP_REPO_NAME"
+  echo " 3. Run make               :  $BUILD_DIR/build_hip"
   echo " "
   echo " This script takes one optional argument: 'nocmake' or 'install' "
   echo " Example Commands          Actions"
   echo " ----------------          -------"
-  echo " ./build_extras.sh           cmake, make, but NO install "
-  echo " ./build_extras.sh nocmake   make, but NO install"
-  echo " ./build_extras.sh install   $SUDO make install"
+  echo " ./build_hip.sh           cmake, make, but NO install "
+  echo " ./build_hip.sh nocmake   make, but NO install"
+  echo " ./build_hip.sh install   $SUDO make install"
   echo " "
   echo " The 'nocmake' or 'install' options can only be used after running"
   echo " this script with no options at least one time. The 'nocmake' option is intended to allow"
   echo " you to debug and fix code in $BUILD_DIR without changing your git repos."
-  echo " It only runs the make command in $BUILD_DIR/build_extras"  
+  echo " It only runs the make command in $BUILD_DIR/build_hip"  
   echo " The 'install' option requires sudo authority. It will also link install directory"
   echo " $INSTALL_DIR to directory $HCC2"
   echo " "
@@ -157,37 +155,41 @@ fi
 if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
 
    echo 
-   echo "WARNING! FRESH START. ERASING any previous builds in $BUILD_DIR/build_extras "
+   echo "WARNING! FRESH START. ERASING any previous builds in $BUILD_DIR/build_hip "
    echo "Use ""$0 nocmake"" or ""$0 install"" to avoid this FRESH START."
    echo
-   rm -rf $BUILD_DIR/build_extras
-   mkdir -p $BUILD_DIR/build_extras
+   rm -rf $BUILD_DIR/build_hip
+   mkdir -p $BUILD_DIR/build_hip
 
 else
 
-   if [ ! -d $BUILD_DIR/build_extras ] ; then 
-      echo "ERROR: The build directory $BUILD_DIR/build_extras does not exist"
+   if [ ! -d $BUILD_DIR/build_hip ] ; then 
+      echo "ERROR: The build directory $BUILD_DIR/build_hip does not exist"
       echo "       run $0 without nocmake or install options. " 
       exit 1
    fi
 
 fi
 
-cd $BUILD_DIR/build_extras
-
 if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
-   echo " -----Running cmake ---- " 
-   echo "cd $BUILD_DIR/build_extras; cmake ../$HCC2_REPO_NAME/hc"
-   cmake  ../$HCC2_REPO_NAME/hc 2>&1 | tee /tmp/cmake.out
+
+   cd $BUILD_DIR/build_hip
+   echo
+   echo " -----Running hip cmake ---- " 
+   echo "cd $BUILD_DIR/build_hip; cmake ../$HIP_REPO_NAME"
+   echo cmake -DHCC_HOME=$HCC2 -DCMAKE_INSTALL_PREFIX=$HCC2 ../$HIP_REPO_NAME 2>&1 | tee -a /tmp/cmake.out
+   cmake -DHCC_HOME=$HCC2 -DCMAKE_INSTALL_PREFIX=$HCC2 ../$HIP_REPO_NAME 2>&1 | tee -a /tmp/cmake.out
+   #cmake -DHCC_HOME=/opt/rocm/hcc -DCMAKE_INSTALL_PREFIX=$HCC2 ../$HIP_REPO_NAME 2>&1 | tee -a /tmp/cmake.out
    if [ $? != 0 ] ; then 
-      echo "ERROR cmake failed. Full log of cmake in /tmp/cmake.out"
+      echo "ERROR cmake hip failed. Full log of cmake in /tmp/cmake.out"
       exit 1
    fi
 fi
 
+cd $BUILD_DIR/build_hip
 echo
-echo " -----Running make ---- " 
-echo "cd $BUILD_DIR/build_extras; make -j $NUM_THREADS"
+echo " -----Running hip make ---- " 
+echo "cd $BUILD_DIR/build_hip; make -j $NUM_THREADS"
 make -j $NUM_THREADS 
 if [ $? != 0 ] ; then 
    echo "ERROR make -j $NUM_THREADS failed"
@@ -195,13 +197,16 @@ if [ $? != 0 ] ; then
 fi
 
 if [ "$1" == "install" ] ; then
-   echo " -----Installing to $INSTALL_DIR ---- " 
+
+   cd $BUILD_DIR/build_hip
+   echo 
+   echo " -----Installing hip to $INSTALL_DIR ---- " 
    $SUDO make install 
    if [ $? != 0 ] ; then 
-      echo "ERROR make install failed "
+      echo "ERROR make install for hip failed "
       exit 1
    fi
-   echo " "
+
 else 
    echo 
    echo "SUCCESSFUL BUILD, please run:  $0 install"

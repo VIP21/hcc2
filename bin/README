@@ -21,7 +21,7 @@ build_atmi.sh      -  Builds early release of ATMI for hcc2.
 build_rt.sh        -  Builds the OpenMP libraries for hcc2.
                       This also installs in /opt/rocm/hcc2 (or $HCC2)
 
-build_extras.sh    -  Builds hcc_config, hip, and cudaclang-rt
+build_hip.sh       -  Builds hip and cudaclang-rt
 
 build_libamdgcn.sh -  Builds the amd bc libraries from rocm-device-libs needed by hcc2.
                       It installs in /opt/rocm/libamdgcn (or $LIBAMDGCN)
@@ -93,8 +93,8 @@ To build all components, run the scripts in the following order:
 	./build_rt.sh  
 	./build_rt.sh  install
 
-	./build_extras.sh
-	./build_extras.sh  install
+	./build_hip.sh
+	./build_hip.sh  install
 
 	./build_libamdgcn.sh
 	./build_libamdgcn.sh install
@@ -103,7 +103,7 @@ These scripts do not automatically install in case their is a build failure.
 After all, this is a development project.  In case of a build failure, you 
 can restart the build by running "make" or "make install" in the build directory. 
 
-The compiler created by build_hcc2.sh is needed by build_rt.sh, build_extras.sh,
+The compiler created by build_hcc2.sh is needed by build_rt.sh, build_hip.sh,
 and build_libamdgcn.sh to build device libraries.  So you must have 
 built and installed hcc2 before building the libraries.
 

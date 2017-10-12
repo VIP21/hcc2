@@ -7,10 +7,10 @@ set(HCC2 $ENV{HCC2})
 if (NOT HCC2) 
    set(HCC2 "/opt/rocm/hcc2")
 endif()
-MESSAGE("Using HCC2 path: ${HCC2}")
+MESSAGE("-- Using HCC2 path: ${HCC2}")
 
 SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/scripts/cmake")
-MESSAGE("Module path: ${CMAKE_MODULE_PATH}")
+MESSAGE("-- Module path: ${CMAKE_MODULE_PATH}")
 
 # set as release build by default
 IF (NOT CMAKE_BUILD_TYPE)
@@ -131,46 +131,15 @@ if (USE_LIBCXX)
   message( "libc++ headers found at ${LIBCXX_HEADER}" )
 endif( )
 
-#################
-# Set up version information
-#################
-
-# define HCC version information
-SET(KALMAR_VERSION_MAJOR "1")
-SET(KALMAR_VERSION_MINOR "0")
-
-include(GenerateVersionFromGit)
-
-if (NOT KALMAR_VERSION_STRING)
-  set(KALMAR_VERSION_STRING
-    "${KALMAR_VERSION_MAJOR}.${KALMAR_VERSION_MINOR}")
-endif()
-
-# Set HCC version string. The rule for version string is:
-# KALMAR_VERSION_MAJOR . KALMAR_VERSION_MINOR . KALMAR_VERSION_PATCH-KALMAR_SDK_COMIT-KALMAR_FRONTEND_COMMIT-KALMAR_BACKEND_COMMIT
-add_version_info_from_git(KALMAR_VERSION_STRING
-  KALMAR_VERSION_PATCH KALMAR_SDK_COMMIT KALMAR_FRONTEND_COMMIT KALMAR_BACKEND_COMMIT)
-
 # set default installation path
-set(INSTALL_DIR_NAME "hcc-${KALMAR_VERSION_MAJOR}.${KALMAR_VERSION_MINOR}")
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND CMAKE_INSTALL_PREFIX MATCHES "/usr/local")
   set(CMAKE_INSTALL_PREFIX ${HCC2})
 endif ()
-MESSAGE("Installation path: ${CMAKE_INSTALL_PREFIX}")
-
-# set the installation path for the installer package
-set(CPACK_SET_DESTDIR ON CACHE BOOL "Installer package will install hcc to CMAKE_INSTALL_PREFIX instead of CPACK_PACKAGING_INSTALL_PREFIX")
-if (CPACK_SET_DESTDIR)
-  set(HCC_PACKAGE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
-else (CPACK_SET_DESTDIR)
-  set(CPACK_PACKAGING_INSTALL_PREFIX "/opt/rocm/${INSTALL_DIR_NAME}" CACHE PATH "Default installation path of hcc installer package")
-  set(HCC_PACKAGE_INSTALL_PREFIX ${CPACK_PACKAGING_INSTALL_PREFIX})
-endif (CPACK_SET_DESTDIR)
-MESSAGE("Installer package installation path: ${HCC_PACKAGE_INSTALL_PREFIX}")
 
 # show HCC version string
 MESSAGE("====================================================")
-MESSAGE("Building extras for HCC2 version: ${KALMAR_VERSION_STRING}")
+MESSAGE("Building hc for HCC2 version:  ${HCC2_VERSION_STRING}")
+MESSAGE("Installation path:  ${CMAKE_INSTALL_PREFIX}")
 MESSAGE("====================================================")
 
 #################
