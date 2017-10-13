@@ -15,8 +15,8 @@ set( CONFIG_PACKAGE_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/hcc )
 ####################
 # C++AMP runtime (mcwamp)
 ####################
-add_mcwamp_library(mcwamp mcwamp.cpp)
-add_mcwamp_library(mcwamp_atomic mcwamp_atomic.cpp)
+add_mcwamp_library("mcwamp" mcwamp.cpp)
+add_mcwamp_library("mcwamp_atomic" mcwamp_atomic.cpp)
 
 # Library interface to use runtime
 add_library(hccrt INTERFACE)
@@ -33,7 +33,7 @@ endif (USE_LIBCXX)
 
 # Library interface for building shared libraries
 add_library(hccshared INTERFACE)
-target_link_libraries(hccshared INTERFACE -fPIC)
+target_link_libraries(hccshared INTERFACE -fPIC -Wl,-Bsymbolic)
 
 ####################
 # C++AMP tools

@@ -31,6 +31,7 @@ endforeach( f )
 
 # Create target for hcc-headers and set dependencies
 add_custom_target(hcc-headers ALL DEPENDS ${out_files})
+#add_dependencies(world hcc-headers)
 
 # Install command for headers
 install(FILES ${HCC_HEADERS}

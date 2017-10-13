@@ -150,11 +150,12 @@ void ldflags(void) {
         }
     }
 
-    // extra libraries if using libc++ for C++ runtime
-    // If using RHEL or CentOS, must also use c++abi
+    // extra libraries if using libc++ for C++ runtime   
 #ifdef USE_LIBCXX
-    std::cout << " -stdlib=libc++";
-    std::cout << " -lc++ -lc++abi ";
+    std::cout << " -stdlib=libc++ ";
+    #ifndef HCC_TOOLCHAIN_RHEL
+      std::cout << " -lc++abi ";
+    #endif
 #endif
     std::cout << " -ldl -lm -lpthread";
 
@@ -185,7 +186,6 @@ void prefix(void) {
 // Support to perform google unit testing
 void gtest(void) {
     if (build_mode) {
-       std::cout << " -I" CMAKE_GTEST_INC_DIR;
        std::cout << " -L" CMAKE_BUILD_LIB_DIR;
        std::cout << " -lmcwamp_gtest ";
     }
@@ -198,7 +198,7 @@ void gtest(void) {
 
 // Compiling as a shared library
 void shared(void) {
-    std::cout << " -shared -fPIC ";
+    std::cout << " -shared -fPIC -Wl,-Bsymbolic ";
 }
 
 // print command line usage
