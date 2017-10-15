@@ -78,12 +78,12 @@ else
 endif
 
 # Check if the ATMI is an install or local build
-ifneq ("$(wildcard $(ATMI)/include)","")
+ifeq ("$(wildcard $(ATMI)/CMakeFiles)","")
   ATMI_LIB    = $(ATMI)/lib$(DEBUG)
   ATMI_LIB_BC = $(ATMI)/lib$(DEBUG)/libdevice
 else
-  ATMI_LIB    = $(ATMI)/runtime/core
-  ATMI_LIB_BC = $(ATMI)/device_runtime
+  ATMI_LIB    = $(ATMI)/lib
+  ATMI_LIB_BC = $(ATMI)/lib/libdevice
 endif
 
 # Compilation and link require at LIBRARY_PATH
