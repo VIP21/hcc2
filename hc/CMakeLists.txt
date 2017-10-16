@@ -214,7 +214,7 @@ add_subdirectory(include)
 set(AMDHSACOD ${ROCM_ROOT}/bin/amdhsacod CACHE FILEPATH "Specify the amdhsacod tool")
 
 add_subdirectory(hcc_config)
-add_subdirectory(lib)
+#add_subdirectory(lib)
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/hcc_config/hcc_config.hxx.in
