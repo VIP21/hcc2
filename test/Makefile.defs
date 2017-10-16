@@ -67,7 +67,7 @@ RUNPROF =  $(CUDA)/bin/nvprof
 RUNPROF =  
 
 # Check if the OMPRT is an install or local build
-ifneq ("$(wildcard $(OMPRT)/include)","")
+ifeq ("$(wildcard $(OMPRT)/CMakeFiles)","")
   OMPRT_INC    = $(OMPRT)/include
   OMPRT_LIB    = $(OMPRT)/lib$(DEBUG)
   OMPRT_LIB_BC = $(OMPRT)/lib$(DEBUG)/libdevice
