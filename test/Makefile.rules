@@ -6,7 +6,7 @@ all: $(TESTNAME)
 
 # ----- Demo compile and link in one step, no object code saved
 $(TESTNAME): $(TESTSRC_ALL)
-	$(SETENV) $(CC) $(CFLAGS) $(OMP_FLAGS) $(LINK_FLAGS) $^ -o $@ 
+	$(SETENV) $(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(OMP_FLAGS) $(LINK_FLAGS) $^ -o $@ 
 
 run: $(TESTNAME)
 	$(RUNENV) $(RUNPROF) ./$(TESTNAME) 2>&1 | tee $@.log
@@ -18,7 +18,7 @@ $(TESTNAME).o: $(addsuffix .o, $(TESTNAMES_ALL))
 endif
 
 %.o: %.c*
-	$(SETENV) $(CC) -c $(CFLAGS) $(OMP_FLAGS) $^ -o $@
+	$(SETENV) $(CC) -c $(CFLAGS) $(EXTRA_CFLAGS) $(OMP_FLAGS) $^ -o $@
 
 obin: $(TESTNAME).o
 	$(SETENV) $(CC) $(OMP_FLAGS) $(LINK_FLAGS) $(addsuffix .o, $(TESTNAMES_ALL)) -o $@
@@ -72,13 +72,12 @@ help:
 	@echo
 	@echo " Run Environment:      $(RUNENV)"
 	@echo
-	@echo " Compile Flags:        $(CFLAGS)"
+	@echo " Compile Flags:        $(CFLAGS) $(EXTRA_CFLAGS)"
 	@echo
 	@echo " OMP Compile Flags:    $(OMP_FLAGS)"
 	@echo
 	@echo " Link Flags:           $(LINK_FLAGS)"
 	@echo
-
 
 #  ----   Demo compilation to LLVM IR and backend steps
 ifneq ($(TESTNAME), $(findstring $(TESTNAME),$(TESTNAMES_ALL)))
@@ -87,7 +86,7 @@ $(TESTNAME).ll: $(addsuffix .ll, $(TESTNAMES_ALL))
 endif
 
 %.ll: %.c*
-	$(SETENV) $(CC) -c -S -emit-llvm $(CFLAGS) $(OMP_FLAGS) $^ -o $@
+	$(SETENV) $(CC) -c -S -emit-llvm $(CFLAGS) $(EXTRA_CFLAGS) $(OMP_FLAGS) $^ -o $@
 
 ifneq ($(TESTNAME), $(findstring $(TESTNAME),$(TESTNAMES_ALL)))
 .PHONY: $(TESTNAME).ll.s
@@ -118,7 +117,7 @@ $(TESTNAME).s: $(addsuffix .s, $(TESTNAMES_ALL))
 endif
 
 %.s: %.c*
-	$(SETENV) $(CC) -c -S $(CFLAGS) $(OMP_FLAGS) $^ -o $@
+	$(SETENV) $(CC) -c -S $(CFLAGS) $(EXTRA_CFLAGS) $(OMP_FLAGS) $^ -o $@
 
 ifneq ($(TESTNAME), $(findstring $(TESTNAME),$(TESTNAMES_ALL)))
 .PHONY: $(TESTNAME).s.o

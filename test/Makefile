@@ -94,7 +94,7 @@ help:
 	@echo
 	@echo " Run Environment:      $(RUNENV)"
 	@echo
-	@echo " Compile Flags:        $(CFLAGS)"
+	@echo " Compile Flags:        $(CFLAGS) $(EXTRA_CFLAGS)"
 	@echo
 	@echo " OMP Compile Flags:    $(OMP_FLAGS)"
 	@echo
