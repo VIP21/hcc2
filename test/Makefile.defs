@@ -42,8 +42,11 @@ ifeq ($(GFXNAME),)
 endif
 
 ifeq ($(DEVICE_ARCH),)
+ifeq ($(findstring amdgcn,$(DEVICE_TARGET)),)
   DEVICE_ARCH = $(SMNAME)
+else
   DEVICE_ARCH = $(GFXNAME)
+endif
 endif
 
 ifeq ($(TARGET),)

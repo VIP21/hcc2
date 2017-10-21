@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 // 920 fails
-#define TRIALS 452
+#define TRIALS 919
 // 6000 fails
 #define N 64*5000
 
