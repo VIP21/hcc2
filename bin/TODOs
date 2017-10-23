@@ -114,5 +114,8 @@ Note: There is no committment to complete any or all items
          the need for gitlfs as we currently do in packages directory. 
          (Andrey)
 
+030 ___  Reenable "Free device allocation entry" in hcc2-rc master, at the moment
+         it is guarded by "#if 0" at libomptarget/plugins/hsa/src/rtl.cpp@258.
+         The experiment with 0.3-9 branch shows no regerssions on AMDGPU hcc2/test.
 
 Move this list to Git Issues when things slow down.
