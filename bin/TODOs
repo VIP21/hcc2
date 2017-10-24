@@ -63,6 +63,12 @@ Note: There is no committment to complete any or all items
 017  ___ Merge with latest yorktown coral repos (Greg)
          (0.4-X)
 
+017a ___ Merge hcc2-clang and hcc2-llvm with latest yorktown coral repos (Greg)
+         (0.4-X)
+
+017b ___ Merge hcc2-rt with latest yorktown coral repo (Guansong)
+         (0.4-X)
+
 018  _X_ make utilities in hcc2-rt/utils/bin executable with package
          install, needs 007 
 
@@ -117,5 +123,7 @@ Note: There is no committment to complete any or all items
 030 ___  Reenable "Free device allocation entry" in hcc2-rc master, at the moment
          it is guarded by "#if 0" at libomptarget/plugins/hsa/src/rtl.cpp@258.
          The experiment with 0.3-9 branch shows no regerssions on AMDGPU hcc2/test.
+         
+031 ___  Upstream ATMI 0.4 branch to the master branch
 
 Move this list to Git Issues when things slow down.
