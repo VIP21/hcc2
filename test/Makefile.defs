@@ -112,12 +112,8 @@ else
 CFLAGS = -O2
 endif
 
-ifeq ($(TEMPS), 1)
-CFLAGS += -save-temps
-endif
-
 OMP_FLAGS = -target $(HOST_TARGET) -fopenmp $(TARGET)
-
+OMP_FLAGS += $(EXTRA_OMP_FLAGS)
 ifeq ($(TEMPS), 1)
 OMP_FLAGS += -save-temps
 endif
