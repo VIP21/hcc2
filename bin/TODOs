@@ -63,10 +63,13 @@ Note: There is no committment to complete any or all items
 017  ___ Merge with latest yorktown coral repos (Greg)
          (0.4-X)
 
-017a ___ Merge hcc2-clang and hcc2-llvm with latest yorktown coral repos (Greg)
+017a ___ Merge hcc2-clang with latest yorktown coral repos
          (0.4-X)
-
-017b ___ Merge hcc2-rt with latest yorktown coral repo (Guansong)
+         
+017b ___ Merge hcc2-llvm with latest yorktown coral repos
+         (0.4-X)
+         
+017c ___ Merge hcc2-rt with latest yorktown coral repo (Guansong)
          (0.4-X)
 
 018  _X_ make utilities in hcc2-rt/utils/bin executable with package
@@ -125,5 +128,19 @@ Note: There is no committment to complete any or all items
          The experiment with 0.3-9 branch shows no regerssions on AMDGPU hcc2/test.
          
 031 ___  Upstream ATMI 0.4 branch to the master branch
+
+032 ___  Get status of Chip's OpenMP Apps on AMDGPU and Nvidia (Andrey)
+
+033 ___  Investigate hang in ATMI examples (Guansong)
+
+035 ___  Investigate root cause of issue #1, HSA_STATUS_ERROR_OUT_OF_RESOURCES (Guansong)
+
+034 ___  Request a performance tool example (Guansong)
+
+035 ___  Investigate root cause for Assert in /lib/Target/AMDGPU/SIInstrInfo.cpp:4176 (hpgmp-mp4, lulesh-mp4)
+
+036 ___  Investigate root cause of HSA_STATUS_ERROR_INVALID_ALLOCATION for xsbench-mp4 (Guansong)
+
+037 ___  Investigate root cause of HSA_STATUS_ERROR_INVALID_ISA for snap-mp4 (Andrey)
 
 Move this list to Git Issues when things slow down.
