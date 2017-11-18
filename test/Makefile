@@ -4,6 +4,7 @@ TESTS_DIR = \
     DeclareSharedMemory \
     assertok_error \
     atomic \
+    atomic_double \
     class \
     collapse \
     devices \
