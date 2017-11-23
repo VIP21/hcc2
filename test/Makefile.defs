@@ -59,9 +59,31 @@ ifeq ($(OFFLOAD_DEBUG),1)
   SET_DEVICE_DEBUG = DEVICE_DEBUG=1
 endif
 
+ifeq ($(OMP_FLAGS),)
+OMP_FLAGS = -target $(HOST_TARGET) -fopenmp $(TARGET)
+OMP_FLAGS += $(EXTRA_OMP_FLAGS)
+endif
+
 ifeq ($(VERBOSE),1)
-  $(info    Compilation VERBOSE Mode ON)
+  $(info    Compilation and linking VERBOSE Mode ON)
   VERBOSE = -v
+endif
+
+ifeq ($(TEMPS),1)
+  $(info    Compilation and linking save-temp Mode ON)
+  VERBOSE += -save-temps
+endif
+
+ifeq ($(NOOPT),1)
+CFLAGS =
+else
+CFLAGS = -O2
+endif
+
+ifeq ($(findstring amdgcn,$(OMP_FLAGS)),)
+LINK_FLAGS = -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart #FIXME, need to check if this is really needed
+else
+LINK_FLAGS =
 endif
 
 CUDA      = /usr/local/cuda
@@ -90,7 +112,7 @@ else
 endif
 
 # Compilation and link require at LIBRARY_PATH
-ifeq ($(findstring amdgcn,$(TARGET)),)
+ifeq ($(findstring amdgcn,$(OMP_FLAGS)),)
 _LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib
 else
 _LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(ATMI_LIB_BC):$(ATMI_LIB):$(LIBAMDGCN)/$(GFXNAME)/lib
@@ -99,28 +121,11 @@ endif
 SETENV   = env C_INCLUDE_PATH=$(OMPRT_INC):$(C_INCLUDE_PATH) CPLUS_INCLUDE_PATH=$(OMPRT_INC):$(CPLUS_INCLUDE_PATH) LIBRARY_PATH=$(_LIBPATH):$(LIBRARY_PATH) PATH=$(HCC2)/bin:$(PATH)
 
 # The ATMI and LOCH libraries are needed for dynamic runtime linking.
-ifeq ($(findstring amdgcn,$(TARGET)),)
+ifeq ($(findstring amdgcn,$(OMP_FLAGS)),)
 _LDPATH  = $(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib
 else
 _LDPATH  = $(OMPRT_LIB):$(ATMI_LIB)
 endif
+
 RUNENV   = env LD_LIBRARY_PATH=$(_LDPATH):$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
-
-ifeq ($(NOOPT),1)
-CFLAGS =
-else
-CFLAGS = -O2
-endif
-
-OMP_FLAGS = -target $(HOST_TARGET) -fopenmp $(TARGET)
-OMP_FLAGS += $(EXTRA_OMP_FLAGS)
-ifeq ($(TEMPS), 1)
-OMP_FLAGS += -save-temps
-endif
-
-ifeq ($(findstring amdgcn,$(TARGET)),)
-LINK_FLAGS = -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart #FIXME, need to check if this is really needed
-else
-LINK_FLAGS =
-endif
 
