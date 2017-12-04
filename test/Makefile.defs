@@ -50,7 +50,7 @@ endif
 endif
 
 ifeq ($(TARGET),)
-  TARGET  =  -fopenmp-targets=$(DEVICE_TARGET) --cuda-gpu-arch=$(DEVICE_ARCH)
+  TARGET  =  -fopenmp-targets=$(DEVICE_TARGET) -Xopenmp-target=$(DEVICE_TARGET) -march=$(DEVICE_ARCH)
 endif
 
 ifeq ($(OFFLOAD_DEBUG),1)
