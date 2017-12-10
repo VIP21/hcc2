@@ -24,6 +24,10 @@ else
   $(info    WARNING! ATMI environment variable is set, using $(ATMI))
 endif
 
+ifneq ($(TIMEOUT),)
+  TKILL= timeout $(TIMEOUT)
+endif
+
 UNAMEP=$(shell uname -p)
 
 ifeq ($(HOST_TARGET),)
@@ -118,7 +122,7 @@ else
 _LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(ATMI_LIB_BC):$(ATMI_LIB):$(LIBAMDGCN)/$(GFXNAME)/lib
 endif
 
-SETENV   = env C_INCLUDE_PATH=$(OMPRT_INC):$(C_INCLUDE_PATH) CPLUS_INCLUDE_PATH=$(OMPRT_INC):$(CPLUS_INCLUDE_PATH) LIBRARY_PATH=$(_LIBPATH):$(LIBRARY_PATH) PATH=$(HCC2)/bin:$(PATH)
+SETENV   = env C_INCLUDE_PATH=$(OMPRT_INC):$(C_INCLUDE_PATH) CPLUS_INCLUDE_PATH=$(OMPRT_INC):$(CPLUS_INCLUDE_PATH) LIBRARY_PATH=$(_LIBPATH):$(LIBRARY_PATH) PATH=$(HCC2)/bin:$(PATH) $(TKILL)
 
 # The ATMI and LOCH libraries are needed for dynamic runtime linking.
 ifeq ($(findstring amdgcn,$(OMP_FLAGS)),)
@@ -127,5 +131,5 @@ else
 _LDPATH  = $(OMPRT_LIB):$(ATMI_LIB)
 endif
 
-RUNENV   = env LD_LIBRARY_PATH=$(_LDPATH):$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
+RUNENV   = env LD_LIBRARY_PATH=$(_LDPATH):$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG) $(TKILL)
 
