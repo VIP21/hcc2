@@ -10,28 +10,15 @@ TESTSRC  = main.c vsum.c vmul.c
 
 ifeq ($(HCC2),)
   HCC2 = /opt/rocm/hcc2
-else
-  $(info    WARNING! HCC2 environment variable is set, using $(HCC2))
 endif
 ifeq ($(LIBAMDGCN),)
   LIBAMDGCN = /opt/rocm/libamdgcn
-else
-  $(info    WARNING! LIBAMDGCN environment variable is set, using $(LIBAMDGCN))
 endif
 ifeq ($(OMPRT),)
   OMPRT = $(HCC2)
-else
-  $(info    WARNING! OMPRT environment is set, using $(OMPRT))
 endif
 ifeq ($(ATMI),)
-  ifneq ("$(wildcard $(HCC2)/include/atmi.h)","")
-    ATMI = $(HCC2)
-  else
-    $(info    WARNING! No $(HCC2)/include/atmi.h and ATMI environment variable isn't set, using /opt/rocm/atmi)
-    ATMI = /opt/rocm/atmi
-  endif
-else
-  $(info    WARNING! ATMI environment variable is set, using $(ATMI))
+  ATMI = $(HCC2)
 endif
 
 ifeq ($(CUDA),)
@@ -64,37 +51,34 @@ ifeq ($(HOST_TARGET),)
   HOST_TARGET = $(UNAMEP)-pc-linux-gnu
 endif
 
-ifeq ($(SMNAME),)
-  SMNAME = sm_35
+ifeq ($(DEVICE_ARCH),)
+  DEVICE_ARCH = $(shell $(HCC2)/bin/mygpu)
 endif
 
-ifeq ($(GFXNAME),)
-  GFXNAME = gfx803
-endif
-
-ifeq ($(DEVICE_TARGET),)
-#  DEVICE_TARGET = nvptx64-nvidia-cuda
+ifeq ($(findstring gfx,$(DEVICE_ARCH)),)
+  DEVICE_TARGET = nvptx64-nvidia-cuda
+else
   DEVICE_TARGET = amdgcn--cuda
 endif
 
+CFLAGS = -O3 -target $(HOST_TARGET) -fopenmp -fopenmp-targets=$(DEVICE_TARGET) -Xopenmp-target=$(DEVICE_TARGET) -march=$(DEVICE_ARCH) -I$(OMPRT_INC) 
+LFLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC)
+
 ifeq ($(findstring amdgcn,$(DEVICE_TARGET)),)
-ifeq ($(DEVICE_ARCH),)
-  DEVICE_ARCH = $(SMNAME)
-endif
-  CFLAGS = -O3 -target $(HOST_TARGET) -fopenmp -fopenmp-targets=$(DEVICE_TARGET) --cuda-gpu-arch=$(DEVICE_ARCH) -I$(OMPRT_INC) -I$(CUDA)/include $(EXTRA_CFLAGS)
-  LFLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC) -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart
+
+  CFLAGS += -I$(CUDA)/include 
+  LFLAGS += -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart
   CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib PATH=$(HCC2)/bin:$(PATH)
   RUNENV = env LD_LIBRARY_PATH=$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib:$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
+
 else
-ifeq ($(DEVICE_ARCH),)
-    DEVICE_ARCH = $(GFXNAME)
-endif
-  CFLAGS = -O3 -target $(HOST_TARGET) -fopenmp -fopenmp-targets=$(DEVICE_TARGET) --cuda-gpu-arch=$(DEVICE_ARCH) -I$(OMPRT_INC) $(EXTRA_CFLAGS)
-  LFLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC)
-  CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(ATMI_LIB_BC):$(ATMI_LIB):$(LIBAMDGCN)/$(GFXNAME)/lib PATH=$(HCC2)/bin:$(PATH)
+
+  CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(ATMI_LIB_BC):$(ATMI_LIB):$(LIBAMDGCN)/$(DEVICE_ARCH)/lib PATH=$(HCC2)/bin:$(PATH)
   RUNENV = env LD_LIBRARY_PATH=$(OMPRT_LIB):$(ATMI_LIB):$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
+
 endif
 
+CFLAGS += $(EXTRA_CFLAGS)
 
 # ----- Demo compile and link in one step, no object code saved
 $(TESTNAME): $(TESTSRC)
@@ -158,8 +142,6 @@ help:
 	@echo "  VERBOSE=n             if n=1, add verbose output"
 	@echo "  UNAMEP=<arch>         host arch, default=x86_64"
 	@echo "  HOST_TARGET=<target>  host target, default=x86_64-pc-linux-gnu"
-	@echo "  SMNAME=<arch>         offload Nvidia sub-target, default=sm_35"
-	@echo "  GFXNAME=<arch>        offload AMDGCN sub-target, default=gfx803"
 	@echo "  ATMI=<dir>            ATMI install dir, default=$(HCC2)"
 	@echo "  OMPRT=<dir>           OMPRT install dir, default=$(HCC2)"
 	@echo
