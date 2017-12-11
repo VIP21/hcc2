@@ -81,7 +81,7 @@ COBRANCH="master"
 clone_or_pull
 
 reponame="hcc2-rt"
-COBRANCH="rel_0.3-9"
+COBRANCH="master"
 clone_or_pull
 
 reponame="hcc2-llvm"
