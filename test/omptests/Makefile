@@ -68,7 +68,10 @@ run_all_static: bld_all_static
 
 runonly_all_static:
 	@for i in $(TEST_FOLDERS) ; do \
-	  $(MAKE) -C $$i run || exit 1; \
+	  echo ; \
+	  echo "EXECUTION  TEST: $$i" ; \
+	  $(MAKE) -C $$i run ; \
+	  echo "EXECUTION  TEST: $$i;    STATUS:$$?" ; \
 	done
 	@(printenv OMP_TARGET_OFFLOAD | grep "DISABLED" >/dev/null && echo " ---> Test ran on the host") || echo  " ---> Test ran on the device"
 	@echo " ---> All tests completed successfully!!!"
@@ -77,7 +80,10 @@ bld_all_static: $(TEST_FOLDERS_BLD_STATIC)
 	@echo " ---> All tests built successfully!!!"
 
 %_static_bld:
-	@$(MAKE) -C $(@:_static_bld=) static
+	@echo ; \
+	echo "COMPILATION  TEST: $@" ; \
+	$(MAKE) -C $(@:_static_bld=) static ; \
+	echo "COMPILATION  TEST: $@;    STATUS:$$?" ;
 
 mp_error: $(TEST_FOLDERS_RUN_STATIC)
 

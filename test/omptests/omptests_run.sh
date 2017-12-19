@@ -1,0 +1,1 @@
+env TARGET="-fopenmp-targets=amdgcn--cuda -Xopenmp-target=amdgcn--cuda -march=gfx803" HOSTRTL=$ATMI/lib/libdevice TARGETRTL=$OMPRT/lib GLOMPRTL=$OMPRT/lib LLVMBIN=$HCC2/bin make 2>&1 | tee omptests_run_`date --rfc-3339=date`.log

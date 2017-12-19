@@ -76,16 +76,21 @@ else ifeq ($(machine),x86_64)
   cmdc += -I$(HOSTRTL)
   cmdc += -I$(HOSTRTL)/../
   cmdc += -I$(HOSTRTL)/../projects/openmp/runtime/src/
+  cmdc += -I$(TARGETRTL)/../include
 
   cmdx += $(CXX)
   cmdx += -I$(HOSTRTL)
   cmdx += -I$(HOSTRTL)/../
   cmdx += -I$(HOSTRTL)/../projects/openmp/runtime/src/
+  cmdx += -I$(TARGETRTL)/../include
 
   cmdx += -std=c++11 -v
   
-  cmdc += -L$(HOSTRTL) -L$(TARGETRTL) -target x86_64-pc-linux-gnu -fopenmp=libomp -fopenmp-targets=nvptx64-nvidia-cuda
-  cmdx += -L$(HOSTRTL) -L$(TARGETRTL) -target x86_64-pc-linux-gnu -fopenmp=libomp -fopenmp-targets=nvptx64-nvidia-cuda
+  ifeq ($(TARGET),)
+    TARGET  =  -fopenmp-targets=amdgcn--cuda -Xopenmp-target=amdgcn--cuda -march=gfx803
+  endif
+  cmdc += -L$(HOSTRTL) -L$(TARGETRTL) -L$(TARGETRTL)/libdevice -target x86_64-pc-linux-gnu -fopenmp=libomp $(TARGET)
+  cmdx += -L$(HOSTRTL) -L$(TARGETRTL) -L$(TARGETRTL)/libdevice -target x86_64-pc-linux-gnu -fopenmp=libomp $(TARGET)
 
   extra_ld_lib_path := /home/compteam/opt/gcc/lib64
 else
@@ -102,7 +107,7 @@ compile_cmd := $(results_folder)/compile.cmd
 # Make sure the libraries are visible 
 #
 
-LD_LIBRARY_PATH := $(HOSTRTL):$(TARGETRTL):$(GLOMPRTL):/usr/local/cuda/lib64:$(results_folder):$(extra_ld_lib_path)
+LD_LIBRARY_PATH := $(HOSTRTL)/..:$(TARGETRTL):$(GLOMPRTL):/usr/local/cuda/lib64:$(results_folder):$(extra_ld_lib_path)
 export LD_LIBRARY_PATH
 LIBRARY_PATH := $(GLOMPRTL):/usr/local/cuda/lib64:/usr/local/cuda/nvvm/libdevice
 export LIBRARY_PATH
