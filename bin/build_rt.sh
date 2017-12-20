@@ -10,7 +10,12 @@ HCC2RT_REPOS=${HCC2RT_REPOS:-/home/$USER/git/hcc2}
 BUILD_RT=${BUILD_RT:-$HCC2RT_REPOS}
 RT_REPO_NAME=${RT_REPO_NAME:-hcc2-rt}
 
-NVPTXGPU_DEFAULT=${NVPTXGPU_DEFAULT:-30}
+# We can now provide a list of sm architectures, but they must support long long maxAtomic 
+NVPTXGPU=${NVPTXGPU_DEFAULT:-35,50}
+# Also provide a list of GFX processors to build for
+GFXLIST=${GFXLIST:-"gfx700;gfx701;gfx800;gfx801;gfx803;gfx900;gfx901"}
+export GFXLIST
+
 SUDO=${SUDO:-set}
 
 if [ "$SUDO" == "set" ] ; then 
@@ -44,9 +49,6 @@ function getdname(){
    fi
    echo $__DIRN
 }
-
-GFXLIST=${GFXLIST:-"gfx700;gfx701;gfx800;gfx801;gfx803;gfx900;gfx901"}
-export GFXLIST
 
 thisdir=$(getdname $0)
 [ ! -L "$0" ] || thisdir=$(getdname `readlink "$0"`)
@@ -93,23 +95,6 @@ fi
 # I don't see now nvcc is called, but this eliminates the deprecated warnings
 export CUDAFE_FLAGS="-w"
 
-if [ -f /usr/bin/nvidia-smi ] ; then 
-   GPU=`/usr/bin/nvidia-smi -L | grep -m1 GPU | cut -d: -f2 | cut -d"(" -f1`
-   if [ "$GPU" == " Quadro K4000 " ] ; then 
-      NVPTXGPU=30
-   else
-      if [ "$GPU" == " GeForce GTX 980 " ] ; then 
-         NVPTXGPU=50
-      elif [ "$GPU" == " Tesla K20c " ] ; then
-         NVPTXGPU=35
-      else 
-         NVPTXGPU=$NVPTXGPU_DEFAULT
-      fi
-   fi
-else
-   NVPTXGPU=$NVPTXGPU_DEFAULT
-fi
-
 if [ ! -d $HCC2RT_REPOS/$RT_REPO_NAME ] ; then 
    echo "ERROR:  Missing repository $HCC2RT_REPOS/$RT_REPO_NAME "
    echo "        Consider setting env variables HCC2RT_REPOS and/or RT_REPO_NAME "
@@ -132,7 +117,7 @@ if [ ! -z `which "getconf"` ]; then
     NUM_THREADS=$(`which "getconf"` _NPROCESSORS_ONLN)
 fi
 
-COMMON_CMAKE_OPTS="-DCMAKE_C_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_CXX_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_COMPILER=$HCC2/bin/clang -DCMAKE_CXX_COMPILER=$HCC2/bin/clang++ -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DLIBOMPTARGET_NVPTX_ENABLE_BCLIB=1 -DLIBOMPTARGET_NVPTX_CUDA_COMPILER=$HCC2/bin/clang++ -DLIBOMPTARGET_NVPTX_BC_LINKER=$HCC2/bin/llvm-link"
+COMMON_CMAKE_OPTS="-DOPENMP_ENABLE_LIBOMPTARGET=1 -DCMAKE_C_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_CXX_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_COMPILER=$HCC2/bin/clang -DCMAKE_CXX_COMPILER=$HCC2/bin/clang++ -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DLIBOMPTARGET_NVPTX_ENABLE_BCLIB=1 -DLIBOMPTARGET_NVPTX_CUDA_COMPILER=$HCC2/bin/clang++ -DLIBOMPTARGET_NVPTX_BC_LINKER=$HCC2/bin/llvm-link"
 
 if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then 
 
