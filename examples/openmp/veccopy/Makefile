@@ -73,15 +73,15 @@ ifeq ($(GFXNAME),)
 endif
 
 ifeq ($(DEVICE_TARGET),)
-#  DEVICE_TARGET = nvptx64-nvidia-cuda
-  DEVICE_TARGET = amdgcn--cuda
+#  DEVICE_TARGET = amdgcn--cuda
+  DEVICE_TARGET = nvptx64-nvidia-cuda
 endif
 
 ifeq ($(findstring amdgcn,$(DEVICE_TARGET)),)
 ifeq ($(DEVICE_ARCH),)
   DEVICE_ARCH = $(SMNAME)
 endif
-  CFLAGS = -O3 -target $(HOST_TARGET) -fopenmp -fopenmp-targets=$(DEVICE_TARGET) --cuda-gpu-arch=$(DEVICE_ARCH) -I$(OMPRT_INC) -I$(CUDA)/include $(EXTRA_CFLAGS)
+  CFLAGS = -O3 -target $(HOST_TARGET) -fopenmp -fopenmp-targets=$(DEVICE_TARGET)  -Xopenmp-target=$(DEVICE_TARGET) -march=$(DEVICE_ARCH) -I$(OMPRT_INC) -I$(CUDA)/include $(EXTRA_CFLAGS)
   LFLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC) -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart
   CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib PATH=$(HCC2)/bin:$(PATH)
   RUNENV = env LD_LIBRARY_PATH=$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib:$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
@@ -89,7 +89,7 @@ else
 ifeq ($(DEVICE_ARCH),)
     DEVICE_ARCH = $(GFXNAME)
 endif
-  CFLAGS = -O3 -target $(HOST_TARGET) -fopenmp -fopenmp-targets=$(DEVICE_TARGET) --cuda-gpu-arch=$(DEVICE_ARCH) -I$(OMPRT_INC) $(EXTRA_CFLAGS)
+  CFLAGS = -O3 -target $(HOST_TARGET) -fopenmp -fopenmp-targets=$(DEVICE_TARGET)  -Xopenmp-target=$(DEVICE_TARGET) -march=$(DEVICE_ARCH) -I$(OMPRT_INC) $(EXTRA_CFLAGS)
   LFLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC)
   CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(ATMI_LIB_BC):$(ATMI_LIB):$(LIBAMDGCN)/$(GFXNAME)/lib PATH=$(HCC2)/bin:$(PATH)
   RUNENV = env LD_LIBRARY_PATH=$(OMPRT_LIB):$(ATMI_LIB):$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
