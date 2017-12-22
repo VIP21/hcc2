@@ -11,7 +11,7 @@ BUILD_RT=${BUILD_RT:-$HCC2RT_REPOS}
 RT_REPO_NAME=${RT_REPO_NAME:-hcc2-rt}
 
 # We can now provide a list of sm architectures, but they must support long long maxAtomic 
-NVPTXGPU=${NVPTXGPU_DEFAULT:-35,50}
+NVPTXGPU=${NVPTXGPU_DEFAULT:-30,35,50}
 # Also provide a list of GFX processors to build for
 GFXLIST=${GFXLIST:-"gfx700;gfx701;gfx800;gfx801;gfx803;gfx900;gfx901"}
 export GFXLIST
