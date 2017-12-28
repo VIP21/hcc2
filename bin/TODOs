@@ -23,7 +23,7 @@ Note: There is no committment to complete any or all items
          Examples for compiling OpenCL and Cuda kernels are in 
          hcc2/examples/cloc (Greg)
 
-007  ___ Add Debian packaging control files to this bin directory
+007  _X_ Add Debian packaging control files to this bin directory
          with versions for amd64, ppc64el, and aarch64
          (Greg) (0.4-1)
 007.1 X  Make libamdgcn a noarch pachage
@@ -52,25 +52,25 @@ Note: There is no committment to complete any or all items
          needs 009 (Guansong)
          (0.3-9)
 
-015  ___ Create a fail message (in driver) if libamdgcn not installed 
+015  _X_ Create a fail message (in driver) if libamdgcn not installed 
          when --cuda-gpu-arch=gfxXXX. Also, create a fail message when 
          --cuda-gpu-arch=sm_XXX and cuda is not installed. (Guansong)
-         (0.4-X)
+         (0.4-0)
 
 016  _X_ Reverse Makefile warnings for LIBAMDGCN and HCC2 env variables (Andrey)
          (0.3-9)
 
-017  ___ Merge with latest yorktown coral repos (Greg)
-         (0.4-X)
+017  _X_ Merge with latest yorktown coral repos (Greg) (Dec 2017)
+         (0.4-0)
 
-017a ___ Merge hcc2-clang with latest yorktown coral repos
-         (0.4-X)
+017a _X_ Merge hcc2-clang with latest yorktown coral repos (Dec 2017)
+         (0.4-0)
          
-017b ___ Merge hcc2-llvm with latest yorktown coral repos
-         (0.4-X)
+017b _X_ Merge hcc2-llvm with latest yorktown coral repos (Dec 2017)
+         (0.4-0)
          
-017c ___ Merge hcc2-rt with latest yorktown coral repo (Guansong)
-         (0.4-X)
+017c _X_ Merge hcc2-rt with latest yorktown coral repo (Guansong) (Dec 2017)
+         (0.4-0)
 
 018  _X_ make utilities in hcc2-rt/utils/bin executable with package
          install, needs 007 
@@ -78,8 +78,8 @@ Note: There is no committment to complete any or all items
 019  ___ Test on carrizo and good HSA installed kaveris  
          (TBD)
 
-020  ___ Add autodiscover of subarch/gpu for both amdgcn and nvptx (Greg)
-         (0.4-X)
+020  _X_ Add autodiscover of subarch/gpu for both amdgcn and nvptx (Greg)
+         (0.4-0) see updated utils/bin/mymcpu
 
 021  ___ Make printf more robust, especially with large blocks 
          where all lanes are active. Create and use a new atmi service
