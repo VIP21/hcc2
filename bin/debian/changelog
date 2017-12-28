@@ -1,4 +1,4 @@
-hcc2 (0.3-9) UNRELEASED; urgency=medium
+hcc2 (0.4-0) UNRELEASED; urgency=medium
 
   * Initial release of hcc2 is 0.3-2
   *   Please see example in /opt/rocm/hcc2/examples/vmuldemo 
@@ -36,4 +36,4 @@ hcc2 (0.3-9) UNRELEASED; urgency=medium
   *   Testing removed from "examples" directory into test/smoke directories. 
   *   Added test/omptests directory for enhanced testing. 
 
- -- Greg Rodgers <Gregory.Rodgers@amd.com>  Fri, 06 Oct 2017 12:33:15 -0500
+ -- Greg Rodgers <Gregory.Rodgers@amd.com>  Thu, 28 Dec 2017 09:41:30 -0600
