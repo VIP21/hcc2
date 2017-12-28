@@ -9,9 +9,9 @@
 
 #include <stdio.h>
 
-#define N 3
-#define M 3
-#define P 3
+#define N 9
+#define M 9
+#define P 9
 
 __global__
 void matrixMul(int *matrixA, int *matrixB, int *matrixC,

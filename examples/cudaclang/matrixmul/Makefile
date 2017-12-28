@@ -17,7 +17,7 @@ ifeq ($(CUDA),)
   CUDA = /usr/local/cuda
 endif
 ifeq ($(TARGET),)
-  TARGET = sm_35
+  TARGET = $(shell $(HCC2)/bin/mygpu)
 endif
 
 INCS     = -I/usr/local/cuda/include -I/usr/local/cuda/samples/common/inc
@@ -82,7 +82,6 @@ help:
 	@echo " make help"
 	@echo
 	@echo "Environment variables to control compile & execution:"
-	@echo "  TARGET=<arch>  offload target, default=sm_35"
 	@echo "  CUDA=<dir>  CUDA install dir, default=/usr/local/cuda"
 	@echo "  HCC2=<dir>  HCC2 install dir, default=/opt/rocm/hcc2"
 	@echo "  LIBAMDGCN=<dir>  device libs, default=/opt/rocm/libamdgcn"
