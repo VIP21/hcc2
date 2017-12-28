@@ -6,7 +6,8 @@ hcc2:  Heterogeneous Compiler Collection (Version 2).
 This is README.md for https:/github.com/ROCM-Developer-Tools/hcc2 .  This is the base repository for HCC2,  Use this for issues, documentation, packaging, examples, build.  
 
 HCC2 is an experimental PROTOTYPE that is intended to support multiple programming models including OpenMP 4.5+, C++ parallel extentions (original HCC), and cuda clang.  It supports offloading to multiple GPU acceleration targets(multi-target).  It also supports different host platforms such as AMD64, PPC64LE, and AARCH64. (multi-platform). 
-The bin directory of this repository contains a README and build scripts needed to build HCC2.
+
+The bin directory of this repository contains a README and build scripts needed to build HCC2. However, we recommend that you install from the debian or rpm packages provided as described below.
 
 Attention Users!  Use this repository for issues. Do not put issues in the source code repositories.  Before creating an issue, you may want to see the developers list of TODOs.  See link below.
 
@@ -70,9 +71,17 @@ On Ubuntu 16.04 LTS (xenial), run these commands:
 ```
 wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.4-0/hcc2_0.4-0_amd64.deb
 wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.4-0/libamdgcn_0.4-0_all.deb
+sudo dpkg -P hcc2
+sudo dpkg -P libamdgcn
+sudo dpkg -P amdcloc
+sudo dpkg -P mymcpu
 sudo dpkg -i hcc2_0.4-0_amd64.deb
 sudo dpkg -i libamdgcn_0.4-0_all.deb
 ```
+the dpkg -P commands are used to delete previous versions of hcc2, libamdgcn, amdcloc, and mymcpu which may conflickt with the installtion.  If these are not installed it is ok to just let the dpkg -P commands fail.
+
+HCC2 does not conflict with the production HCC. There is no reason to delete HCC to use HCC2. The HCC2 bin directory (which includes the standard clang and llvm binaries) is not intended to be in your PATH for typical operation.
+
 
 For rpm-based Linux systems, run the following commands:
 
