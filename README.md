@@ -78,7 +78,7 @@ sudo dpkg -P mymcpu
 sudo dpkg -i hcc2_0.4-0_amd64.deb
 sudo dpkg -i libamdgcn_0.4-0_all.deb
 ```
-the dpkg -P commands are used to delete previous versions of hcc2, libamdgcn, amdcloc, and mymcpu which may conflickt with the installtion.  If these are not installed it is ok to just let the dpkg -P commands fail.
+The "dpkg -P" commands are used to delete previous versions of hcc2, libamdgcn, amdcloc, and mymcpu which may conflict with the installation.  If these are not installed it is ok to just let the "dpkg -P" commands fail.
 
 HCC2 does not conflict with the production HCC. There is no reason to delete HCC to use HCC2. The HCC2 bin directory (which includes the standard clang and llvm binaries) is not intended to be in your PATH for typical operation.
 
@@ -92,7 +92,7 @@ sudo rpm -i hcc2-0.4-0.x86_64.rpm
 sudo rpm -i libamdgcn-0.4-0.noarch.rpm
 ```
 
-Build and install from sources is possible, though due to many different repos involved it is complicated a little. For details see corresponding [README](bin/README).
+Build and install from sources is possible, though due to many different repos involved it is a complex build. For details on the source build see [README](bin/README).
 
 ## HCC2 Limitations
 
