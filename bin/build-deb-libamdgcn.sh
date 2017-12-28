@@ -19,9 +19,10 @@ DEBFULLNAME="Greg Rodgers"
 DEBEMAIL="Gregory.Rodgers@amd.com"
 export DEBFULLNAME DEBEMAIL
 
-echo "opt/rocm/$dirname opt/rocm/libamdgcn" > debian/$pkgname.links
-echo "opt/rocm/$dirname" > debian/$pkgname.install
-echo "usr/share/doc/$dirname" >> debian/$pkgname.install
+debdir=$PWD/debian-libamdgcn
+echo "opt/rocm/$dirname opt/rocm/libamdgcn" > $debdir/$pkgname.links
+echo "opt/rocm/$dirname" > $debdir/$pkgname.install
+echo "usr/share/doc/$dirname" >> $debdir/$pkgname.install
 
 tmpdir=/tmp/$USER/build-deb
 builddir=$tmpdir/$pkgname
@@ -30,7 +31,6 @@ if [ -d $builddir ] ; then
    sudo rm -rf $builddir
 fi
 echo
-debdir=$PWD/debian-libamdgcn
 froot=$builddir/$pkgname-${version}
 mkdir -p $froot$installdir
 mkdir -p $froot/usr/share/doc/$dirname
