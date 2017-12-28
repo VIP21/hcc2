@@ -1,0 +1,20 @@
+Source: libamdgcn
+Maintainer: Greg Rodgers <Gregory.Rodgers@amd.com>
+Section: devel
+Priority: optional
+Standards-Version: 3.9.5
+Build-Depends: debhelper (>= 9) 
+Build-Depends-Indep: cli-common-dev (>= 0.8)
+Homepage: http://github.com/HSAFoundation/CLOC
+
+Package: libamdgcn
+Architecture: all
+#Depends: ${shlibs:Depends},${misc:Depends}
+Depends: ${misc:Depends}
+Description: LLVM bitcode libraries for amdgcn target architectures.
+ Contains bitcode libraries optimized for many amdgpu (Radeon)
+ processors.  This package is required for hcc2 for building 
+ applications with amdgcn targets. Since hcc2 can build for 
+ other targets, hcc2 does not force this package to be required. 
+ This is a noarch package because the bitcode libraries can be
+ used on any platform (amd64, ppc64le, or aarch64). 
