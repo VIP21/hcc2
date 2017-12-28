@@ -1,4 +1,4 @@
-HCC2 - V 0.3-9
+HCC2 - V 0.4-0
 ==============
 
 hcc2:  Heterogeneous Compiler Collection (Version 2). 
@@ -68,19 +68,19 @@ Software License Agreement.
 On Ubuntu 16.04 LTS (xenial), run these commands:
 
 ```
-wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.3-9/hcc2_0.3-9_amd64.deb
-wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.3-9/libamdgcn_0.3-9_all.deb
-sudo dpkg -i hcc2_0.3-9_amd64.deb
-sudo dpkg -i libamdgcn_0.3-9_all.deb
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.4-0/hcc2_0.4-0_amd64.deb
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.4-0/libamdgcn_0.4-0_all.deb
+sudo dpkg -i hcc2_0.4-0_amd64.deb
+sudo dpkg -i libamdgcn_0.4-0_all.deb
 ```
 
 For rpm-based Linux systems, run the following commands:
 
 ```
-wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.3-9/hcc2-0.3-9.x86_64.rpm
-wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.3-9/libamdgcn-0.3-9.noarch.rpm
-sudo rpm -i hcc2-0.3-9.x86_64.rpm
-sudo rpm -i libamdgcn-0.3-9.noarch.rpm
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.4-0/hcc2-0.4-0.x86_64.rpm
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.4-0/libamdgcn-0.4-0.noarch.rpm
+sudo rpm -i hcc2-0.4-0.x86_64.rpm
+sudo rpm -i libamdgcn-0.4-0.noarch.rpm
 ```
 
 Build and install from sources is possible, though due to many different repos involved it is complicated a little. For details see corresponding [README](bin/README).

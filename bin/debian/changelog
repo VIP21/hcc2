@@ -20,5 +20,20 @@ hcc2 (0.3-9) UNRELEASED; urgency=medium
   *   set-linkage moved to bin for building bc libs
   *   new GFXLIST added to build environment to help developers minimize build time
   *   support for cuda9
+  * 0.4-0 is a major upgrade
+  *   Merge yorktown coral CLANG 4.0 compiler as of Nov 15, 2017 
+  *     This provides significant enhancements for synthesized GPU kernels. 
+  *   Support for optimized libomptarget bc libraries for multiple nvptx subarchs 
+  *   Support for cudaclang for both nvidia and amdgcn targets
+  *   specification of the target on command line changed to -march=
+  *     This may change again in the future
+  *   autodetect the target of the current machine with the mygpu script
+  *   all smoke tests now run for both nvidia and amdgcn targets. 
+  *     stream test still does not vectorize
+  *   Stop using release branches in our github.  We now use github release mechanism
+  *     and attach deb and rpm files to the release
+  *   Tasklist is currently managed in hcc2/hcc2/bin/TODOs. 
+  *   Testing removed from "examples" directory into test/smoke directories. 
+  *   Added test/omptests directory for enhanced testing. 
 
  -- Greg Rodgers <Gregory.Rodgers@amd.com>  Fri, 06 Oct 2017 12:33:15 -0500
