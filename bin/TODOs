@@ -88,7 +88,7 @@ Note: There is no committment to complete any or all items
          with OFFLOAD_DEBUG=1 turned on.  (Greg)
          (0.4-X)
 
-022  ___ Run omp test suite (Andrey)
+022  _X_ Run omp test suite (Andrey)
          Please add a script in hcc2/bin that runs these tests. 
          (0.3-9)
 
