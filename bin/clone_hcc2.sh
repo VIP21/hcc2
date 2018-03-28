@@ -9,9 +9,7 @@ GITROCDEV="https://github.com/ROCm-Developer-Tools"
 STASH_BEFORE_PULL=${STASH_BEFORE_PULL:-YES}
 
 # Set the directory location for all REPOS
-ROC_REPOS=${ROC_REPOS:-/home/$USER/git/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
-ATMI_REPOS=${ATMI_REPOS:-/home/$USER/git/hcc2}
 
 # Get the HCC2_VERSION_STRING from a file in this directory 
 function getdname(){
@@ -43,7 +41,7 @@ fi
 export HCC2_VERSION_STRING
 
 function clone_or_pull(){
-repodirname=$basedir/$reponame
+repodirname=$HCC2_REPOS/$reponame
 echo
 if [ -d $repodirname  ] ; then 
    echo "--- Pulling updates to existing dir $repodirname ----"
@@ -58,7 +56,7 @@ if [ -d $repodirname  ] ; then
    git pull 
 else 
    echo --- NEW CLONE of repo $reponame to $repodirname ----
-   cd $basedir
+   cd $HCC2_REPOS
    echo git clone $repo_web_location/$reponame
    git clone $repo_web_location/$reponame
    echo "cd $repodirname ; git checkout $COBRANCH"
@@ -68,32 +66,30 @@ fi
 }
 
 mkdir -p $HCC2_REPOS
-mkdir -p $ATMI_REPOS
 
 # ---------------------------------------
 #  The first 5 REPOS are in ROCm-Development
 # ---------------------------------------
 repo_web_location=$GITROCDEV
-basedir=$HCC2_REPOS
 
 reponame="hcc2"
 COBRANCH="master"
 clone_or_pull
 
 reponame="openmp"
-COBRANCH="master"
+COBRANCH="HCC2-180328"
 clone_or_pull
 
 reponame="llvm"
-COBRANCH="HCC2-180315"
+COBRANCH="HCC2-180328"
 clone_or_pull
 
 reponame="clang"
-COBRANCH="HCC2-180315"
+COBRANCH="HCC2-180328"
 clone_or_pull
 
 reponame="lld"
-COBRANCH="HCC2-180315"
+COBRANCH="HCC2-180328"
 clone_or_pull
 
 reponame="hcc2-hip"
@@ -106,14 +102,12 @@ clone_or_pull
 repo_web_location=$GITROC
 
 # This repo is used to build /opt/rocm/libamdgcn
-basedir=$ROC_REPOS
 reponame="rocm-device-libs"
 COBRANCH="master"
 clone_or_pull
 
 # This is the ATMI repo for ATMI 0.4 in development
-basedir=$ATMI_REPOS
 reponame="atmi-staging"
 COBRANCH="0.4"
-clone_or_pull
+#clone_or_pull
 
