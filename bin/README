@@ -9,7 +9,7 @@ This bin directory contains scripts to build HCC2
 clone_hcc2.sh      -  A script to make sure the necessary repos are cloned and  up to date.
                       See below for a list of these libraries.
 
-build_hcc2.sh      -  Build the HCC2 compiler. This compiler supports cuda clang, openmp, and 
+build_hcc2.sh      -  Build the HCC2 compiler. This compiler supports cuda clang, openmp, hip, and 
                       the OpenCL frontend for cloc.sh to build device libraries.  It contains a 
                       recent version of the AMD Lightning compiler and the ptx backend. 
                       This compiler works for both Nvidia and AMD Radeon GPUs.
@@ -54,8 +54,7 @@ for other environment variables that you may override including repo names.
 HCC2              /opt/rocm/hcc2           *
 CUDA              /usr/local/cuda          *
 HCC2_REPOS        /home/$USER/git/hcc2
-ROC_REPOS         /home/$USER/git/hcc2
-NVPTXGPU_DEFAULT  30
+NVPTXGPUS         30,35,50
 BUILD_TYPE        Release
 SUDO              set
 
@@ -66,14 +65,13 @@ the values in your .bashrc or .bash_profile to build your HOME directory.
 Here is a sample for your .bash_profile
 
 SUDO="disable"
-HCC2=$HOME/hcc2
+HCC2=$HOME/install/hcc2
 BUILD_TYPE=Debug
-NVPTXGPU_DEFAULT=50
-export SUDO HCC2 NVPTXGPU_DEFAULT BUILD_TYPE
+NVPTXGPUS=30,35,50,60,65
+export SUDO HCC2 NVPTXGPUS BUILD_TYPE
 
 The build scripts will build from the source directories identified by the 
-environment variable ROC_REPOS and HCC2_REPOS. The out-of-source build for 
-hcc2 will be done in the directory $ROC_REPOS/build_hcc2 . 
+environment variable HCC2_REPOS. 
 
 To build all components, run the scripts in the following order:
 
@@ -99,15 +97,3 @@ can restart the build by running "make" or "make install" in the build directory
 The compiler created by build_hcc2.sh is needed by build_openmp.sh and 
 build_libamdgcn.sh to build device libraries.  So you must have 
 built and installed hcc2 before building the libraries.
-
--------- Optional ------
-For some people access to git repositories in HOME directory is slow. 
-The build scripts have an optional feature that will rsync a copy of each of the 
-necessary repositories to another directory that may have faster access 
-such as /tmp.  This feature could also be useful if you are making lots of 
-testing changes that you do not want in your git repository. 
-To trigger this feature, set these environment variables: 
-
-export BUILD_HCC2=/tmp/$USER/hcc2
-export BUILD_RT=/tmp/$USER/rt
-export BUILD_ATMI=/tmp/$USER/atmi
