@@ -37,6 +37,7 @@
 HCC2=${HCC2:-/opt/rocm/hcc2}
 HIPRT_REPO=${HIPRT_REPO:-/home/$USER/git/hcc2/hcc2-hip}
 GFXLIST=${GFXLIST:-"gfx700 gfx701 gfx801 gfx803 gfx900"}
+export GFXLIST
 
 SUDO=${SUDO:-set}
 if [ $SUDO == "set" ] ; then
@@ -162,6 +163,7 @@ else
       echo
       echo "BUILD COMPLETE!  To install run this command:"
       echo  $0 install
+      echo "to install into $INSTALL_DIR/lib and $INSTALL_DIR/lib-debug "
       echo
 fi
 
