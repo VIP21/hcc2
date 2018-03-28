@@ -1,15 +1,15 @@
 #!/bin/bash
 #
-#  File: build_libamdgcn.sh
-#        buind device libraries in $LIBAMDGCN
+#  File: build_libdevice.sh
+#        buind device libraries in $HCC2/lib/libdevice
 #
 
 # Do not change these values. Set the environment variables to override these defaults
+
 HCC2=${HCC2:-/opt/rocm/hcc2}
-LIBAMDGCN=${LIBAMDGCN:-/opt/rocm/libamdgcn}
-LIBAMDGCN_REPOS=${LIBAMDGCN_REPOS:-/home/$USER/git/hcc2}
-BUILD_LIBAMDGCN=${BUILD_LIBAMDGCN:-$LIBAMDGCN_REPOS}
-LIBAMDGCN_REPO_NAME=${LIBAMDGCN_REPO_NAME:-rocm-device-libs}
+HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
+BUILD_LIBDEVICE=${BUILD_LIBDEVICE:-$HCC2_REPOS}
+HCC2_LIBDEVICE_REPO_NAME=${HCC2_LIBDEVICE_REPO_NAME:-rocm-device-libs}
 HSA_DIR=${HSA_DIR:-/opt/rocm/hsa}
 SKIPTEST=${SKIPTEST:-"YES"}
 SUDO=${SUDO:-set}
@@ -19,64 +19,41 @@ else
    SUDO=""
 fi
 
-BUILD_DIR=$BUILD_LIBAMDGCN
-if [ "$BUILD_DIR" != "$LIBAMDGCN_REPOS" ] ; then 
+BUILD_DIR=$BUILD_LIBDEVICE
+if [ "$BUILD_DIR" != "$HCC2_REPOS" ] ; then 
    COPYSOURCE=true
 fi
 
-# Get the HCC2_VERSION_STRING from a file in this directory 
-function getdname(){
-   local __DIRN=`dirname "$1"`
-   if [ "$__DIRN" = "." ] ; then
-      __DIRN=$PWD;
-   else
-      if [ ${__DIRN:0:1} != "/" ] ; then
-         if [ ${__DIRN:0:2} == ".." ] ; then
-               __DIRN=`dirname $PWD`/${__DIRN:3}
-         else
-            if [ ${__DIRN:0:1} = "." ] ; then
-               __DIRN=$PWD/${__DIRN:2}
-            else
-               __DIRN=$PWD/$__DIRN
-            fi
-         fi
-      fi
-   fi
-   echo $__DIRN
-}
-thisdir=$(getdname $0)
-[ ! -L "$0" ] || thisdir=$(getdname `readlink "$0"`)
-if [ -f $thisdir/HCC2_VERSION_STRING ] ; then 
-   HCC2_VERSION_STRING=`cat $thisdir/HCC2_VERSION_STRING`
-else 
-   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.4-0"}
-fi
-export HCC2_VERSION_STRING
-INSTALL_DIR="${LIBAMDGCN}_${HCC2_VERSION_STRING}"
+INSTALL_DIR="${HCC2}/lib/libdevice"
 
 LLVM_BUILD=$HCC2
-SOURCEDIR=$LIBAMDGCN_REPOS/$LIBAMDGCN_REPO_NAME
+SOURCEDIR=$HCC2_REPOS/$HCC2_LIBDEVICE_REPO_NAME
 
-MCPU_LIST=${GFXLIST:-"gfx700 gfx701 gfx800 gfx801 gfx803 gfx900 gfx901"}
+MCPU_LIST=${GFXLIST:-"gfx700 gfx701 gfx801 gfx803 gfx900"}
 
-MYCMAKEOPTS="-DLLVM_DIR=$LLVM_BUILD -DGENERIC_IS_ZERO=ON -DCUDA_TRIPLE=ON -DBUILD_HC_LIB=ON -DROCM_DEVICELIB_INCLUDE_TESTS=OFF"
+MYCMAKEOPTS="-DLLVM_DIR=$LLVM_BUILD -DBUILD_HC_LIB=ON -DROCM_DEVICELIB_INCLUDE_TESTS=OFF"
 
-#  Use the following CMAKEOPTS to turn on testing
-#MYCMAKEOPTS="-DLLVM_DIR=$LLVM_BUILD -DAMDHSACOD=$HSA_DIR/bin/amdhsacod -DGENERIC_IS_ZERO=ON -DCUDA_TRIPLE=ON -DBUILD_HC_LIB=ON -DROCM_DEVICELIB_INCLUDE_TESTS=ON"
-
-if [ ! -L $LIBAMDGCN ] ; then 
-  if [ -d $LIBAMDGCN ] ; then 
-     echo "ERROR: Directory $LIBAMDGCN is a physical directory."
-     echo "       It must be a symbolic link or not exist"
-     exit 1
-  fi
+if [ ! -d $HCC2/lib ] ; then 
+  echo "ERROR: Directory $HCC2/lib is missing"
+  echo "       HCC2 must be installed in $HCC2 to continue"
+  exit 1
 fi
 
 function gfx2code(){ 
    case "$1" in 
+      "gfx600") codename="tahiti"
+      ;;
+      "gfx601") codename="pitcairn"
+      ;;
       "gfx700") codename="kaveri"
       ;;
       "gfx701") codename="hawaii"
+      ;;
+      "gfx702") codename="r390"
+      ;;
+      "gfx703") codename="kabini"
+      ;;
+      "gfx704") codename="bonaire"
       ;;
       "gfx800") codename="iceland"
       ;;
@@ -86,7 +63,15 @@ function gfx2code(){
       ;;
       "gfx803") codename="fiji"
       ;;
+      "gfx804") codename="polaris"
+      ;;
+      "gfx810") codename="stoney"
+      ;;
       "gfx900") codename="vega"
+      ;;
+      "gfx901") codename="tbd901"
+      ;;
+      "gfx902") codename="tbd902"
       ;;
       *) codename="$1" 
       ;;
@@ -104,24 +89,28 @@ export PATH=$LLVM_BUILD/bin:$PATH
 
 if [ "$1" != "install" ] ; then 
    if [ $COPYSOURCE ] ; then 
-      if [ -d $BUILD_DIR/$LIBAMDGCN_REPO_NAME ] ; then 
-         echo rm -rf $BUILD_DIR/$LIBAMDGCN_REPO_NAME
-         rm -rf $BUILD_DIR/$LIBAMDGCN_REPO_NAME
+      if [ -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME ] ; then 
+         echo rm -rf $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
+         rm -rf $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
       fi
-      mkdir -p $BUILD_DIR/$LIBAMDGCN_REPO_NAME
-      echo rsync -a $SOURCEDIR/ $BUILD_DIR/$LIBAMDGCN_REPO_NAME/
-      rsync -a $SOURCEDIR/ $BUILD_DIR/$LIBAMDGCN_REPO_NAME/
+      mkdir -p $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
+      echo rsync -a $SOURCEDIR/ $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/
+      rsync -a $SOURCEDIR/ $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/
+      # Fixup ll files to avoid link warnings
+      for llfile in `find $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME -type f | grep "\.ll" ` ; do 
+        sed -i -e"s/:64-A5/:64-S32-A5/" $llfile
+      done
    fi
 
    LASTMCPU="fiji"
-   sedfile1=$BUILD_DIR/$LIBAMDGCN_REPO_NAME/OCL.cmake
-   sedfile2=$BUILD_DIR/$LIBAMDGCN_REPO_NAME/CMakeLists.txt
-   origsedfile2=$BUILD_DIR/$LIBAMDGCN_REPO_NAME/CMakeLists.txt.orig
+   sedfile1=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/OCL.cmake
+   sedfile2=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/CMakeLists.txt
+   origsedfile2=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/CMakeLists.txt.orig
    if [ ! $COPYSOURCE ] ; then 
      cp $sedfile2 $origsedfile2 
    fi
    for MCPU in $MCPU_LIST  ; do 
-      builddir_mcpu=$BUILD_DIR/build_libamdgcn_$MCPU
+      builddir_mcpu=$BUILD_DIR/build_libdevice_$MCPU
       if [ -d $builddir_mcpu ] ; then 
          echo rm -rf $builddir_mcpu
          rm -rf $builddir_mcpu
@@ -143,14 +132,14 @@ if [ "$1" != "install" ] ; then
       grep mcpu $sedfile2
       CC="$LLVM_BUILD/bin/clang"
       export CC
-      echo "cmake $MYCMAKEOPTS -DCMAKE_INSTALL_PREFIX=$installdir_gfx $BUILD_DIR/$LIBAMDGCN_REPO_NAME"
-      cmake $MYCMAKEOPTS -DCMAKE_INSTALL_PREFIX=$installdir_gfx $BUILD_DIR/$LIBAMDGCN_REPO_NAME
+      echo "cmake $MYCMAKEOPTS -DCMAKE_INSTALL_PREFIX=$installdir_gfx $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME"
+      cmake $MYCMAKEOPTS -DCMAKE_INSTALL_PREFIX=$installdir_gfx $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
       if [ $? != 0 ] ; then 
          echo "ERROR cmake failed for $MCPU, command was \n"
-         echo "      cmake $MYCMAKEOPTS -DCMAKE_INSTALL_PREFIX=$installdir_gfx $BUILD_DIR/$LIBAMDGCN_REPO_NAME"
+         echo "      cmake $MYCMAKEOPTS -DCMAKE_INSTALL_PREFIX=$installdir_gfx $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME"
          if [ ! $COPYSOURCE ] ; then 
             #  Put the cmake files in repository back to original condition.
-            cd $BUILD_DIR/$LIBAMDGCN_REPO_NAME
+            cd $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
             git checkout $sedfile1
             cp $origsedfile2 $sedfile2
          fi
@@ -161,7 +150,7 @@ if [ "$1" != "install" ] ; then
          echo "ERROR make failed for $MCPU "
          if [ ! $COPYSOURCE ] ; then 
             #  Put the cmake files in repository back to original condition.
-            cd $BUILD_DIR/$LIBAMDGCN_REPO_NAME
+            cd $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
             git checkout $sedfile1
             cp $origsedfile2 $sedfile2
          fi
@@ -170,19 +159,19 @@ if [ "$1" != "install" ] ; then
    done
    if [ ! $COPYSOURCE ] ; then 
       #  Put the cmake files in repository back to original condition.
-      cd $BUILD_DIR/$LIBAMDGCN_REPO_NAME
+      cd $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
       git checkout $sedfile1
       cp $origsedfile2 $sedfile2
       rm $origsedfile2 
    fi
    echo 
    echo "  Done with all makes"
-   echo "  Please run ./build_libamdgcn.sh install "
+   echo "  Please run ./build_libdevice.sh install "
    echo 
 
    if [ "$SKIPTEST" != "YES" ] ; then 
       for MCPU in $MCPU_LIST  ; do 
-         builddir_mcpu=$BUILD_DIR/build_libamdgcn_$MCPU
+         builddir_mcpu=$BUILD_DIR/build_libdevice_$MCPU
          cd $builddir_mcpu
          echo "running tests in $builddir_mcpu"
          make test 
@@ -197,10 +186,10 @@ if [ "$1" == "install" ] ; then
    for MCPU in $MCPU_LIST  ; do 
       echo 
       installdir_gfx="$INSTALL_DIR/$MCPU"
-      echo mkdir -p $installdir_gfx/lib
-      $SUDO mkdir -p $installdir_gfx/lib
+      echo mkdir -p $installdir_gfx/include
       $SUDO mkdir -p $installdir_gfx/include
-      builddir_mcpu=$BUILD_DIR/build_libamdgcn_$MCPU
+      $SUDO mkdir -p $installdir_gfx/lib
+      builddir_mcpu=$BUILD_DIR/build_libdevice_$MCPU
       codename=$(gfx2code $MCPU)
       installdir_codename=$INSTALL_DIR/${codename}
       echo "running make install from $builddir_mcpu"
@@ -229,13 +218,16 @@ if [ "$1" == "install" ] ; then
       done
    done
 
-   # we know $LIBAMDGCN is a link so ok to remove it
-   if [ -L $LIBAMDGCN ] ; then 
-      $SUDO rm $LIBAMDGCN
-   fi
-   echo $SUDO ln -sf $INSTALL_DIR $LIBAMDGCN
-   $SUDO ln -sf $INSTALL_DIR $LIBAMDGCN
+   # rocm-device-lib cmake installs to lib dir, move all bc files up one level
+   for MCPU in $MCPU_LIST  ; do 
+      installdir_gfx="$INSTALL_DIR/$MCPU"
+      echo mv $installdir_gfx/lib/*.bc $installdir_gfx
+      $SUDO mv $installdir_gfx/lib/*.bc $installdir_gfx
+      echo rmdir $installdir_gfx/lib 
+      $SUDO rmdir $installdir_gfx/lib 
+   done
+
    echo 
-   echo "# installation complete "
+   echo " $0 Installation complete into $INSTALL_DIR"
    echo 
 fi

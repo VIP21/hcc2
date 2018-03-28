@@ -80,23 +80,23 @@ reponame="hcc2"
 COBRANCH="master"
 clone_or_pull
 
-reponame="hcc2-rt"
+reponame="openmp"
 COBRANCH="master"
 clone_or_pull
 
-reponame="hcc2-llvm"
-COBRANCH="master"
+reponame="llvm"
+COBRANCH="HCC2-180315"
 clone_or_pull
 
-reponame="hcc2-clang"
-COBRANCH="master"
+reponame="clang"
+COBRANCH="HCC2-180315"
 clone_or_pull
 
-reponame="hcc2-lld"
-COBRANCH="master"
+reponame="lld"
+COBRANCH="HCC2-180315"
 clone_or_pull
 
-reponame="hip"
+reponame="hcc2-hip"
 COBRANCH="master"
 clone_or_pull
 
@@ -108,7 +108,7 @@ repo_web_location=$GITROC
 # This repo is used to build /opt/rocm/libamdgcn
 basedir=$ROC_REPOS
 reponame="rocm-device-libs"
-COBRANCH="rel_0.3-9"
+COBRANCH="master"
 clone_or_pull
 
 # This is the ATMI repo for ATMI 0.4 in development
@@ -117,7 +117,3 @@ reponame="atmi-staging"
 COBRANCH="0.4"
 clone_or_pull
 
-basedir=$ATMI_REPOS
-reponame="cudaclang-rt"
-COBRANCH="master"
-clone_or_pull

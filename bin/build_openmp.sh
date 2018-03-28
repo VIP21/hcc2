@@ -1,19 +1,20 @@
 #!/bin/bash
 #
-#  build_rt.sh:  Script to build the HCC2 runtime libraries and debug libraries.  
+#  build_openmp.sh:  Script to build the HCC2 runtime libraries and debug libraries.  
 #                This script will install in location defined by HCC2 env variable
 #
 # Do not change these values. If you set the environment variables these defaults will changed to 
 # your environment variables
 HCC2=${HCC2:-/opt/rocm/hcc2}
-HCC2RT_REPOS=${HCC2RT_REPOS:-/home/$USER/git/hcc2}
-BUILD_RT=${BUILD_RT:-$HCC2RT_REPOS}
-RT_REPO_NAME=${RT_REPO_NAME:-hcc2-rt}
+HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
+BUILD_OPENMP=${BUILD_OPENMP:-$HCC2_REPOS}
+OPENMP_REPO_NAME=${OPENMP_REPO_NAME:-openmp}
+REPO_BRANCH=${REPO_BRANCH:-HCC2-180328}
 
 # We can now provide a list of sm architectures, but they must support long long maxAtomic 
-NVPTXGPU=${NVPTXGPU_DEFAULT:-30,35,50}
+NVPTXGPUS=${NVPTXGPU_DEFAULT:-30,35,50}
 # Also provide a list of GFX processors to build for
-GFXLIST=${GFXLIST:-"gfx700;gfx701;gfx800;gfx801;gfx803;gfx900;gfx901"}
+GFXLIST=${GFXLIST:-"gfx700;gfx701;gfx801;gfx803;gfx900"}
 export GFXLIST
 
 SUDO=${SUDO:-set}
@@ -24,8 +25,8 @@ else
    SUDO=""
 fi
 
-BUILD_DIR=$BUILD_RT
-if [ "$BUILD_DIR" != "$HCC2RT_REPOS" ] ; then 
+BUILD_DIR=$BUILD_OPENMP
+if [ "$BUILD_DIR" != "$HCC2_REPOS" ] ; then 
    COPYSOURCE=true
 fi
 
@@ -63,25 +64,48 @@ INSTALL_DIR="${HCC2}_${HCC2_VERSION_STRING}"
 if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then 
   echo " "
   echo "Example commands and actions: "
-  echo "  ./build_rt.sh                   rsync, cmake, make, NO Install "
-  echo "  ./build_rt.sh nocmake           NO rsync, NO cmake, make, NO install "
-  echo "  ./build_rt.sh install           NO rsync, NO Cmake, make, INSTALL"
+  echo "  ./build_openmp.sh                   cmake, make, NO Install "
+  echo "  ./build_openmp.sh nocmake           NO cmake, make, NO install "
+  echo "  ./build_openmp.sh install           NO Cmake, make, INSTALL"
   echo " "
-  echo "To build hcc2, you need to build 4 components with these commands"
+  echo "To build hcc2, you need to build 5 components with these commands"
   echo " "
   echo "  ./build_hcc2.sh "
   echo "  ./build_hcc2.sh install"
   echo "  ./build_atmi"
   echo "  ./build_atmi install"
-  echo "  ./build_rt.sh "
-  echo "  ./build_rt.sh install"
-  echo "  ./build_libamdgcn.sh"
-  echo "  ./build_libamdgcn.sh install"
+  echo "  ./build_openmp.sh "
+  echo "  ./build_openmp.sh install"
+  echo "  ./build_hiprt.sh "
+  echo "  ./build_hiprt.sh install"
+  echo "  ./build_libdevic.sh"
+  echo "  ./build_libdevice.sh install"
   echo " "
   exit 
 fi
 
-WEBSITE="https\:\/\/github.com\/RadeonOpenCompute"
+#  Check the repositories exist and are on the correct branch
+function checkrepo(){
+   cd $REPO_DIR
+   COBRANCH=`git branch --list | grep "\*" | cut -d" " -f2`
+   if [ "$COBRANCH" != "$REPO_BRANCH" ] ; then
+      if [ "$COBRANCH" == "master" ] ; then
+        echo "EXIT:  Repository $REPO_DIR is on development branch: master"
+        exit 1
+      else
+        echo "ERROR:  The repository at $REPO_DIR is not on branch $REPO_BRANCH"
+        echo "          It is on branch $COBRANCH"
+        exit 1
+     fi
+   fi
+   if [ ! -d $REPO_DIR ] ; then
+      echo "ERROR:  Missing repository directory $REPO_DIR"
+      exit 1
+   fi
+   echo "-- Repository $REPO_DIR is correctly on branch $REPO_BRANCH"
+}
+REPO_DIR=$HCC2_REPOS/$OPENMP_REPO_NAME
+checkrepo
 
 CUDAH=`find /usr/local/cuda/targets -type f -name "cuda.h" 2>/dev/null`
 if [ "$CUDAH" == "" ] ; then
@@ -95,9 +119,9 @@ fi
 # I don't see now nvcc is called, but this eliminates the deprecated warnings
 export CUDAFE_FLAGS="-w"
 
-if [ ! -d $HCC2RT_REPOS/$RT_REPO_NAME ] ; then 
-   echo "ERROR:  Missing repository $HCC2RT_REPOS/$RT_REPO_NAME "
-   echo "        Consider setting env variables HCC2RT_REPOS and/or RT_REPO_NAME "
+if [ ! -d $HCC2_REPOS/$OPENMP_REPO_NAME ] ; then 
+   echo "ERROR:  Missing repository $HCC2_REPOS/$OPENMP_REPO_NAME "
+   echo "        Consider setting env variables HCC2_REPOS and/or OPENMP_REPO_NAME "
    exit 1
 fi
 
@@ -117,18 +141,21 @@ if [ ! -z `which "getconf"` ]; then
     NUM_THREADS=$(`which "getconf"` _NPROCESSORS_ONLN)
 fi
 
-COMMON_CMAKE_OPTS="-DOPENMP_ENABLE_LIBOMPTARGET=1 -DCMAKE_C_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_CXX_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_COMPILER=$HCC2/bin/clang -DCMAKE_CXX_COMPILER=$HCC2/bin/clang++ -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DLIBOMPTARGET_NVPTX_ENABLE_BCLIB=1 -DLIBOMPTARGET_NVPTX_CUDA_COMPILER=$HCC2/bin/clang++ -DLIBOMPTARGET_NVPTX_BC_LINKER=$HCC2/bin/llvm-link"
+#COMMON_CMAKE_OPTS="-DOPENMP_ENABLE_LIBOMPTARGET=1 -DCMAKE_C_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_CXX_FLAGS=-DOPENMP_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_COMPILER=$HCC2/bin/clang -DCMAKE_CXX_COMPILER=$HCC2/bin/clang++ -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITY=$NVPTXGPU -DLIBOMPTARGET_NVPTX_ENABLE_BCLIB=1 -DLIBOMPTARGET_NVPTX_CUDA_COMPILER=$HCC2/bin/clang++ -DLIBOMPTARGET_NVPTX_BC_LINKER=$HCC2/bin/llvm-link"
+
+COMMON_CMAKE_OPTS="-DOPENMP_ENABLE_LIBOMPTARGET=1 -DCMAKE_C_COMPILER=$HCC2/bin/clang -DCMAKE_CXX_COMPILER=$HCC2/bin/clang++ -DCMAKE_INSTALL_PREFIX=$install_dir -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=$NVPTXGPUS  -DLIBOMPTARGET_NVPTX_ENABLE_BCLIB=1 -DLIBOMPTARGET_NVPTX_CUDA_COMPILER=$HCC2/bin/clang++ -DLIBOMPTARGET_NVPTX_BC_LINKER=$HCC2/bin/llvm-link"
+
 
 if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then 
 
    echo " " 
-   echo "This is a FRESH START. ERASING any previous builds in $BUILD_DIR/$RT_REPO_NAME "
+   echo "This is a FRESH START. ERASING any previous builds in $BUILD_DIR/$OPENMP_REPO_NAME "
    echo "Use ""$0 nocmake"" or ""$0 install"" to avoid FRESH START."
 
    if [ $COPYSOURCE ] ; then 
-      mkdir -p $BUILD_DIR/$RT_REPO_NAME
-      echo rsync -av --exclude ".git" $HCC2RT_REPOS/$RT_REPO_NAME/ $BUILD_DIR/$RT_REPO_NAME/ 
-      rsync -av --exclude ".git" $HCC2RT_REPOS/$RT_REPO_NAME/ $BUILD_DIR/$RT_REPO_NAME/ 
+      mkdir -p $BUILD_DIR/$OPENMP_REPO_NAME
+      echo rsync -av --exclude ".git" --delete $HCC2_REPOS/$OPENMP_REPO_NAME/ $BUILD_DIR/$OPENMP_REPO_NAME/ 
+      rsync -av --exclude ".git" --delete $HCC2_REPOS/$OPENMP_REPO_NAME/ $BUILD_DIR/$OPENMP_REPO_NAME/ 
    fi
 
       echo rm -rf $BUILD_DIR/build_lib
@@ -137,8 +164,8 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
       mkdir -p $BUILD_DIR/build_lib
       cd $BUILD_DIR/build_lib
       echo " -----Running openmp cmake ---- " 
-      echo cmake $MYCMAKEOPTS  $BUILD_DIR/$RT_REPO_NAME
-      cmake $MYCMAKEOPTS  $BUILD_DIR/$RT_REPO_NAME
+      echo cmake $MYCMAKEOPTS  $BUILD_DIR/$OPENMP_REPO_NAME
+      cmake $MYCMAKEOPTS  $BUILD_DIR/$OPENMP_REPO_NAME
       if [ $? != 0 ] ; then 
          echo "ERROR openmp cmake failed. Cmake flags"
          echo "      $MYCMAKEOPTS"
@@ -152,8 +179,8 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
       mkdir -p $BUILD_DIR/build_debug
       cd $BUILD_DIR/build_debug
       echo " -----Running openmp cmake for debug ---- " 
-      echo cmake $MYCMAKEOPTS  $BUILD_DIR/$RT_REPO_NAME
-      cmake $MYCMAKEOPTS  $BUILD_DIR/$RT_REPO_NAME
+      echo cmake $MYCMAKEOPTS  $BUILD_DIR/$OPENMP_REPO_NAME
+      cmake $MYCMAKEOPTS  $BUILD_DIR/$OPENMP_REPO_NAME
       if [ $? != 0 ] ; then 
          echo "ERROR openmp debug cmake failed. Cmake flags"
          echo "      $MYCMAKEOPTS"
@@ -182,8 +209,9 @@ if [ $? != 0 ] ; then
       exit 1
 else
       echo
-      echo "Successful build of ./build_rt.sh .  Please run:"
-      echo "./build_rt.sh install"
+      echo "Successful build of ./build_openmp.sh .  Please run:"
+      echo "  ./build_openmp.sh install "
+      echo "to install into directory $INSTALL_DIR/lib and $INSTALL_DIR/lib-debug"
       echo
 fi
 

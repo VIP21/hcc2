@@ -1,10 +1,10 @@
 #!/bin/bash
 # 
 #  build_hcc2.sh:  Script to build the hcc2 compiler. 
-#                     This clang 5.0 compiler supports CUDA clang AND OpenMP
-#                     offloading for BOTH nvidia and Radeon accelerator cards.
-#                     This compiler has both the NVPTX and AMDGPU LLVM backends.
-#                     The AMDGPU LLVM backend is referred to as the Lightning Compiler.
+#                  This clang 7.0 compiler supports clang hip, OpenMP, and clang cuda
+#                  offloading languages for BOTH nvidia and Radeon accelerator cards.
+#                  This compiler has both the NVPTX and AMDGPU LLVM backends.
+#                  The AMDGPU LLVM backend is referred to as the Lightning Compiler.
 #
 # See the help text below, run 'build_hcc2.sh -h' for more information. 
 #
@@ -12,18 +12,17 @@
 # Simply set the environment variables to override these defaults
 HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
-HCC2RT_REPOS=${HCC2RT_REPOS:-/home/$USER/git/hcc2}
 BUILD_TYPE=${BUILD_TYPE:-Release}
 SUDO=${SUDO:-set}
 HCC2_REPO_NAME=${HCC2_REPO_NAME:-hcc2}
-CLANG_REPO_NAME=${CLANG_REPO_NAME:-hcc2-clang}
-LLD_REPO_NAME=${LLD_REPO_NAME:-hcc2-lld}
-LLVM_REPO_NAME=${LLVM_REPO_NAME:-hcc2-llvm}
-RT_REPO_NAME=${RT_REPO_NAME:-hcc2-rt}
-CUDACLANG_REPO_NAME=${CUDACLANG_REPO_NAME:-cudaclang-rt}
+CLANG_REPO_NAME=${CLANG_REPO_NAME:-clang}
+LLD_REPO_NAME=${LLD_REPO_NAME:-lld}
+LLVM_REPO_NAME=${LLVM_REPO_NAME:-llvm}
+RT_REPO_NAME=${RT_REPO_NAME:-openmp}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
+REPO_BRANCH=${REPO_BRANCH:-HCC2-180328}
 
-if [ "$SUDO" == "set" ] ; then 
+if [ "$SUDO" == "set" ]  || [ "$SUDO" == "yes" ] || [ "$SUDO" == "YES" ] ; then
    SUDO="sudo"
 else 
    SUDO=""
@@ -61,7 +60,7 @@ thisdir=$(getdname $0)
 if [ -f $thisdir/HCC2_VERSION_STRING ] ; then
    HCC2_VERSION_STRING=`cat $thisdir/HCC2_VERSION_STRING`
 else
-   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.4-0"}
+   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.5-0"}
 fi
 export HCC2_VERSION_STRING
 INSTALL_DIR="${HCC2}_${HCC2_VERSION_STRING}"
@@ -79,68 +78,90 @@ fi
 MYCMAKEOPTS="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DLLVM_ENABLE_ASSERTIONS=ON -DLLVM_TARGETS_TO_BUILD=AMDGPU;X86;NVPTX;PowerPC;AArch64 $COMPILERS -DHCC2_VERSION_STRING=$HCC2_VERSION_STRING"
 
 if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then 
-  echo " "
-  echo " This LLVM build script uses these git repositories:"
-  echo "    $HCC2_REPOS/$CLANG_REPO_NAME"
-  echo "    $HCC2_REPOS/$LLVM_REPO_NAME"
-  echo "    $HCC2_REPOS/$LLD_REPO_NAME"
-  echo "    $HCC2_REPOS/$HCC2_REPO_NAME"
-  echo " "
-  echo " When you provide NO arguments to this script, it performs these actions:"
-  echo " 1. mkdir $BUILD_DIR/build_hcc2"
-  echo " 2. Link clang, lld, and hc tools for in-tree LLVM build :"
-  echo "    ln -sf $BUILD_DIR/$CLANG_REPO_NAME $BUILD_DIR/llvm/tools/clang"
-  echo "    ln -sf $BUILD_DIR/$LLD_REPO_NAME $BUILD_DIR/llvm/tools/ld"
-  echo "    ln -sf $BUILD_DIR/$HCC2_REPO_NAME/hc $BUILD_DIR/llvm/tools/hc"
-  echo " 3. Run 'cmake ../$LLVM_REPO_NAME ' in :  $BUILD_DIR/build_hcc2"
-  echo " 4. Run make               :  $BUILD_DIR/build_hcc2"
-  echo " "
-  echo " This script takes one optional argument: 'nocmake' or 'install' "
-  echo " Example Commands          Actions"
-  echo " ----------------          -------"
-  echo " ./build_hcc2.sh           link, cmake, make, but NO install "
-  echo " ./build_hcc2.sh nocmake   make, but NO install"
-  echo " ./build_hcc2.sh install  $SUDO make install"
-  echo " "
-  echo " These cmake options are in effect:  "
-  echo " $MYCMAKEOPTS"
-  echo " "
-  echo " The 'nocmake' or 'install' options can only be used after running"
-  echo " this script with no options at least one time. The 'nocmake' option is intended to allow"
-  echo " you to debug and fix code in $BUILD_DIR without changing your git repos."
-  echo " It only runs the make command in $BUILD_DIR/build_hcc2"  
-  echo " The 'install' option requires sudo authority. It will also link install directory"
-  echo " $INSTALL_DIR to directory $HCC2"
-  echo " "
-  echo " You can set these environment variables to override behavior of this build script"
-  echo " The listed defaults are used the environment variable is not set." 
-  echo " "
-  echo "    HCC2            /opt/rocm/hcc2           Where the compiler will be installed"
-  echo "    HCC2_REPOS      /home/<USER>/git/hcc2    Directory for all git repositories"
-  echo "    BUILD_TYPE      Release                  The CMAKE build type" 
-  echo "    SUDO            set                      If equal to set, use sudo to install"
-  echo "    HCC2_REPO_NAME  hcc2                     The name of this hcc2 repo"
-  echo "    CLANG_REPO_NAME hcc2-clang               The name of the clang repo"
-  echo "    LLD_REPO_NAME   hcc2-lld                 The name of the lld repo"
-  echo "    LLVM_REPO_NAME  hcc2-llvm                The name of the llvm repo"
-  echo "    CUDACLANG_REPO_NAME  cudaclang-rt        The name of the cuda clang runtime repo"
-  echo "    BUILD_HCC2      same as HCC2_REPOS       Directory to build if other than HCC2_REPOS"
-  echo "  "
-  echo " We recommend that you do NOT set BUILD_HCC2 unless access to your repositories is very slow. "
-  echo " If you set BUILD_HCC2 to something other than $HCC2_REPOS, (e.g. /tmp/hcc2), the source repositories"
-  echo " will be incrementally replicated, rsync'ed, to subdirectories of BUILD_HCC2. Set BUILD_HCC2 ONLY"
-  echo " if you do not want to build from sources in $HCC2_REPOS. This replication only"
-  echo " happens on a complete build.  That is, if you specify 'install' or 'nocmake', "
-  echo " NO replication of the repositories is made to BUILD_HCC2.  You do NOT need to set BUILD_HCC2"  
-  echo " to force cmake and make to build outside of the sources. The cmake command and subsequent make"
-  echo " will occur in $BUILD_DIR/build_hcc2"
-  echo "  "
-  echo " Examples: To build a debug version of the compiler, run this command before the build:"
-  echo "    export BUILD_TYPE=debug"
-  echo " To install the compiler in a different location without sudo, run these commands"
-  echo "    export HCC2=$HOME/hcc2"
-  echo "    export SUDO=noset"
-  echo "  "
+  echo
+  echo " build_hcc2.sh is a smart clang/llvm compiler build script."
+  echo
+  echo " Repositories:"
+  echo "    build_hcc2.sh uses these local git repositories:"
+  echo "    DIRECTORY                         BRANCH"
+  echo "    ---------                         ------"
+  echo "    $HCC2_REPOS/$CLANG_REPO_NAME     $REPO_BRANCH"
+  echo "    $HCC2_REPOS/$LLVM_REPO_NAME      $REPO_BRANCH"
+  echo "    $HCC2_REPOS/$LLD_REPO_NAME       $REPO_BRANCH"
+  echo "    $HCC2_REPOS/$RT_REPO_NAME    $REPO_BRANCH"
+  echo
+  echo " Initial Build:"
+  echo "    build_hcc2.sh with no options does the initial build with these actions:"
+  echo "    - Links clang and lld repos in $LLVM_REPO_NAME/tools for a full build."
+  echo "    - mkdir -p $BUILD_DIR/build_hcc2 "
+  echo "    - cd $BUILD_DIR/build_hcc2"
+  echo "    - cmake $BUILD_DIR/$LLVM_REPO_NAME (with cmake options below)"
+  echo "    - make"
+  echo
+  echo " Optional Arguments 'nocmake' and 'install' :"
+  echo "    build_hcc2.sh takes one optional argument: 'nocmake' or 'install'. "
+  echo "    The 'nocmake' or 'install' options can only be used after your initial build"
+  echo "    with no options. The 'nocmake' option is intended to restart make after "
+  echo "    you fix code following a failed build. The 'install' option will run 'make' "
+  echo "    and 'make install' causing installation into the directorey $INSTALL_DIR . "
+  echo "    The 'install' option will also create a symbolic link to directory $HCC2 ."
+  echo
+  echo "    COMMAND                   ACTIONS"
+  echo "    -------                   -------"
+  echo "    ./build_hcc2.sh nocmake   make"
+  echo "    ./build_hcc2.sh install   make install"
+  echo
+  echo " Environment Variables:"
+  echo "    You can set environment variables to override behavior of build_hcc2.sh"
+  echo "    NAME              DEFAULT                  DESCRIPTION"
+  echo "    ----              -------                  -----------"
+  echo "    HCC2              /opt/rocm/hcc2           Where the compiler will be installed"
+  echo "    HCC2_REPOS        /home/<USER>/git/hcc2    Location of llvm, clang, lld, and hcc2 repos"
+  echo "    CLANG_REPO_NAME   clang                    Name of the clang repo"
+  echo "    LLVM_REPO_NAME    llvm                     Name of the llvm repo"
+  echo "    LLD_REPO_NAME     lld                      Name of the lld repo"
+  echo "    REPO_BRANCH       $REPO_BRANCH              The branch for clang, llvm, lld, and openmp"
+  echo "    SUDO              set                      Use sudo when installing"
+  echo "    BUILD_TYPE        Release                  The CMAKE build type"
+  echo "    BUILD_HCC2        same as HCC2_REPOS       Different build location than HCC2_REPOS"
+  echo
+  echo "   Since install typically requires sudo authority, the default for SUOO is 'set'"
+  echo "   Any other value will not use sudo to install. "
+  echo
+  echo " Examples:"
+  echo "    To build a debug version of the compiler, run this command before the build:"
+  echo "       export BUILD_TYPE=debug"
+  echo "    To install the compiler in a different location without sudo, run these commands"
+  echo "       export HCC2=$HOME/install/hcc2 "
+  echo "       export SUDO=no"
+  echo
+  echo " Post-Install Requirements:"
+  echo "    The HCC2 compiler needs openmp, hip, and rocm device libraries. Use the companion build"
+  echo "    scripts build_openmp.sh, build_libdevice.sh build_hiprt.sh in that order to build and"
+  echo "    install these components. You must have successfully built and installed the compiler"
+  echo "    before building these components."
+  echo
+  echo " The BUILD_HCC2 Envronment Variable:"
+  echo
+  echo "    build_hcc2.sh will always build with cmake and make outside your source git trees."
+  echo "    By default (without BUILD_HCC2) the build will occur in a subdirectory of"
+  echo "    HCC2_REPOS.  That subdirectory is $HCC2_REPOS/build_hcc2"
+  echo
+  echo "    The BUILD_HCC2 environment variable enables source development outside your git"
+  echo "    repositories. By default, this feature is OFF.  The BUILD_HCC2 environment variable "
+  echo "    can be used if access to your git repositories is very slow or you want to test "
+  echo "    changes outside of your local git repositories (specified by HCC2_REPOS env var). "
+  echo "    If BUILD_HCC2 is set, your git repositories (specifed by HCC2_REPOS) will be"
+  echo "    replicated to subdirectories of BUILD_HCC2 using rsync.  The subsequent build "
+  echo "    (cmake and make) will occur in subdirectory BUILD_HCC2/build_hcc2."
+  echo "    This replication only happens on your initial build, that is, if you specify no arguments."
+  echo "    The option 'nocmake' skips replication and then restarts make in the build directory."
+  echo "    The "install" option skips replication, skips cmake, runs 'make' and 'make install'. "
+  echo "    Be careful to always use options nocmake or install if you made local changes in"
+  echo "    BUILD_HCC2 or your changes will be lost by a new replica of your git repositories."
+  echo
+  echo " cmake Options In Effect:"
+
   exit 
 fi
 
@@ -156,12 +177,14 @@ fi
 function checkrepo(){
    cd $REPO_DIR
    COBRANCH=`git branch --list | grep "\*" | cut -d" " -f2`
-   if [ "$COBRANCH" != "rel_$HCC2_VERSION_STRING" ] ; then
+   if [ "$COBRANCH" != "$REPO_BRANCH" ] ; then
       if [ "$COBRANCH" == "master" ] ; then 
-        echo "WARNING:  Repository $REPO_DIR is on development branch: master"
+        echo "EXIT:  Repository $REPO_DIR is on development branch: master"
+        exit 1
       else 
-        echo "WARNING:  The repository at $REPO_DIR is not on branch rel_$HCC2_VERSION_STRING"
+        echo "ERROR:  The repository at $REPO_DIR is not on branch $REPO_BRANCH"
         echo "          It is on branch $COBRANCH"
+        exit 1
      fi
    fi
    if [ ! -d $REPO_DIR ] ; then
@@ -169,19 +192,12 @@ function checkrepo(){
       exit 1
    fi
 }
-REPO_DIR=$HCC2_REPOS/$HCC2_REPO_NAME
-checkrepo
 REPO_DIR=$HCC2_REPOS/$LLVM_REPO_NAME
 checkrepo
 REPO_DIR=$HCC2_REPOS/$CLANG_REPO_NAME
 checkrepo
 REPO_DIR=$HCC2_REPOS/$LLD_REPO_NAME
 checkrepo
-REPO_DIR=$HCC2RT_REPOS/$RT_REPO_NAME
-checkrepo
-REPO_DIR=$HCC2_REPOS/$CUDACLANG_REPO_NAME
-checkrepo
-
 # Make sure we can update the install directory
 if [ "$1" == "install" ] ; then 
    $SUDO mkdir -p $INSTALL_DIR
@@ -344,7 +360,9 @@ if [ "$1" == "install" ] ; then
    # add executables forgot by make install but needed for testing
    $SUDO cp -p $BUILD_DIR/build_hcc2/bin/llvm-lit $HCC2/bin/llvm-lit
    $SUDO cp -p $BUILD_DIR/build_hcc2/bin/FileCheck $HCC2/bin/FileCheck
-   echo " "
+   echo
+   echo "SUCCESSFUL INSTALL to $INSTALL_DIR with link to $HCC2"
+   echo
 else 
    echo 
    echo "SUCCESSFUL BUILD, please run:  $0 install"

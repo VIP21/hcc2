@@ -18,17 +18,14 @@ build_hcc2.sh      -  Build the HCC2 compiler. This compiler supports cuda clang
 build_atmi.sh      -  Builds early release of ATMI for hcc2.
                       This installs in /opt/rocm/hcc2 (or $HCC2)
 
-build_rt.sh        -  Builds the OpenMP libraries for hcc2.
+build_openmp.sh    -  Builds the OpenMP libraries for hcc2.
                       This also installs in /opt/rocm/hcc2 (or $HCC2)
 
-build_hip.sh       -  Builds hip and cudaclang-rt
+build_libdevice.sh -  Builds the amd bc libraries from rocm-device-libs needed by hcc2.
+                      This also installs in /opt/rocm/hcc2 (or $HCC2)
 
-build_libamdgcn.sh -  Builds the amd bc libraries from rocm-device-libs needed by hcc2.
-                      It installs in /opt/rocm/libamdgcn (or $LIBAMDGCN)
-
-build_deb-hcc2.sh  -  Builds debi and rpm packages after source build
-                      Read the source for all the dependencies needed. 
-debian             -  This directory is used by build-deb-hcc2.sh
+build_hiprt.sh     -  Builds the hip bc libraries and host runtimes needed by hcc2.
+                      This also installs in /opt/rocm/hcc2 (or $HCC2)
 
 HCC2_VERSION_STRING - File to set the version of HCC2 to clone and build . 
 
@@ -37,14 +34,13 @@ The repositories and branches needed by HCC2 are:
 DIRECTORY NAME *                  HCC2 REPOSITORY **       BRANCH
 -------------------------------   ---------------------    ------
 $HOME/git/hcc2/hcc2               %rocdev/hcc2             master ***
-$HOME/git/hcc2/hcc2-clang         %rocdev/hcc2-clang       master
-$HOME/git/hcc2/hcc2-rt            %rocdev/hcc2-rt          master
-$HOME/git/hcc2/hcc2-llvm          %rocdev/hcc2-llvm        master
-$HOME/git/hcc2/hcc2-lld           %rocdev/hcc2-lld         master
-$HOME/git/hcc2/hip                %rocdev/hip              master
+$HOME/git/hcc2/clang              %rocdev/clang            HCC2-180328 ***
+$HOME/git/hcc2/llvm               %rocdev/llvm             HCC2-180328 *** 
+$HOME/git/hcc2/lld                %rocdev/lld              HCC2-180328 *** 
+$HOME/git/hcc2/openmp             %rocdev/openmp           HCC2-180328 ***  
+$HOME/git/hcc2/hcc2-hip           %rocdev/hcc2-hip         master ***
 $HOME/git/hcc2/rocm-device-libs   %roc/rocm-device-libs    master
-$HOME/git/hcc2/atmi-staging       %roc/atmi-staging        0.4
-$HOME/git/hcc2/cudaclang-rt       %roc/cudaclang-rt        master
+$HOME/git/hcc2/atmi-staging       %roc/atmi-staging        master ***
 
    * Clone your repositories here or override with environment variables.
   ** Replace %roc with "https://github.com/RadeonOpenCompute"
@@ -56,11 +52,9 @@ defaults if they are not set. This is not a complete list.  See the script heade
 for other environment variables that you may override including repo names. 
 
 HCC2              /opt/rocm/hcc2           *
-LIBAMDGCN         /opt/rocm/libamdgcn      *
 CUDA              /usr/local/cuda          *
 HCC2_REPOS        /home/$USER/git/hcc2
 ROC_REPOS         /home/$USER/git/hcc2
-LIBAMDGCN_REPOS   /home/$USER/git/hcc2
 NVPTXGPU_DEFAULT  30
 BUILD_TYPE        Release
 SUDO              set
@@ -73,10 +67,9 @@ Here is a sample for your .bash_profile
 
 SUDO="disable"
 HCC2=$HOME/hcc2
-LIBAMDGCN=$HOME/libamdgcn
 BUILD_TYPE=Debug
 NVPTXGPU_DEFAULT=50
-export SUDO HCC2 LIBAMDGCN NVPTXGPU_DEFAULT BUILD_TYPE
+export SUDO HCC2 NVPTXGPU_DEFAULT BUILD_TYPE
 
 The build scripts will build from the source directories identified by the 
 environment variable ROC_REPOS and HCC2_REPOS. The out-of-source build for 
@@ -90,21 +83,21 @@ To build all components, run the scripts in the following order:
 	./build_atmi.sh
 	./build_atmi.sh install
 
-	./build_rt.sh  
-	./build_rt.sh  install
+	./build_openmp.sh  
+	./build_openmp.sh  install
 
-	./build_hip.sh
-	./build_hip.sh  install
+	./build_libdevice.sh  
+	./build_libdevice.sh  install
 
-	./build_libamdgcn.sh
-	./build_libamdgcn.sh install
+	./build_hiprt.sh
+	./build_hiprt.sh install
 
 These scripts do not automatically install in case their is a build failure.
 After all, this is a development project.  In case of a build failure, you 
 can restart the build by running "make" or "make install" in the build directory. 
 
-The compiler created by build_hcc2.sh is needed by build_rt.sh, build_hip.sh,
-and build_libamdgcn.sh to build device libraries.  So you must have 
+The compiler created by build_hcc2.sh is needed by build_openmp.sh and 
+build_libamdgcn.sh to build device libraries.  So you must have 
 built and installed hcc2 before building the libraries.
 
 -------- Optional ------
@@ -116,6 +109,5 @@ testing changes that you do not want in your git repository.
 To trigger this feature, set these environment variables: 
 
 export BUILD_HCC2=/tmp/$USER/hcc2
-export BUILD_LIBAMDGCN=/tmp/$USER/libamdgcn
 export BUILD_RT=/tmp/$USER/rt
 export BUILD_ATMI=/tmp/$USER/atmi
