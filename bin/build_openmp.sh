@@ -59,7 +59,7 @@ else
    HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.4-0"}
 fi
 export HCC2_VERSION_STRING
-INSTALL_DIR="${HCC2}_${HCC2_VERSION_STRING}"
+INSTALL_DIR=${INSTALL_OPENMP:-"${HCC2}_${HCC2_VERSION_STRING}"}
 
 if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then 
   echo " "
