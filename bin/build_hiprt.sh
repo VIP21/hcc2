@@ -46,12 +46,12 @@ else
    SUDO=""
 fi
 
-BUILD_DIR=/tmp/$USER/hiprt
+BUILD_DIR=${BUILD_HIPRT:-/tmp/$USER/hiprt}
 
 HCC2_VERSION=0.5
 HCC2_MOD=0
 
-INSTALL_DIR="${HCC2}_${HCC2_VERSION}-${HCC2_MOD}"
+INSTALL_DIR=${INSTALL_HIPRT:-"${HCC2}_${HCC2_VERSION}-${HCC2_MOD}"}
 LLVM_BUILD=$HCC2
 
 if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then
