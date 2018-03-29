@@ -251,11 +251,8 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
       rsync -av --exclude ".git" --exclude "CommandLine.cpp" --delete $HCC2_REPOS/$LLVM_REPO_NAME $BUILD_DIR 2>&1 
       echo rsync -a --exclude ".git" --delete $HCC2_REPOS/$CLANG_REPO_NAME $BUILD_DIR
       rsync -av --exclude ".git" --delete $HCC2_REPOS/$CLANG_REPO_NAME $BUILD_DIR 2>&1 
-      echo rsync -a --exclude ".git" $HCC2_REPOS/$LLD_REPO_NAME $BUILD_DIR
-      rsync -av --exclude ".git" $HCC2_REPOS/$LLD_REPO_NAME $BUILD_DIR 2>&1
-      echo rsync -a --exclude ".git" $HCC2_REPOS/$HCC2_REPO_NAME/hc $BUILD_DIR
-      mkdir -p $BUILD_DIR/$HCC2_REPO_NAME/hc
-      rsync -av --exclude ".git" $HCC2_REPOS/$HCC2_REPO_NAME/hc $BUILD_DIR/$HCC2_REPO_NAME 2>&1
+      echo rsync -a --exclude ".git" --delete $HCC2_REPOS/$LLD_REPO_NAME $BUILD_DIR
+      rsync -av --exclude ".git" --delete $HCC2_REPOS/$LLD_REPO_NAME $BUILD_DIR 2>&1
       mkdir -p $BUILD_DIR/$LLVM_REPO_NAME/tools
       if [ -L $BUILD_DIR/$LLVM_REPO_NAME/tools/clang ] ; then 
         rm $BUILD_DIR/$LLVM_REPO_NAME/tools/clang
@@ -271,14 +268,6 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
       ln -sf $BUILD_DIR/$LLD_REPO_NAME $BUILD_DIR/$LLVM_REPO_NAME/tools/ld
       if [ $? != 0 ] ; then
          echo "ERROR link command for $LLD_REPO_NAME to ld failed."
-         exit 1
-      fi
-      if [ -L $BUILD_DIR/$LLVM_REPO_NAME/tools/hc ] ; then
-        rm $BUILD_DIR/$LLVM_REPO_NAME/tools/hc
-      fi
-      ln -sf $BUILD_DIR/$HCC2_REPO_NAME/hc $BUILD_DIR/$LLVM_REPO_NAME/tools/hc
-      if [ $? != 0 ] ; then
-         echo "ERROR link command for $HCC2_REPO_NAME/hc to hc failed."
          exit 1
       fi
    else
