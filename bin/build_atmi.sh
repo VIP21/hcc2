@@ -37,7 +37,7 @@ function getdname(){
    echo $__DIRN
 }
 
-GFXLIST=${GFXLIST:-"gfx700;gfx701;gfx800;gfx801;gfx803;gfx900;gfx901"}
+GFXLIST=${GFXLIST:-"gfx700;gfx701;gfx801;gfx803;gfx900"}
 export GFXLIST
 
 thisdir=$(getdname $0)
@@ -107,7 +107,7 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
    BUILDTYPE="Release"
    echo rm -rf $BUILD_ATMI/build_atmi/build_lib
    rm -rf $BUILD_ATMI/build_atmi/build_lib
-   MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DGENERIC_IS_ZERO=ON -DCUDA_TRIPLE=ON -DATMI_HSA_SERVICE=on -DATMI_HSA_INTEROP=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
+   MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DATMI_HSA_INTEROP=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
    mkdir -p $BUILD_ATMI/build_atmi/build_lib
    cd $BUILD_ATMI/build_atmi/build_lib
    echo " -----Running atmi cmake ---- " 
@@ -122,7 +122,7 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
    BUILDTYPE="Debug"
    echo rm -rf $BUILD_ATMI/build_atmi/build_debug
    rm -rf $BUILD_ATMI/build_atmi/build_debug
-   MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DGENERIC_IS_ZERO=ON -DCUDA_TRIPLE=ON -DATMI_HSA_SERVICE=on -DATMI_HSA_INTEROP=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
+   MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DATMI_HSA_INTEROP=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
    mkdir -p $BUILD_ATMI/build_atmi/build_debug
    cd $BUILD_ATMI/build_atmi/build_debug
    echo " -----Running atmi cmake for debug ---- " 
