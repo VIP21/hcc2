@@ -63,7 +63,7 @@ else
    HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.5-0"}
 fi
 export HCC2_VERSION_STRING
-INSTALL_DIR="${HCC2}_${HCC2_VERSION_STRING}"
+INSTALL_DIR=${INSTALL_HCC2:-"${HCC2}_${HCC2_VERSION_STRING}"}
 
 WEBSITE="http\:\/\/github.com\/ROCm-Developer-Tools\/hcc2"
 
@@ -124,6 +124,7 @@ if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then
   echo "    SUDO              set                      Use sudo when installing"
   echo "    BUILD_TYPE        Release                  The CMAKE build type"
   echo "    BUILD_HCC2        same as HCC2_REPOS       Different build location than HCC2_REPOS"
+  echo "    INSTALL_HCC2      <HCC2>_${HCC2_VERSION_STRING}             Different install location than <HCC2>_${HCC2_VERSION_STRING}"
   echo
   echo "   Since install typically requires sudo authority, the default for SUOO is 'set'"
   echo "   Any other value will not use sudo to install. "
