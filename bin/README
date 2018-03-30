@@ -71,7 +71,10 @@ NVPTXGPUS=30,35,50,60,65
 export SUDO HCC2 NVPTXGPUS BUILD_TYPE
 
 The build scripts will build from the source directories identified by the 
-environment variable HCC2_REPOS. 
+environment variable HCC2_REPOS.
+
+To set apternative installation path for the component INSTALL_<COMPONENT> environment 
+variable can be used, e.g. INSTALL_HCC2
 
 To build all components, run the scripts in the following order:
 
