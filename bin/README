@@ -15,6 +15,9 @@ build_hcc2.sh      -  Build the HCC2 compiler. This compiler supports cuda clang
                       This compiler works for both Nvidia and AMD Radeon GPUs.
                       Please read the help text,  ./build_hcc2.sh -h
 
+build_utils.sh     -  Builds the HCC2 utilities
+                      This installs in /opt/rocm/hcc2 (or $HCC2)
+
 build_atmi.sh      -  Builds early release of ATMI for hcc2.
                       This installs in /opt/rocm/hcc2 (or $HCC2)
 
@@ -54,7 +57,7 @@ for other environment variables that you may override including repo names.
 HCC2              /opt/rocm/hcc2           *
 CUDA              /usr/local/cuda          *
 HCC2_REPOS        /home/$USER/git/hcc2
-NVPTXGPUS         30,35,50
+NVPTXGPUS         30,35,50,60
 BUILD_TYPE        Release
 SUDO              set
 
@@ -73,7 +76,7 @@ export SUDO HCC2 NVPTXGPUS BUILD_TYPE
 The build scripts will build from the source directories identified by the 
 environment variable HCC2_REPOS.
 
-To set apternative installation path for the component INSTALL_<COMPONENT> environment 
+To set alternative installation path for the component INSTALL_<COMPONENT> environment 
 variable can be used, e.g. INSTALL_HCC2
 
 To build all components, run the scripts in the following order:
@@ -81,22 +84,28 @@ To build all components, run the scripts in the following order:
 	./build_hcc2.sh
 	./build_hcc2.sh install
 
+	./build_utils.sh
+	./build_utils.sh install
+
 	./build_atmi.sh
 	./build_atmi.sh install
 
 	./build_openmp.sh  
-	./build_openmp.sh  install
+	./build_openmp.sh install
 
 	./build_libdevice.sh  
-	./build_libdevice.sh  install
+	./build_libdevice.sh install
 
 	./build_hiprt.sh
 	./build_hiprt.sh install
 
 These scripts do not automatically install in case their is a build failure.
-After all, this is a development project.  In case of a build failure, you 
-can restart the build by running "make" or "make install" in the build directory. 
+In case of a build failure, you can restart the build by running "make" or 
+"make install" in the build directory. 
 
-The compiler created by build_hcc2.sh is needed by build_openmp.sh and 
-build_libamdgcn.sh to build device libraries.  So you must have 
-built and installed hcc2 before building the libraries.
+The compiler created by build_hcc2.sh is needed by all of the components.
+So you must build and install hcc2 first before building any of the components.
+
+The utilities created by build_utils.sh are needed by the 4 library components
+build_atmi.sh, build_openmp.sh, build_libdevice.sh and build_hiprt.sh. 
+So you must build and install the utilities before building the libraries.
