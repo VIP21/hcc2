@@ -25,7 +25,7 @@ find_package(LLVM QUIET CONFIG
 )
 
 if (LLVM_DIR)
-  if(NOT ${CMAKE_INSTALL_PREFIX})
+  if("{CMAKE_INSTALL_PREFIX}" STREQUAL "")
      set(CMAKE_INSTALL_PREFIX ${LLVM_INSTALL_PREFIX})
   endif()
   message("")
