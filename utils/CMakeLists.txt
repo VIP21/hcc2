@@ -87,3 +87,35 @@ install(PROGRAMS
    ${CMAKE_CURRENT_SOURCE_DIR}/bin/mygpu
    ${CMAKE_CURRENT_BINARY_DIR}/prepare-builtins
    DESTINATION "bin")
+
+install(FILES
+/opt/rocm/include/amd_hsa_kernel_code.h
+/opt/rocm/include/amd_hsa_signal.h
+/opt/rocm/include/hsa.h
+/opt/rocm/include/device_amd_hsa.h
+/opt/rocm/include/amd_hsa_common.h
+/opt/rocm/include/ockl_hsa.h
+/opt/rocm/include/amd_hsa_elf.h
+/opt/rocm/include/ockl.h
+/opt/rocm/include/amd_hsa_queue.h
+/opt/rocm/include/ocml.h
+        DESTINATION include COMPONENT hcc2utils)
+
+install(FILES
+/opt/rocm/hsa/include/hsa/hsa_api_trace.h
+/opt/rocm/hsa/include/hsa/hsa_ext_debugger.h
+/opt/rocm/hsa/include/hsa/amd_hsa_kernel_code.h
+/opt/rocm/hsa/include/hsa/amd_hsa_signal.h
+/opt/rocm/hsa/include/hsa/hsa_ven_amd_aqlprofile.h
+/opt/rocm/hsa/include/hsa/hsa_ext_finalize.h
+/opt/rocm/hsa/include/hsa/hsa.h
+/opt/rocm/hsa/include/hsa/amd_hsa_tools_interfaces.h
+/opt/rocm/hsa/include/hsa/amd_hsa_common.h
+/opt/rocm/hsa/include/hsa/hsa_ext_image.h
+/opt/rocm/hsa/include/hsa/hsa_ext_amd.h
+/opt/rocm/hsa/include/hsa/amd_hsa_elf.h
+/opt/rocm/hsa/include/hsa/hsa_ext_profiler.h
+/opt/rocm/hsa/include/hsa/hsa_ven_amd_loader.h
+/opt/rocm/hsa/include/hsa/amd_hsa_queue.h
+/opt/rocm/hsa/include/hsa/Brig.h
+        DESTINATION include/hsa COMPONENT hcc2utils)
