@@ -35,7 +35,10 @@
 # SOFTWARE.
 
 HCC2=${HCC2:-/opt/rocm/hcc2}
-HIPRT_REPO=${HIPRT_REPO:-/home/$USER/git/hcc2/hcc2-hip}
+HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
+HIP_REPO_NAME=${HCC2_REPO_NAME:-hcc2-hip}
+BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
+HIPRT_REPO=$HCC2_REPOS/$HIP_REPO_NAME
 GFXLIST=${GFXLIST:-"gfx700 gfx701 gfx801 gfx803 gfx900"}
 export GFXLIST
 
@@ -46,7 +49,7 @@ else
    SUDO=""
 fi
 
-BUILD_DIR=${BUILD_HIPRT:-/tmp/$USER/hiprt}
+BUILD_DIR=${BUILD_HCC2}
 
 HCC2_VERSION=0.5
 HCC2_MOD=0
@@ -96,17 +99,17 @@ fi
 if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
 
   BUILDTYPE="Release"
-  if [ -d "$BUILD_DIR/build_lib" ] ; then
+  if [ -d "$BUILD_DIR/build/hip" ] ; then
      echo
      echo "FRESH START , CLEANING UP FROM PREVIOUS BUILD"
-     echo rm -rf $BUILD_DIR/build_lib
-     rm -rf $BUILD_DIR/build_lib
+     echo rm -rf $BUILD_DIR/build/hip
+     rm -rf $BUILD_DIR/build/hip
   fi
 
   MYCMAKEOPTS="-DCMAKE_BUILD_TYPE=$BUILDTYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DBUILD_SHARED_LIBS=ON -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DLLVM_DIR=$LLVM_BUILD/lib/cmake/llvm"
 
-  mkdir -p $BUILD_DIR/build_lib
-  cd $BUILD_DIR/build_lib
+  mkdir -p $BUILD_DIR/build/hip
+  cd $BUILD_DIR/build/hip
   echo " -----Running hiprt cmake ---- "
   echo cmake $MYCMAKEOPTS $HIPRT_REPO
   cmake $MYCMAKEOPTS $HIPRT_REPO
@@ -117,16 +120,16 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
   fi
 
   BUILDTYPE="Debug"
-  if [ -d "$BUILD_DIR/build_debug" ] ; then
+  if [ -d "$BUILD_DIR/build/hip_debug" ] ; then
     echo "FRESH START , CLEANING UP FROM PREVIOUS BUILD"
-    echo rm -rf $BUILD_DIR/build_debug
-    rm -rf $BUILD_DIR/build_debug
+    echo rm -rf $BUILD_DIR/build/hip_debug
+    rm -rf $BUILD_DIR/build/hip_debug
   fi
 
   MYCMAKEOPTS="-DCMAKE_BUILD_TYPE=$BUILDTYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DBUILD_SHARED_LIBS=ON -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DLLVM_DIR=$LLVM_BUILD/lib/cmake/llvm"
 
-  mkdir -p $BUILD_DIR/build_debug
-  cd $BUILD_DIR/build_debug
+  mkdir -p $BUILD_DIR/build/hip_debug
+  cd $BUILD_DIR/build/hip_debug
   echo " -----Running openmp cmake for debug ---- "
   echo cmake $MYCMAKEOPTS $HIPRT_REPO
   cmake $MYCMAKEOPTS $HIPRT_REPO
@@ -137,7 +140,7 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
   fi
 fi
 
-cd $BUILD_DIR/build_lib
+cd $BUILD_DIR/build/hip
 echo
 echo " -----Running make for hiprt ---- "
 make -j $NUM_THREADS
@@ -145,18 +148,18 @@ if [ $? != 0 ] ; then
       echo " "
       echo "ERROR: make -j $NUM_THREADS  FAILED"
       echo "To restart:"
-      echo "  cd $BUILD_DIR/build_lib"
+      echo "  cd $BUILD_DIR/build/hip"
       echo "  make"
       exit 1
 fi
 
-cd $BUILD_DIR/build_debug
+cd $BUILD_DIR/build/hip_debug
 echo " -----Running make for lib-debug ---- "
 make -j $NUM_THREADS
 if [ $? != 0 ] ; then
       echo "ERROR make -j $NUM_THREADS failed"
       echo "To restart:"
-      echo "  cd $BUILD_DIR/build_debug"
+      echo "  cd $BUILD_DIR/build/hip_debug"
       echo "  make"
       exit 1
 else
@@ -169,14 +172,14 @@ fi
 
 #  ----------- Install only if asked  ----------------------------
 if [ "$1" == "install" ] ; then
-      cd $BUILD_DIR/build_lib
+      cd $BUILD_DIR/build/hip
       echo " -----Installing to $INSTALL_DIR/lib ----- "
       $SUDO make install
       if [ $? != 0 ] ; then
          echo "ERROR make install failed "
          exit 1
       fi
-      cd $BUILD_DIR/build_debug
+      cd $BUILD_DIR/build/hip_debug
       echo " -----Installing to $INSTALL_DIR/lib-debug ---- "
       $SUDO make install
       if [ $? != 0 ] ; then

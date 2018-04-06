@@ -7,7 +7,7 @@
 # your environment variables
 HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
-BUILD_OPENMP=${BUILD_OPENMP:-$HCC2_REPOS}
+BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 OPENMP_REPO_NAME=${OPENMP_REPO_NAME:-openmp}
 REPO_BRANCH=${REPO_BRANCH:-HCC2-180328}
 
@@ -25,7 +25,7 @@ else
    SUDO=""
 fi
 
-BUILD_DIR=$BUILD_OPENMP
+BUILD_DIR=$BUILD_HCC2
 if [ "$BUILD_DIR" != "$HCC2_REPOS" ] ; then 
    COPYSOURCE=true
 fi
@@ -72,14 +72,16 @@ if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then
   echo " "
   echo "  ./build_hcc2.sh "
   echo "  ./build_hcc2.sh install"
-  echo "  ./build_atmi"
-  echo "  ./build_atmi install"
+  echo "  ./build_utils.sh"
+  echo "  ./build_atmi.sh install"
+  echo "  ./build_atmi.sh"
+  echo "  ./build_atmi.sh install"
   echo "  ./build_openmp.sh "
   echo "  ./build_openmp.sh install"
+  echo "  ./build_libdevice.sh"
+  echo "  ./build_libdevice.sh install"
   echo "  ./build_hiprt.sh "
   echo "  ./build_hiprt.sh install"
-  echo "  ./build_libdevic.sh"
-  echo "  ./build_libdevice.sh install"
   echo " "
   exit 
 fi
@@ -165,11 +167,11 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
       rsync -av --exclude ".git" --delete $HCC2_REPOS/$OPENMP_REPO_NAME/ $BUILD_DIR/$OPENMP_REPO_NAME/ 
    fi
 
-      echo rm -rf $BUILD_DIR/build_lib
-      rm -rf $BUILD_DIR/build_lib
+      echo rm -rf $BUILD_DIR/build/openmp
+      rm -rf $BUILD_DIR/build/openmp
       MYCMAKEOPTS="$COMMON_CMAKE_OPTS -DCMAKE_BUILD_TYPE=Release"
-      mkdir -p $BUILD_DIR/build_lib
-      cd $BUILD_DIR/build_lib
+      mkdir -p $BUILD_DIR/build/openmp
+      cd $BUILD_DIR/build/openmp
       echo " -----Running openmp cmake ---- " 
       echo cmake $MYCMAKEOPTS  $BUILD_DIR/$OPENMP_REPO_NAME
       cmake $MYCMAKEOPTS  $BUILD_DIR/$OPENMP_REPO_NAME
@@ -179,12 +181,12 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
          exit 1
       fi
 
-      echo rm -rf $BUILD_DIR/build_debug
-      rm -rf $BUILD_DIR/build_debug
+      echo rm -rf $BUILD_DIR/build/openmp_debug
+      rm -rf $BUILD_DIR/build/openmp_debug
       export OMPTARGET_DEBUG=1
       MYCMAKEOPTS="$COMMON_CMAKE_OPTS -DLIBOMPTARGET_NVPTX_DEBUG=ON -DLIBOMPTARGET_AMDGCN_DEBUG=ON -DCMAKE_BUILD_TYPE=Debug"
-      mkdir -p $BUILD_DIR/build_debug
-      cd $BUILD_DIR/build_debug
+      mkdir -p $BUILD_DIR/build/openmp_debug
+      cd $BUILD_DIR/build/openmp_debug
       echo
       echo " -----Running openmp cmake for debug ---- " 
       echo cmake $MYCMAKEOPTS  $BUILD_DIR/$OPENMP_REPO_NAME
@@ -196,21 +198,21 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
       fi
 fi
 
-cd $BUILD_DIR/build_lib
+cd $BUILD_DIR/build/openmp
 echo
-echo " -----Running make for $BUILD_DIR/build_lib ---- "
+echo " -----Running make for $BUILD_DIR/build/openmp ---- "
 make -j $NUM_THREADS
 if [ $? != 0 ] ; then 
       echo " "
       echo "ERROR: make -j $NUM_THREADS  FAILED"
       echo "To restart:" 
-      echo "  cd $BUILD_DIR/build_lib"
+      echo "  cd $BUILD_DIR/build/openmp"
       echo "  make"
       exit 1
 fi
 
-cd $BUILD_DIR/build_debug
-echo " -----Running make for $BUILD_DIR/build_debug ---- "
+cd $BUILD_DIR/build/openmp_debug
+echo " -----Running make for $BUILD_DIR/build/openmp_debug ---- "
 make -j $NUM_THREADS
 if [ $? != 0 ] ; then 
       echo "ERROR make -j $NUM_THREADS failed"
@@ -225,14 +227,14 @@ fi
 
 #  ----------- Install only if asked  ----------------------------
 if [ "$1" == "install" ] ; then 
-      cd $BUILD_DIR/build_lib
+      cd $BUILD_DIR/build/openmp
       echo " -----Installing to $INSTALL_DIR/lib ----- " 
       $SUDO make install 
       if [ $? != 0 ] ; then 
          echo "ERROR make install failed "
          exit 1
       fi
-      cd $BUILD_DIR/build_debug
+      cd $BUILD_DIR/build/openmp_debug
       echo
       echo " -----Installing to $INSTALL_DIR/lib-debug ---- " 
       $SUDO make install 

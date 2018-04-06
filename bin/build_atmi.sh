@@ -5,9 +5,9 @@
 # Do not change these values. If you set the environment variables these defaults will changed to 
 # your environment variables
 HCC2=${HCC2:-/opt/rocm/hcc2}
-ATMI_REPOS=${ATMI_REPOS:-/home/$USER/git/hcc2}
+HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
 ATMI_REPO_NAME=${ATMI_REPO_NAME:-atmi-staging}
-BUILD_ATMI=${BUILD_ATMI:-$ATMI_REPOS}
+BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 
 SUDO=${SUDO:-set}
 if [ "$SUDO" == "set" ] ; then 
@@ -53,9 +53,9 @@ INSTALL_DIR=${INSTALL_ATMI:-"${HCC2}_${HCC2_VERSION_STRING}"}
 if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then 
   echo " "
   echo " This script builds release and debug versions of ATMI libraries."
-  echo " It gets the source from:  $ATMI_REPOS/$ATMI_REPO_NAME"
-  echo " It builds libraries in:   $BUILD_ATMI/build_atmi/build_lib "
-  echo "    and:                   $BUILD_ATMI/build_atmi/build_debug "
+  echo " It gets the source from:  $HCC2_REPOS/$ATMI_REPO_NAME"
+  echo " It builds libraries in:   $BUILD_HCC2/build/atmi"
+  echo "    and:                   $BUILD_HCC2/build/atmi_debug"
   echo " It installs in:           $INSTALL_DIR"
   echo " "
   echo "Example commands and actions: "
@@ -66,19 +66,21 @@ if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then
   echo "To build hcc2, you need to build 4 components with these commands"
   echo "  ./build_hcc2"
   echo "  ./build_hcc2.sh install"
+  echo "  ./build_utils.sh "
+  echo "  ./build_utils.sh install"
   echo "  ./build_atmi.sh "
   echo "  ./build_atmi.sh install"
-  echo "  ./build_rt.sh"
-  echo "  ./build_rt.sh install"
-  echo "  ./build_libamdgcn.sh"
-  echo "  ./build_libamdgcn.sh install"
+  echo "  ./build_libdevice.sh"
+  echo "  ./build_libdevice.sh install"
+  echo "  ./build_hiprt.sh"
+  echo "  ./build_hiprt.sh install"
   echo " "
   exit 
 fi
 
-if [ ! -d $ATMI_REPOS/$ATMI_REPO_NAME ] ; then 
-   echo "ERROR:  Missing repository $ATMI_REPOS/$ATMI_REPO_NAME"
-   echo "        Are environment variables ATMI_REPOS and ATMI_REPO_NAME set correctly?"
+if [ ! -d $HCC2_REPOS/$ATMI_REPO_NAME ] ; then 
+   echo "ERROR:  Missing repository $HCC2_REPOS/$ATMI_REPO_NAME"
+   echo "        Are environment variables HCC2_REPOS and ATMI_REPO_NAME set correctly?"
    exit 1
 fi
 
@@ -101,18 +103,18 @@ fi
 if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then 
 
    echo " " 
-   echo "This is a FRESH START. ERASING any previous builds in $BUILD_ATMI/build_atmi"
+   echo "This is a FRESH START. ERASING any previous builds in $BUILD_HCC2/build_atmi"
    echo "Use ""$0 nocmake"" or ""$0 install"" to avoid FRESH START."
 
    BUILDTYPE="Release"
-   echo rm -rf $BUILD_ATMI/build_atmi/build_lib
-   rm -rf $BUILD_ATMI/build_atmi/build_lib
+   echo rm -rf $BUILD_HCC2/build/atmi
+   rm -rf $BUILD_HCC2/build/atmi
    MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DATMI_HSA_INTEROP=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
-   mkdir -p $BUILD_ATMI/build_atmi/build_lib
-   cd $BUILD_ATMI/build_atmi/build_lib
+   mkdir -p $BUILD_HCC2/build/atmi
+   cd $BUILD_HCC2/build/atmi
    echo " -----Running atmi cmake ---- " 
-   echo cmake $MYCMAKEOPTS  $ATMI_REPOS/$ATMI_REPO_NAME/src
-   cmake $MYCMAKEOPTS  $ATMI_REPOS/$ATMI_REPO_NAME/src
+   echo cmake $MYCMAKEOPTS  $HCC2_REPOS/$ATMI_REPO_NAME/src
+   cmake $MYCMAKEOPTS  $HCC2_REPOS/$ATMI_REPO_NAME/src
    if [ $? != 0 ] ; then 
       echo "ERROR atmi cmake failed. cmake flags"
       echo "      $MYCMAKEOPTS"
@@ -120,13 +122,13 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
    fi
 
    BUILDTYPE="Debug"
-   echo rm -rf $BUILD_ATMI/build_atmi/build_debug
-   rm -rf $BUILD_ATMI/build_atmi/build_debug
+   echo rm -rf $BUILD_HCC2/build/atmi_debug
+   rm -rf $BUILD_HCC2/build/atmi_debug
    MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DATMI_HSA_INTEROP=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
-   mkdir -p $BUILD_ATMI/build_atmi/build_debug
-   cd $BUILD_ATMI/build_atmi/build_debug
+   mkdir -p $BUILD_HCC2/build/atmi_debug
+   cd $BUILD_HCC2/build/atmi_debug
    echo " -----Running atmi cmake for debug ---- " 
-   cmake $MYCMAKEOPTS $ATMI_REPOS/$ATMI_REPO_NAME/src
+   cmake $MYCMAKEOPTS $HCC2_REPOS/$ATMI_REPO_NAME/src
    if [ $? != 0 ] ; then 
       echo "ERROR atmi debug cmake failed. cmake flags"
       echo "      $MYCMAKEOPTS"
@@ -134,7 +136,7 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
   fi
 fi
 
-cd $BUILD_ATMI/build_atmi/build_lib
+cd $BUILD_HCC2/build/atmi
 echo
 echo " -----Running make for atmi ---- " 
 make -j $NUM_THREADS
@@ -142,12 +144,12 @@ if [ $? != 0 ] ; then
       echo " "
       echo "ERROR: make -j $NUM_THREADS  FAILED"
       echo "To restart:" 
-      echo "  cd $BUILD_ATMI/build_atmi/build_lib"
+      echo "  cd $BUILD_HCC2/build/atmi"
       echo "  make"
       exit 1
 fi
 
-cd $BUILD_ATMI/build_atmi/build_debug
+cd $BUILD_HCC2/build/atmi_debug
 echo " -----Running make for lib-debug ---- " 
 make -j $NUM_THREADS
 if [ $? != 0 ] ; then 
@@ -157,14 +159,14 @@ fi
 
 #  ----------- Install only if asked  ----------------------------
 if [ "$1" == "install" ] ; then 
-      cd $BUILD_ATMI/build_atmi/build_lib
+      cd $BUILD_HCC2/build/atmi
       echo " -----Installing to $INSTALL_DIR/lib ----- " 
       $SUDO make install 
       if [ $? != 0 ] ; then 
          echo "ERROR make install failed "
          exit 1
       fi
-      cd $BUILD_ATMI/build_atmi/build_debug
+      cd $BUILD_HCC2/build/atmi_debug
       echo " -----Installing to $INSTALL_DIR/lib-debug ---- " 
       $SUDO make install 
       if [ $? != 0 ] ; then 

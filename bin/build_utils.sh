@@ -33,6 +33,7 @@ HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
 HCC2_REPO_NAME=${HCC2_REPO_NAME:-hcc2}
 INSTALL_UTILS=${INSTALL_UTILS:-$HCC2}
+BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 SUDO=${SUDO:-set}
 
 if [ $SUDO == "set" ] ; then
@@ -43,7 +44,7 @@ fi
 
 UTILS_DIR=${HCC2_REPOS}/$HCC2_REPO_NAME/utils
 INSTALL_DIR=${INSTALL_UTILS}
-BUILD_DIR=${BUILD_UTILS:-/tmp/$USER/hcc2utils}
+BUILD_DIR=$BUILD_HCC2
 MYCMAKEOPTS="-DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
 
 if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then

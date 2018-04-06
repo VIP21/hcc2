@@ -75,7 +75,7 @@ if [ "$PROC" == "ppc64le" ] ; then
 else
    COMPILERS="-DCMAKE_C_COMPILER=$GCC -DCMAKE_CXX_COMPILER=$GCPLUSCPLUS"
 fi
-MYCMAKEOPTS="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DLLVM_ENABLE_ASSERTIONS=ON -DLLVM_TARGETS_TO_BUILD=AMDGPU;X86;NVPTX;PowerPC;AArch64 $COMPILERS -DHCC2_VERSION_STRING=$HCC2_VERSION_STRING"
+MYCMAKEOPTS="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DLLVM_ENABLE_ASSERTIONS=ON -DLLVM_TARGETS_TO_BUILD=AMDGPU;X86;NVPTX;PowerPC;AArch64 $COMPILERS -DLLVM_VERSION_SUFFIX=_HCC2_Version_$HCC2_VERSION_STRING"
 
 if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then 
   echo
@@ -93,8 +93,8 @@ if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then
   echo " Initial Build:"
   echo "    build_hcc2.sh with no options does the initial build with these actions:"
   echo "    - Links clang and lld repos in $LLVM_REPO_NAME/tools for a full build."
-  echo "    - mkdir -p $BUILD_DIR/build_hcc2 "
-  echo "    - cd $BUILD_DIR/build_hcc2"
+  echo "    - mkdir -p $BUILD_DIR/build/hcc2 "
+  echo "    - cd $BUILD_DIR/build/hcc2"
   echo "    - cmake $BUILD_DIR/$LLVM_REPO_NAME (with cmake options below)"
   echo "    - make"
   echo
@@ -146,7 +146,7 @@ if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then
   echo
   echo "    build_hcc2.sh will always build with cmake and make outside your source git trees."
   echo "    By default (without BUILD_HCC2) the build will occur in a subdirectory of"
-  echo "    HCC2_REPOS.  That subdirectory is $HCC2_REPOS/build_hcc2"
+  echo "    HCC2_REPOS.  That subdirectory is $HCC2_REPOS/build/hcc2"
   echo
   echo "    The BUILD_HCC2 environment variable enables source development outside your git"
   echo "    repositories. By default, this feature is OFF.  The BUILD_HCC2 environment variable "
@@ -154,7 +154,7 @@ if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then
   echo "    changes outside of your local git repositories (specified by HCC2_REPOS env var). "
   echo "    If BUILD_HCC2 is set, your git repositories (specifed by HCC2_REPOS) will be"
   echo "    replicated to subdirectories of BUILD_HCC2 using rsync.  The subsequent build "
-  echo "    (cmake and make) will occur in subdirectory BUILD_HCC2/build_hcc2."
+  echo "    (cmake and make) will occur in subdirectory BUILD_HCC2/build/hcc2."
   echo "    This replication only happens on your initial build, that is, if you specify no arguments."
   echo "    The option 'nocmake' skips replication and then restarts make in the build directory."
   echo "    The "install" option skips replication, skips cmake, runs 'make' and 'make install'. "
@@ -236,10 +236,10 @@ fi
 # Skip synchronization from git repos if nocmake or install are specified
 if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
    echo 
-   echo "This is a FRESH START. ERASING any previous builds in $BUILD_DIR/build_hcc2 "
+   echo "This is a FRESH START. ERASING any previous builds in $BUILD_DIR/build/hcc2 "
    echo "Use ""$0 nocmake"" or ""$0 install"" to avoid FRESH START."
-   rm -rf $BUILD_DIR/build_hcc2
-   mkdir -p $BUILD_DIR/build_hcc2
+   rm -rf $BUILD_DIR/build/hcc2
+   mkdir -p $BUILD_DIR/build/hcc2
 
    if [ $COPYSOURCE ] ; then 
       #  Copy/rsync the git repos into /tmp for faster compilation
@@ -289,14 +289,14 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
    fi
 
 else
-   if [ ! -d $BUILD_DIR/build_hcc2 ] ; then 
-      echo "ERROR: The build directory $BUILD_DIR/build_hcc2 does not exist"
+   if [ ! -d $BUILD_DIR/build/hcc2 ] ; then 
+      echo "ERROR: The build directory $BUILD_DIR/build/hcc2 does not exist"
       echo "       run $0 without nocmake or install options. " 
       exit 1
    fi
 fi
 
-cd $BUILD_DIR/build_hcc2
+cd $BUILD_DIR/build/hcc2
 
 if [ -f $BUILDCLFILE ] ; then 
    # only copy if there has been a change to the source.  
@@ -313,12 +313,13 @@ else
 fi
 rm $TEMPCLFILE
 
-cd $BUILD_DIR/build_hcc2
+cd $BUILD_DIR/build/hcc2
 
 if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
+   echo
    echo " -----Running cmake ---- " 
-   echo cmake $MYCMAKEOPTS  ../$LLVM_REPO_NAME
-   cmake $MYCMAKEOPTS  ../$LLVM_REPO_NAME 2>&1 | tee /tmp/cmake.out
+   echo cmake $MYCMAKEOPTS  $BUILD_DIR/$LLVM_REPO_NAME
+   cmake $MYCMAKEOPTS  $BUILD_DIR/$LLVM_REPO_NAME 2>&1 | tee /tmp/cmake.out
    if [ $? != 0 ] ; then 
       echo "ERROR cmake failed. Cmake flags"
       echo "      $MYCMAKEOPTS"
@@ -348,8 +349,8 @@ if [ "$1" == "install" ] ; then
    fi
    $SUDO ln -sf $INSTALL_DIR $HCC2   
    # add executables forgot by make install but needed for testing
-   $SUDO cp -p $BUILD_DIR/build_hcc2/bin/llvm-lit $HCC2/bin/llvm-lit
-   $SUDO cp -p $BUILD_DIR/build_hcc2/bin/FileCheck $HCC2/bin/FileCheck
+   $SUDO cp -p $BUILD_DIR/build/hcc2/bin/llvm-lit $HCC2/bin/llvm-lit
+   $SUDO cp -p $BUILD_DIR/build/hcc2/bin/FileCheck $HCC2/bin/FileCheck
    echo
    echo "SUCCESSFUL INSTALL to $INSTALL_DIR with link to $HCC2"
    echo

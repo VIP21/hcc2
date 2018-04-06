@@ -8,7 +8,7 @@
 
 HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
-BUILD_LIBDEVICE=${BUILD_LIBDEVICE:-$HCC2_REPOS}
+BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 HCC2_LIBDEVICE_REPO_NAME=${HCC2_LIBDEVICE_REPO_NAME:-rocm-device-libs}
 HSA_DIR=${HSA_DIR:-/opt/rocm/hsa}
 SKIPTEST=${SKIPTEST:-"YES"}
@@ -19,7 +19,7 @@ else
    SUDO=""
 fi
 
-BUILD_DIR=$BUILD_LIBDEVICE
+BUILD_DIR=$BUILD_HCC2
 if [ "$BUILD_DIR" != "$HCC2_REPOS" ] ; then 
    COPYSOURCE=true
 fi
@@ -110,7 +110,7 @@ if [ "$1" != "install" ] ; then
      cp $sedfile2 $origsedfile2 
    fi
    for MCPU in $MCPU_LIST  ; do 
-      builddir_mcpu=$BUILD_DIR/build_libdevice_$MCPU
+      builddir_mcpu=$BUILD_DIR/build/libdevice/$MCPU
       if [ -d $builddir_mcpu ] ; then 
          echo rm -rf $builddir_mcpu
          rm -rf $builddir_mcpu
@@ -171,7 +171,7 @@ if [ "$1" != "install" ] ; then
 
    if [ "$SKIPTEST" != "YES" ] ; then 
       for MCPU in $MCPU_LIST  ; do 
-         builddir_mcpu=$BUILD_DIR/build_libdevice_$MCPU
+         builddir_mcpu=$BUILD_DIR/build/libdevice/$MCPU
          cd $builddir_mcpu
          echo "running tests in $builddir_mcpu"
          make test 
@@ -189,7 +189,7 @@ if [ "$1" == "install" ] ; then
       echo mkdir -p $installdir_gfx/include
       $SUDO mkdir -p $installdir_gfx/include
       $SUDO mkdir -p $installdir_gfx/lib
-      builddir_mcpu=$BUILD_DIR/build_libdevice_$MCPU
+      builddir_mcpu=$BUILD_DIR/build/libdevice/$MCPU
       codename=$(gfx2code $MCPU)
       installdir_codename=$INSTALL_DIR/${codename}
       echo "running make install from $builddir_mcpu"
