@@ -143,10 +143,7 @@ if [ ! -z `which "getconf"` ]; then
     NUM_THREADS=$(`which "getconf"` _NPROCESSORS_ONLN)
 fi
 
-
 COMMON_CMAKE_OPTS="-DOPENMP_ENABLE_LIBOMPTARGET=1
--DCMAKE_C_COMPILER=$HCC2/bin/clang
--DCMAKE_CXX_COMPILER=$HCC2/bin/clang++
 -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR
 -DLIBOMPTARGET_NVPTX_ENABLE_BCLIB=ON
 -DLIBOMPTARGET_NVPTX_CUDA_COMPILER=$HCC2/bin/clang++
@@ -184,7 +181,7 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
       echo rm -rf $BUILD_DIR/build/openmp_debug
       rm -rf $BUILD_DIR/build/openmp_debug
       export OMPTARGET_DEBUG=1
-      MYCMAKEOPTS="$COMMON_CMAKE_OPTS -DLIBOMPTARGET_NVPTX_DEBUG=ON -DLIBOMPTARGET_AMDGCN_DEBUG=ON -DCMAKE_BUILD_TYPE=Debug"
+      MYCMAKEOPTS="$COMMON_CMAKE_OPTS -DLIBOMPTARGET_NVPTX_DEBUG=ON -DLIBOMPTARGET_AMDGCN_DEBUG=ON -DCMAKE_BUILD_TYPE=Debug -DOMPTARGET_DEBUG=1"
       mkdir -p $BUILD_DIR/build/openmp_debug
       cd $BUILD_DIR/build/openmp_debug
       echo
@@ -213,6 +210,7 @@ fi
 
 cd $BUILD_DIR/build/openmp_debug
 echo " -----Running make for $BUILD_DIR/build/openmp_debug ---- "
+export OMPTARGET_DEBUG=1
 make -j $NUM_THREADS
 if [ $? != 0 ] ; then 
       echo "ERROR make -j $NUM_THREADS failed"
