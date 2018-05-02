@@ -245,7 +245,7 @@ if [ "$thisname" == "" ] ; then
 
 #  kfd may not be working so check lspci for ATI
    if [ "$thisname" == "unknown" ] ; then
-      slot=`lspci | grep ATI | grep -v Audio | cut -d" " -f1 | sort -u`
+      slot=`lspci | grep ATI | grep Radeon | grep -v Audio | cut -d" " -f1 | sort -u`
       if [ "$slot" != "" ] ; then
          kfdid=`lspci -s $slot -n | cut -d" " -f3 | cut -d":" -f2`
          if [ "$kfdid" != "" ] ; then
