@@ -73,7 +73,6 @@ function usage(){
 
    Options with values:
     -hcc2      <path>           $HCC2 or /opt/rocm/hcc2
-    -libgcn    <path>           $LIBAMDGCN or /opt/rocm/libamdgcn  
     -cuda-path <path>           $CUDA_PATH or /usr/local/cuda
     -mcpu      <cputype>        Default= value returned by mygpu
     -bclib     <bcfile>         Add a bc library for llvm-link
@@ -89,10 +88,9 @@ function usage(){
     cloc.sh whybother.cu      /* creates whybother.hsaco             */
 
    Note: Instead of providing these command line options:
-   -hcc2, -libgcn, -cuda-path, -mcpu, or -clopts
-
-   You may set these environment variables, respectively:
-   HCC2, LIBAMDGCN, CUDA_PATH, LC_MCPU, or CLOPTS
+     -hcc2,  -cuda-path, -mcpu, or -clopts
+     you may set these environment variables, respectively:
+     HCC2, CUDA_PATH, LC_MCPU, or CLOPTS
 
    Command line options will take precedence over environment variables. 
 
@@ -187,7 +185,6 @@ while [ $# -gt 0 ] ; do
       -bclib)		EXTRABCLIB=$2; shift ;; 
       -mcpu)            LC_MCPU=$2; shift ;;
       -hcc2)            HCC2=$2; shift ;;
-      -libgcn)          LIBAMDGCN=$2; shift ;;
       -cuda-path)       CUDA_PATH=$2; shift ;;
       -h) 	        usage ;; 
       -help) 	        usage ;; 
@@ -224,7 +221,6 @@ cdir=$(getdname $0)
 [ ! -L "$cdir/cloc.sh" ] || cdir=$(getdname `readlink "$cdir/cloc.sh"`)
 
 HCC2=${HCC2:-/opt/rocm/hcc2}
-LIBAMDGCN=${LIBAMDGCN:-/opt/rocm/libamdgcn}
 CUDA_PATH=${CUDA_PATH:-/usr/local/cuda}
 
 # Determine which gfx processor to use, default to Fiji (gfx803)
@@ -245,15 +241,13 @@ if [ $VV ]  ; then
 fi
 
 BCFILES=""
-BCFILES="$BCFILES $HCC2/lib/libdevice/libicuda2gcn-$LC_MCPU.bc"
-BCFILES="$BCFILES $LIBAMDGCN/$LC_MCPU/lib/cuda2gcn.amdgcn.bc"
-BCFILES="$BCFILES $LIBAMDGCN/$LC_MCPU/lib/opencl.amdgcn.bc"
-BCFILES="$BCFILES $LIBAMDGCN/$LC_MCPU/lib/ockl.amdgcn.bc"
-BCFILES="$BCFILES $LIBAMDGCN/$LC_MCPU/lib/ocml.amdgcn.bc"
-BCFILES="$BCFILES $LIBAMDGCN/$LC_MCPU/lib/irif.amdgcn.bc"
-BCFILES="$BCFILES $LIBAMDGCN/$LC_MCPU/lib/oclc_isa_version.amdgcn.bc"
-
-#LINKOPTS="-Xclang -mlink-bitcode-file -Xclang $LIBAMDGCN/lib/libamdgcn.$LC_MCPU.bc"
+BCFILES="$BCFILES $HCC2/lib/libdevice/$LC_MCPU/libhiprt.bc"
+BCFILES="$BCFILES $HCC2/lib/libdevice/$LC_MCPU/hc.amdgcn.bc"
+BCFILES="$BCFILES $HCC2/lib/libdevice/$LC_MCPU/opencl.amdgcn.bc"
+BCFILES="$BCFILES $HCC2/lib/libdevice/$LC_MCPU/ockl.amdgcn.bc"
+BCFILES="$BCFILES $HCC2/lib/libdevice/$LC_MCPU/ocml.amdgcn.bc"
+BCFILES="$BCFILES $HCC2/lib/libdevice/$LC_MCPU/irif.amdgcn.bc"
+BCFILES="$BCFILES $HCC2/lib/libdevice/$LC_MCPU/oclc_isa_version.amdgcn.bc"
 
 if [ $EXTRABCLIB ] ; then 
    if [ -f $EXTRABCLIB ] ; then 
@@ -285,14 +279,14 @@ if [ $CUDACLANG ] ; then
    INCLUDES="-I $CUDA_PATH/include ${INCLUDES}"
    CMD_CLC=${CMD_CLC:-clang++ $CUOPTS $INCLUDES} 
 else
-   INCLUDES="-I ${LIBAMDGCN}/include ${INCLUDES}" 
-   CMD_CLC=${CMD_CLC:-clang -x cl -Xclang -cl-std=CL2.0 $CLOPTS $LINKOPTS $INCLUDES -include opencl-c.h -Dcl_clang_storage_class_specifiers -Dcl_khr_fp64 -target amdgcn--cuda -mcpu=$LC_MCPU } 
+   INCLUDES="-I ${HCC2}/include ${INCLUDES}"
+   CMD_CLC=${CMD_CLC:-clang -x cl -Xclang -cl-std=CL2.0 $CLOPTS $LINKOPTS $INCLUDES -include opencl-c.h -Dcl_clang_storage_class_specifiers -Dcl_khr_fp64 -target amdgcn-amd-amdhsa }
 fi
 CMD_LLA=${CMD_LLA:-llvm-dis}
 CMD_ASM=${CMD_ASM:-llvm-as}
 CMD_LLL=${CMD_LLL:-llvm-link}
 CMD_OPT=${CMD_OPT:-opt -O$LLVMOPT -mcpu=$LC_MCPU -amdgpu-annotate-kernel-features}
-CMD_LLC=${CMD_LLC:-llc -mtriple amdgcn--cuda -mcpu=$LC_MCPU -filetype=obj}
+CMD_LLC=${CMD_LLC:-llc -mtriple amdgcn-amd-amdhsa -mcpu=$LC_MCPU -filetype=obj}
 
 RUNDATE=`date`
 
