@@ -85,6 +85,7 @@ install(PROGRAMS
    ${CMAKE_CURRENT_SOURCE_DIR}/bin/cloc.sh
    ${CMAKE_CURRENT_SOURCE_DIR}/bin/mymcpu
    ${CMAKE_CURRENT_SOURCE_DIR}/bin/mygpu
+   ${CMAKE_CURRENT_SOURCE_DIR}/bin/make_header_from_ll_defines.sh
    ${CMAKE_CURRENT_BINARY_DIR}/prepare-builtins
    DESTINATION "bin")
 
