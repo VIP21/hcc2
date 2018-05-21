@@ -120,3 +120,23 @@ install(FILES
 /opt/rocm/hsa/include/hsa/amd_hsa_queue.h
 /opt/rocm/hsa/include/hsa/Brig.h
         DESTINATION include/hsa COMPONENT hcc2utils)
+
+set(repobaselocation $ENV{REPOBASELOCATION} )
+if (EXISTS ${repobaselocation} )
+else()
+  set(home $ENV{HOME})
+  set(repobaselocation "${home}/git/hcc2")
+  message("=========> WARNING USING DEFAULT REPOBASELOCATION As ${repobaselocation}")
+endif()
+set(hip2headersdir "${repobaselocation}/hcc2-hip/include/hip2")
+if (EXISTS ${hip2headersdir}/hip_runtime.h )
+  install(FILES
+   ${hip2headersdir}/hip_runtime.h
+   ${hip2headersdir}/hip_texture_functions.h
+   ${hip2headersdir}/hip_texture_types.h
+        DESTINATION lib/clang/7.0.0/include/hip2)
+else()
+  message("=========> ERROR ${hip2headersdir}/hip_runtime.h DOES NOT EXIST")
+  message("                 Correct REPOBASELOCATION")
+  message("                 And/Or clone hcc2-hip repository to REPOBASELOCATION")
+endif()
