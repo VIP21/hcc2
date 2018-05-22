@@ -128,6 +128,7 @@ else()
   set(repobaselocation "${home}/git/hcc2")
   message("=========> WARNING USING DEFAULT REPOBASELOCATION As ${repobaselocation}")
 endif()
+set(hipheadersdir "${repobaselocation}/hcc2-hip/include/hip")
 set(hip2headersdir "${repobaselocation}/hcc2-hip/include/hip2")
 if (EXISTS ${hip2headersdir}/hip_runtime.h )
   install(FILES
@@ -135,6 +136,9 @@ if (EXISTS ${hip2headersdir}/hip_runtime.h )
    ${hip2headersdir}/hip_texture_functions.h
    ${hip2headersdir}/hip_texture_types.h
         DESTINATION lib/clang/7.0.0/include/hip2)
+  install(DIRECTORY
+   ${hipheadersdir}
+        DESTINATION lib/clang/7.0.0/include)
 else()
   message("=========> ERROR ${hip2headersdir}/hip_runtime.h DOES NOT EXIST")
   message("                 Correct REPOBASELOCATION")
