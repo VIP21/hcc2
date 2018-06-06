@@ -58,7 +58,7 @@ else
    echo --- NEW CLONE of repo $reponame to $repodirname ----
    cd $HCC2_REPOS
    echo git clone $repo_web_location/$reponame
-   git clone $repo_web_location/$reponame
+   git clone $repo_web_location/$reponame $reponame
    echo "cd $repodirname ; git checkout $COBRANCH"
    cd $repodirname
    git checkout $COBRANCH
@@ -74,26 +74,26 @@ repo_web_location=$GITROCDEV
 
 reponame="hcc2"
 COBRANCH="master"
-clone_or_pull
+#clone_or_pull
 
 reponame="openmp"
-COBRANCH="HCC2-180503"
+COBRANCH="HCC2-180605"
 clone_or_pull
 
 reponame="llvm"
-COBRANCH="HCC2-180503"
+COBRANCH="HCC2-180605"
 clone_or_pull
 
 reponame="clang"
-COBRANCH="HCC2-180503"
+COBRANCH="HCC2-180605"
 clone_or_pull
 
 reponame="lld"
-COBRANCH="HCC2-180503"
+COBRANCH="HCC2-180605"
 clone_or_pull
 
-reponame="hcc2-hip"
-COBRANCH="master"
+reponame="hip"
+COBRANCH="hip-clang"
 clone_or_pull
 
 # ---------------------------------------
@@ -103,7 +103,7 @@ repo_web_location=$GITROC
 
 # This repo is used to build /opt/rocm/libamdgcn
 reponame="rocm-device-libs"
-COBRANCH="master"
+COBRANCH="hip-clang"
 clone_or_pull
 
 # This is the ATMI repo for ATMI 0.4 in development

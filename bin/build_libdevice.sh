@@ -211,7 +211,10 @@ if [ "$1" == "install" ] ; then
          idfile=${fixfile##*isa_version_}
          idfile=${idfile%*.amdgcn.bc}
          if [ "$id" == "$idfile" ] ; then 
-            $SUDO mv $fixfile $fixdir/lib/oclc_isa_version.amdgcn.bc
+            if [ -f $fixdir/lib/oclc_isa_version.amdgcn.bc ] ; then
+              $SUDO rm -f $fixdir/lib/oclc_isa_version.amdgcn.bc
+            fi
+            $SUDO ln -sf $fixfile $fixdir/lib/oclc_isa_version.amdgcn.bc
          else
             $SUDO rm $fixfile
          fi

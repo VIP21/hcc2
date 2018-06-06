@@ -27,7 +27,7 @@ build_openmp.sh    -  Builds the OpenMP libraries for hcc2.
 build_libdevice.sh -  Builds the amd bc libraries from rocm-device-libs needed by hcc2.
                       This also installs in /opt/rocm/hcc2 (or $HCC2)
 
-build_hiprt.sh     -  Builds the hip bc libraries and host runtimes needed by hcc2.
+build_hit.sh     -  Builds the hip bc libraries and host runtimes needed by hcc2.
                       This also installs in /opt/rocm/hcc2 (or $HCC2)
 
 HCC2_VERSION_STRING - File to set the version of HCC2 to clone and build . 
@@ -37,12 +37,12 @@ The repositories and branches needed by HCC2 are:
 DIRECTORY NAME *                  HCC2 REPOSITORY **       BRANCH
 -------------------------------   ---------------------    ------
 $HOME/git/hcc2/hcc2               %rocdev/hcc2             master ***
-$HOME/git/hcc2/clang              %rocdev/clang            HCC2-180503 ***
-$HOME/git/hcc2/llvm               %rocdev/llvm             HCC2-180503 ***
-$HOME/git/hcc2/lld                %rocdev/lld              HCC2-180503 ***
-$HOME/git/hcc2/openmp             %rocdev/openmp           HCC2-180503 ***
-$HOME/git/hcc2/hcc2-hip           %rocdev/hcc2-hip         master ***
-$HOME/git/hcc2/rocm-device-libs   %roc/rocm-device-libs    master
+$HOME/git/hcc2/clang              %rocdev/clang            HCC2-180605 ***
+$HOME/git/hcc2/llvm               %rocdev/llvm             HCC2-180605 ***
+$HOME/git/hcc2/lld                %rocdev/lld              HCC2-180605 ***
+$HOME/git/hcc2/openmp             %rocdev/openmp           HCC2-180605 ***
+$HOME/git/hcc2/hip                %rocdev/hip              hip-clang ***
+$HOME/git/hcc2/rocm-device-libs   %roc/rocm-device-libs    amd-hip
 $HOME/git/hcc2/atmi-staging       %roc/atmi-staging        master ***
 
    * Clone your repositories here or override with environment variables.
@@ -96,8 +96,8 @@ To build all components, run the scripts in the following order:
 	./build_libdevice.sh  
 	./build_libdevice.sh install
 
-	./build_hiprt.sh
-	./build_hiprt.sh install
+	./build_hip.sh
+	./build_hip.sh install
 
 These scripts do not automatically install in case their is a build failure.
 In case of a build failure, you can restart the build by running "make" or 
@@ -107,5 +107,5 @@ The compiler created by build_hcc2.sh is needed by all of the components.
 So you must build and install hcc2 first before building any of the components.
 
 The utilities created by build_utils.sh are needed by the 4 library components
-build_atmi.sh, build_openmp.sh, build_libdevice.sh and build_hiprt.sh. 
+build_atmi.sh, build_openmp.sh, build_libdevice.sh and build_hip.sh. 
 So you must build and install the utilities before building the libraries.
