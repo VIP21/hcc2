@@ -145,6 +145,8 @@ fi
 
 COMMON_CMAKE_OPTS="-DOPENMP_ENABLE_LIBOMPTARGET=1
 -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR
+-DOPENMP_TEST_C_COMPILER=$HCC2/bin/clang
+-DOPENMP_TEST_CXX_COMPILER=$HCC2/bin/clang++
 -DLIBOMPTARGET_NVPTX_ENABLE_BCLIB=ON
 -DLIBOMPTARGET_NVPTX_CUDA_COMPILER=$HCC2/bin/clang++
 -DLIBOMPTARGET_NVPTX_ALTERNATE_HOST_COMPILER=$HCC2/bin/clang
@@ -211,7 +213,8 @@ fi
 cd $BUILD_DIR/build/openmp_debug
 echo " -----Running make for $BUILD_DIR/build/openmp_debug ---- "
 export OMPTARGET_DEBUG=1
-make -j $NUM_THREADS
+# GUANSONG: Please fix this.  We need to skip make and install of debug openmp
+#make -j $NUM_THREADS
 if [ $? != 0 ] ; then 
       echo "ERROR make -j $NUM_THREADS failed"
       exit 1
@@ -235,7 +238,8 @@ if [ "$1" == "install" ] ; then
       cd $BUILD_DIR/build/openmp_debug
       echo
       echo " -----Installing to $INSTALL_DIR/lib-debug ---- " 
-      $SUDO make install 
+# GUANSONG: Please fix this.  We need to skip make and install of debug openmp
+#      $SUDO make install 
       if [ $? != 0 ] ; then 
          echo "ERROR make install failed "
          exit 1
