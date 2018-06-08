@@ -21,6 +21,9 @@ build_utils.sh     -  Builds the HCC2 utilities
 build_atmi.sh      -  Builds early release of ATMI for hcc2.
                       This installs in /opt/rocm/hcc2 (or $HCC2)
 
+build_hit.sh     -  Builds the hip bc libraries and host runtimes needed by hcc2.
+                      This also installs in /opt/rocm/hcc2 (or $HCC2)
+
 build_openmp.sh    -  Builds the OpenMP libraries for hcc2.
                       This also installs in /opt/rocm/hcc2 (or $HCC2)
 
@@ -87,6 +90,9 @@ To build all components, run the scripts in the following order:
 	./build_utils.sh
 	./build_utils.sh install
 
+	./build_hip.sh
+	./build_hip.sh install
+
 	./build_atmi.sh
 	./build_atmi.sh install
 
@@ -95,9 +101,6 @@ To build all components, run the scripts in the following order:
 
 	./build_libdevice.sh  
 	./build_libdevice.sh install
-
-	./build_hip.sh
-	./build_hip.sh install
 
 These scripts do not automatically install in case their is a build failure.
 In case of a build failure, you can restart the build by running "make" or 
