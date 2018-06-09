@@ -35,7 +35,8 @@
 #HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
-HIP_REPO_NAME=${HCC2_REPO_NAME:-hip}
+HIP_REPO_NAME=${HIP_REPO_NAME:-hip}
+HCC2_REPO_NAME=${HCC2_REPO_NAME:-hcc2}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 HIP_REPO_DIR=$HCC2_REPOS/$HIP_REPO_NAME
 #GFXLIST=${GFXLIST:-"gfx700 gfx701 gfx801 gfx803 gfx900"}
@@ -142,4 +143,6 @@ if [ "$1" == "install" ] ; then
       echo " -----Installing to $INSTALL_DIR/lib ----- "
       $SUDO cp -p libhip_hcc.so $INSTALL_DIR/lib/.
       $SUDO rsync -a $HIP_REPO_DIR/include/hip $INSTALL_DIR/lib/clang/7.0.0/include
+      # FIXME:  Remove this if that file ever lands in the hip headers
+      $SUDO cp -p $HCC2_REPOS/$HCC2_REPO_NAME/fixes/hip_host_runtime_api.h $INSTALL_DIR/lib/clang/7.0.0/include/hip/hip_host_runtime_api.h
 fi

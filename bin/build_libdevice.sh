@@ -9,6 +9,7 @@
 HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
+HCC2_REPO_NAME=${HCC2_REPO_NAME:-hcc2}
 HCC2_LIBDEVICE_REPO_NAME=${HCC2_LIBDEVICE_REPO_NAME:-rocm-device-libs}
 HSA_DIR=${HSA_DIR:-/opt/rocm/hsa}
 SKIPTEST=${SKIPTEST:-"YES"}
@@ -31,7 +32,7 @@ SOURCEDIR=$HCC2_REPOS/$HCC2_LIBDEVICE_REPO_NAME
 
 MCPU_LIST=${GFXLIST:-"gfx700 gfx701 gfx801 gfx803 gfx900"}
 
-MYCMAKEOPTS="-DLLVM_DIR=$LLVM_BUILD -DBUILD_HC_LIB=ON -DROCM_DEVICELIB_INCLUDE_TESTS=OFF -DPREPARE_BUILTINS=$HCC2/bin/prepare-builtins"
+MYCMAKEOPTS="-DLLVM_DIR=$LLVM_BUILD -DBUILD_HC_LIB=ON -DBUILD_CUDA2GCN=ON -DROCM_DEVICELIB_INCLUDE_TESTS=OFF -DPREPARE_BUILTINS=$HCC2/bin/prepare-builtins"
 
 if [ ! -d $HCC2/lib ] ; then 
   echo "ERROR: Directory $HCC2/lib is missing"
@@ -106,9 +107,18 @@ if [ "$1" != "install" ] ; then
    sedfile1=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/OCL.cmake
    sedfile2=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/CMakeLists.txt
    origsedfile2=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/CMakeLists.txt.orig
+
+   # Temporarily fix name collision in sync.cl
+   hipsrc=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/hip/src/sync.cl
+   sed -i -e "s/__syncthreads/__syncthreads_hc_barrier/" $hipsrc
+
+   echo patch -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME -p1  $HCC2_REPOS/$HCC2_REPO_NAME/fixes/rocdl.patch
+   patch -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME -p1 < $HCC2_REPOS/$HCC2_REPO_NAME/fixes/rocdl.patch
+
    if [ ! $COPYSOURCE ] ; then 
      cp $sedfile2 $origsedfile2 
    fi
+
    for MCPU in $MCPU_LIST  ; do 
       builddir_mcpu=$BUILD_DIR/build/libdevice/$MCPU
       if [ -d $builddir_mcpu ] ; then 
@@ -122,6 +132,9 @@ if [ "$1" != "install" ] ; then
       echo 
       installdir_gfx="$INSTALL_DIR/$MCPU"
       sed -i -e"s/mcpu=$LASTMCPU/mcpu=$MCPU/" $sedfile1
+      if [ "$MCPU" != "gfx803" ] ; then
+         sed -i -e"s/gfx803/$MCPU/" $sedfile1
+      fi
       sed -i -e"s/mcpu=$LASTMCPU/mcpu=$MCPU/" $sedfile2
       LASTMCPU="$MCPU"
 
@@ -137,27 +150,31 @@ if [ "$1" != "install" ] ; then
       if [ $? != 0 ] ; then 
          echo "ERROR cmake failed for $MCPU, command was \n"
          echo "      cmake $MYCMAKEOPTS -DCMAKE_INSTALL_PREFIX=$installdir_gfx $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME"
-         if [ ! $COPYSOURCE ] ; then 
+         if [ ! $COPYSOURCE ] ; then
             #  Put the cmake files in repository back to original condition.
             cd $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
             git checkout $sedfile1
             cp $origsedfile2 $sedfile2
+            git checkout $sedfile1
+            git checkout $hipsrc
+            patch -R -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME -p1 < $HCC2_REPOS/$HCC2_REPO_NAME/fixes/rocdl.patch
          fi
          exit 1
       fi
       make -j $NUM_THREADS 
       if [ $? != 0 ] ; then 
          echo "ERROR make failed for $MCPU "
-         if [ ! $COPYSOURCE ] ; then 
+         if [ ! $COPYSOURCE ] ; then
             #  Put the cmake files in repository back to original condition.
             cd $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
             git checkout $sedfile1
             cp $origsedfile2 $sedfile2
+            patch -R -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME -p1 < $HCC2_REPOS/$HCC2_REPO_NAME/fixes/rocdl.patch
          fi
          exit 1
       fi
    done
-   if [ ! $COPYSOURCE ] ; then 
+   if [ ! $COPYSOURCE ] ; then
       #  Put the cmake files in repository back to original condition.
       cd $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
       git checkout $sedfile1
@@ -230,6 +247,11 @@ if [ "$1" == "install" ] ; then
       $SUDO rmdir $installdir_gfx/lib 
    done
 
+   if [ ! $COPYSOURCE ] ; then
+      echo RESTORING $hipsrc with : git checkout $hipsrc and reverse patch
+      git checkout $hipsrc
+      patch -R -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME -p1 < $HCC2_REPOS/$HCC2_REPO_NAME/fixes/rocdl.patch
+   fi
    echo 
    echo " $0 Installation complete into $INSTALL_DIR"
    echo 

@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 30707ab..7f2b145 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,6 +43,11 @@ add_subdirectory(ockl)
+ add_subdirectory(opencl)
+ add_subdirectory(hip)
+ 
++option(BUILD_CUDA2GCN "Build CUDA2GCN needed for HIP Automatic Mode" OFF)
++if(BUILD_CUDA2GCN)
++  add_subdirectory(cuda2gcn)
++endif(BUILD_CUDA2GCN)
++
+ if(BUILD_HC_LIB)
+   add_subdirectory(hc)
+ endif(BUILD_HC_LIB)
+diff --git a/cuda2gcn/CMakeLists.txt b/cuda2gcn/CMakeLists.txt
+index c2ed32f..42cf467 100644
+--- a/cuda2gcn/CMakeLists.txt
++++ b/cuda2gcn/CMakeLists.txt
+@@ -9,7 +9,15 @@ file(GLOB cl_sources
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cl
+ )
+ 
+-file(GLOB sources ${cl_sources})
++file(GLOB hip_sources
++  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hip
++)
++
++file(GLOB ll_sources
++  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.ll
++)
++
++file(GLOB sources ${cl_sources} ${hip_sources} ${ll_sources})
+ 
+ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../ocml/inc)
+ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../ockl/inc)
