@@ -103,6 +103,7 @@ if [ "$1" != "install" ] ; then
       done
    fi
 
+
    LASTMCPU="fiji"
    sedfile1=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/OCL.cmake
    sedfile2=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/CMakeLists.txt
@@ -114,6 +115,8 @@ if [ "$1" != "install" ] ; then
 
    echo patch -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME -p1  $HCC2_REPOS/$HCC2_REPO_NAME/fixes/rocdl.patch
    patch -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME -p1 < $HCC2_REPOS/$HCC2_REPO_NAME/fixes/rocdl.patch
+   echo "cp $HCC2_REPOS/$HCC2_REPO_NAME/fixes/opencuda2gcn.ll $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/cuda2gcn/src/opencuda2gcn.ll"
+   cp $HCC2_REPOS/$HCC2_REPO_NAME/fixes/opencuda2gcn.ll $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/cuda2gcn/src/opencuda2gcn.ll
 
    if [ ! $COPYSOURCE ] ; then 
      cp $sedfile2 $origsedfile2 
