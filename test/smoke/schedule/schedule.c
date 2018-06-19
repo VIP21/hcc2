@@ -8,7 +8,7 @@ int ordered_example(int lb, int ub, int stride)
   int size = (ub-lb)/ stride;
   double *output = (double*)malloc(size * sizeof(double));
 
-  #pragma omp target map(from:output[0:size])
+  #pragma omp target teams map(from:output[0:size])
   #pragma omp parallel for ordered schedule(dynamic)
   for (i=lb; i<ub; i+=stride) {
     #pragma omp ordered
