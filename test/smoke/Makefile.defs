@@ -35,7 +35,7 @@ ifeq ($(HOST_TARGET),)
 endif
 ifeq ($(DEVICE_TARGET),)
   DEVICE_TARGET = nvptx64-nvidia-cuda
-  DEVICE_TARGET = amdgcn--cuda
+  DEVICE_TARGET = amdgcn-amd-amdhsa
 endif
 
 ifeq ($(SMNAME),)
