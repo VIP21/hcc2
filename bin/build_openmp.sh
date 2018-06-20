@@ -9,7 +9,7 @@ HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 OPENMP_REPO_NAME=${OPENMP_REPO_NAME:-openmp}
-REPO_BRANCH=${REPO_BRANCH:-HCC2-180605}
+REPO_BRANCH=${REPO_BRANCH:-HCC2-180619}
 
 # We can now provide a list of sm architectures, but they must support long long maxAtomic 
 NVPTXGPUS=${NVPTXGPUS:-30,35,50,60}
@@ -213,8 +213,7 @@ fi
 cd $BUILD_DIR/build/openmp_debug
 echo " -----Running make for $BUILD_DIR/build/openmp_debug ---- "
 export OMPTARGET_DEBUG=1
-# GUANSONG: Please fix this.  We need to skip make and install of debug openmp
-#make -j $NUM_THREADS
+make -j $NUM_THREADS
 if [ $? != 0 ] ; then 
       echo "ERROR make -j $NUM_THREADS failed"
       exit 1
@@ -238,8 +237,7 @@ if [ "$1" == "install" ] ; then
       cd $BUILD_DIR/build/openmp_debug
       echo
       echo " -----Installing to $INSTALL_DIR/lib-debug ---- " 
-# GUANSONG: Please fix this.  We need to skip make and install of debug openmp
-#      $SUDO make install 
+      $SUDO make install 
       if [ $? != 0 ] ; then 
          echo "ERROR make install failed "
          exit 1

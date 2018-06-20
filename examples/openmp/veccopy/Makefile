@@ -58,7 +58,7 @@ endif
 ifeq ($(findstring gfx,$(DEVICE_ARCH)),)
   DEVICE_TARGET = nvptx64-nvidia-cuda
 else
-  DEVICE_TARGET = amdgcn--cuda
+  DEVICE_TARGET = amdgcn-amd-amdhsa
 endif
 
 CFLAGS = -O3 -target $(HOST_TARGET) -fopenmp -fopenmp-targets=$(DEVICE_TARGET) -Xopenmp-target=$(DEVICE_TARGET) -march=$(DEVICE_ARCH) -I$(OMPRT_INC) 
