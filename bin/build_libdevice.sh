@@ -32,6 +32,29 @@ SOURCEDIR=$HCC2_REPOS/$HCC2_LIBDEVICE_REPO_NAME
 
 MCPU_LIST=${GFXLIST:-"gfx700 gfx701 gfx801 gfx803 gfx900"}
 
+REPO_BRANCH=${REPO_BRANCH:-HCC2-180619}
+#  Check the repositories exist and are on the correct branch
+function checkrepo(){
+   cd $REPO_DIR
+   COBRANCH=`git branch --list | grep "\*" | cut -d" " -f2`
+   if [ "$COBRANCH" != "$REPO_BRANCH" ] ; then
+      if [ "$COBRANCH" == "master" ] ; then 
+        echo "EXIT:  Repository $REPO_DIR is on development branch: master"
+        exit 1
+      else 
+        echo "ERROR:  The repository at $REPO_DIR is not on branch $REPO_BRANCH"
+        echo "          It is on branch $COBRANCH"
+        exit 1
+     fi
+   fi
+   if [ ! -d $REPO_DIR ] ; then
+      echo "ERROR:  Missing repository directory $REPO_DIR"
+      exit 1
+   fi
+}
+REPO_DIR=$HCC2_REPOS/$HCC2_LIBDEVICE_REPO_NAME
+checkrepo
+
 MYCMAKEOPTS="-DLLVM_DIR=$LLVM_BUILD -DBUILD_HC_LIB=ON -DBUILD_CUDA2GCN=ON -DROCM_DEVICELIB_INCLUDE_TESTS=OFF -DPREPARE_BUILTINS=$HCC2/bin/prepare-builtins"
 
 if [ ! -d $HCC2/lib ] ; then 
@@ -92,7 +115,7 @@ if [ "$1" != "install" ] ; then
    if [ $COPYSOURCE ] ; then 
       if [ -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME ] ; then 
          echo rm -rf $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
-         rm -rf $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
+         $SUDO rm -rf $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
       fi
       mkdir -p $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
       echo rsync -a $SOURCEDIR/ $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/
@@ -103,20 +126,10 @@ if [ "$1" != "install" ] ; then
       done
    fi
 
-
    LASTMCPU="fiji"
    sedfile1=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/OCL.cmake
-   sedfile2=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/CMakeLists.txt
-   origsedfile2=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/CMakeLists.txt.orig
-
-   # Temporarily fix name collision in sync.cl
-   hipsrc=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/hip/src/sync.cl
-   sed -i -e "s/__syncthreads/__syncthreads_hc_barrier/" $hipsrc
-
-   echo patch -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME -p1  $HCC2_REPOS/$HCC2_REPO_NAME/fixes/rocdl.patch
-   patch -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME -p1 < $HCC2_REPOS/$HCC2_REPO_NAME/fixes/rocdl.patch
-   echo "cp $HCC2_REPOS/$HCC2_REPO_NAME/fixes/opencuda2gcn.ll $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/cuda2gcn/src/opencuda2gcn.ll"
-   cp $HCC2_REPOS/$HCC2_REPO_NAME/fixes/opencuda2gcn.ll $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/cuda2gcn/src/opencuda2gcn.ll
+   sedfile2=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/hip/CMakeLists.txt
+   origsedfile2=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/hip/CMakeLists.txt.orig
 
    if [ ! $COPYSOURCE ] ; then 
      cp $sedfile2 $origsedfile2 
@@ -134,18 +147,13 @@ if [ "$1" != "install" ] ; then
       echo DOING BUILD FOR $MCPU in Directory $builddir_mcpu
       echo 
       installdir_gfx="$INSTALL_DIR/$MCPU"
-      sed -i -e"s/mcpu=$LASTMCPU/mcpu=$MCPU/" $sedfile1
+      sed -i -e"s/$LASTMCPU/$MCPU/" $sedfile1
       if [ "$MCPU" != "gfx803" ] ; then
          sed -i -e"s/gfx803/$MCPU/" $sedfile1
       fi
-      sed -i -e"s/mcpu=$LASTMCPU/mcpu=$MCPU/" $sedfile2
+      sed -i -e"s/$LASTMCPU/$MCPU/" $sedfile2
       LASTMCPU="$MCPU"
 
-      # check seds worked
-      echo CHECK: grep mcpu $sedfile1
-      grep mcpu $sedfile1
-      echo CHECK: grep mcpu $sedfile2
-      grep mcpu $sedfile2
       CC="$LLVM_BUILD/bin/clang"
       export CC
       echo "cmake $MYCMAKEOPTS -DCMAKE_INSTALL_PREFIX=$installdir_gfx $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME"
@@ -159,8 +167,6 @@ if [ "$1" != "install" ] ; then
             git checkout $sedfile1
             cp $origsedfile2 $sedfile2
             git checkout $sedfile1
-            git checkout $hipsrc
-            patch -R -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME -p1 < $HCC2_REPOS/$HCC2_REPO_NAME/fixes/rocdl.patch
          fi
          exit 1
       fi
@@ -172,7 +178,6 @@ if [ "$1" != "install" ] ; then
             cd $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
             git checkout $sedfile1
             cp $origsedfile2 $sedfile2
-            patch -R -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME -p1 < $HCC2_REPOS/$HCC2_REPO_NAME/fixes/rocdl.patch
          fi
          exit 1
       fi
@@ -244,17 +249,11 @@ if [ "$1" == "install" ] ; then
    # rocm-device-lib cmake installs to lib dir, move all bc files up one level
    for MCPU in $MCPU_LIST  ; do 
       installdir_gfx="$INSTALL_DIR/$MCPU"
-      echo mv $installdir_gfx/lib/*.bc $installdir_gfx
+      echo "MOVING ALL bc FILES IN $installdir_gfx/lib TO $installdir_gfx"
       $SUDO mv $installdir_gfx/lib/*.bc $installdir_gfx
-      echo rmdir $installdir_gfx/lib 
       $SUDO rmdir $installdir_gfx/lib 
    done
 
-   if [ ! $COPYSOURCE ] ; then
-      echo RESTORING $hipsrc with : git checkout $hipsrc and reverse patch
-      git checkout $hipsrc
-      patch -R -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME -p1 < $HCC2_REPOS/$HCC2_REPO_NAME/fixes/rocdl.patch
-   fi
    echo 
    echo " $0 Installation complete into $INSTALL_DIR"
    echo 
