@@ -68,12 +68,12 @@ ifeq ($(findstring amdgcn,$(DEVICE_TARGET)),)
 
   CFLAGS += -I$(CUDA)/include 
   LFLAGS += -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart
-  CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib PATH=$(HCC2)/bin:$(PATH)
+  CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib:$(LIBRARY_PATH) PATH=$(HCC2)/bin:$(PATH)
   RUNENV = env LD_LIBRARY_PATH=$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib:$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
 
 else
 
-  CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(ATMI_LIB_BC):$(ATMI_LIB):$(LIBAMDGCN)/$(DEVICE_ARCH)/lib PATH=$(HCC2)/bin:$(PATH)
+  CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(ATMI_LIB_BC):$(ATMI_LIB):$(LIBAMDGCN)/$(DEVICE_ARCH)/lib:$(LIBRARY_PATH) PATH=$(HCC2)/bin:$(PATH)
   RUNENV = env LD_LIBRARY_PATH=$(OMPRT_LIB):$(ATMI_LIB):$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
 
 endif
