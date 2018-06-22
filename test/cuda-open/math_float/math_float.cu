@@ -75,7 +75,7 @@ void testFloatMath(float *b)
     b[i] += fmodf(f,f);
     // b[i] += frexpf(f, &idummy); // Fixme: missing function _nv_frexpf
     b[i] += hypotf(f,f);
-    b[i] += (float) ilogbf(f); 
+    b[i] += (float) ilogbf(f);
     // b[i] += isfinite(f); // Fixme: Add to cuda_open headers
     // b[i] += isinf(f); // Fixme: Add to cuda_open headers
     // b[i] += isnan(f); // Fixme: Add to cuda_open headers
@@ -104,7 +104,7 @@ void testFloatMath(float *b)
     // b[i] += normf(1,f); // Fixme: const -> non const conversion
     b[i] += powf(f,f);
     b[i] += rcbrtf(f);
-    b[i] += remainderf(f,f); 
+    b[i] += remainderf(f,f);
     // b[i] += remquof(f,f, &idummy); // Fixme: missing function __nv_remquof
     b[i] += rhypotf(f,f);
     b[i] += rintf(f);
