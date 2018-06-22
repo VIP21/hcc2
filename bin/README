@@ -21,16 +21,13 @@ build_utils.sh     -  Builds the HCC2 utilities
 build_atmi.sh      -  Builds early release of ATMI for hcc2.
                       This installs in /opt/rocm/hcc2 (or $HCC2)
 
-build_hit.sh     -  Builds the hip bc libraries and host runtimes needed by hcc2.
+build_hip.sh       -  Builds the hip bc libraries and host runtimes needed by hcc2.
                       This also installs in /opt/rocm/hcc2 (or $HCC2)
 
 build_openmp.sh    -  Builds the OpenMP libraries for hcc2.
                       This also installs in /opt/rocm/hcc2 (or $HCC2)
 
 build_libdevice.sh -  Builds the amd bc libraries from rocm-device-libs needed by hcc2.
-                      This also installs in /opt/rocm/hcc2 (or $HCC2)
-
-build_hit.sh     -  Builds the hip bc libraries and host runtimes needed by hcc2.
                       This also installs in /opt/rocm/hcc2 (or $HCC2)
 
 HCC2_VERSION_STRING - File to set the version of HCC2 to clone and build . 
