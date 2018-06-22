@@ -1,7 +1,10 @@
 #!/bin/bash
 #
 #  File: build_libdevice.sh
-#        buind device libraries in $HCC2/lib/libdevice
+#        buind the rocm-device-libs libraries in $HCC2/lib/libdevice/$MCPU
+#        The rocm-device-libs get built for each processor in $GFXLIST
+#        even though currently all rocm-device-libs are identical for each 
+#        gfx processor (amdgcn)
 #
 
 # Do not change these values. Set the environment variables to override these defaults
@@ -56,6 +59,34 @@ REPO_DIR=$HCC2_REPOS/$HCC2_LIBDEVICE_REPO_NAME
 checkrepo
 
 MYCMAKEOPTS="-DLLVM_DIR=$LLVM_BUILD -DBUILD_HC_LIB=ON -DBUILD_CUDA2GCN=ON -DROCM_DEVICELIB_INCLUDE_TESTS=OFF -DPREPARE_BUILTINS=$HCC2/bin/prepare-builtins"
+
+function cleanup_sedfiles(){
+   #  Put the cmake files in repository back to original condition.
+   if [ ! $COPYSOURCE ] ; then
+      cd $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
+      git checkout $sedfile1
+      git checkout $sedfile2
+   else 
+      cp -p $origsedfile1 $sedfile1
+      cp -p $origsedfile2 $sedfile2
+   fi
+}
+function define_and_ensure_sedfiles_have_the_fiji_string() {
+   # ensure sed files are not corrupted from previous failed builds
+   sedfile1=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/OCL.cmake
+   origsedfile1=$HCC2_REPOS/$HCC2_LIBDEVICE_REPO_NAME/OCL.cmake
+   git checkout $origsedfile1
+   sedfile2=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/hip/CMakeLists.txt
+   origsedfile2=$HCC2_REPOS/$HCC2_LIBDEVICE_REPO_NAME/hip/CMakeLists.txt
+   git checkout $origsedfile2
+}
+function change_mcpu_in_the_sedfiles() {
+   sed -i -e"s/$LASTMCPU/$MCPU/" $sedfile1
+   if [ "$MCPU" != "gfx803" ] ; then
+      sed -i -e"s/gfx803/$MCPU/" $sedfile1
+   fi
+   sed -i -e"s/$LASTMCPU/$MCPU/" $sedfile2
+}
 
 if [ ! -d $HCC2/lib ] ; then 
   echo "ERROR: Directory $HCC2/lib is missing"
@@ -112,6 +143,9 @@ export LLVM_BUILD HSA_DIR
 export PATH=$LLVM_BUILD/bin:$PATH
 
 if [ "$1" != "install" ] ; then 
+    
+   define_and_ensure_sedfiles_have_the_fiji_string
+
    if [ $COPYSOURCE ] ; then 
       if [ -d $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME ] ; then 
          echo rm -rf $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
@@ -127,19 +161,12 @@ if [ "$1" != "install" ] ; then
    fi
 
    LASTMCPU="fiji"
-   sedfile1=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/OCL.cmake
-   sedfile2=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/hip/CMakeLists.txt
-   origsedfile2=$BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME/hip/CMakeLists.txt.orig
-
-   if [ ! $COPYSOURCE ] ; then 
-     cp $sedfile2 $origsedfile2 
-   fi
-
    for MCPU in $MCPU_LIST  ; do 
       builddir_mcpu=$BUILD_DIR/build/libdevice/$MCPU
       if [ -d $builddir_mcpu ] ; then 
          echo rm -rf $builddir_mcpu
-         rm -rf $builddir_mcpu
+         # need SUDO because a previous make install was done with sudo 
+         $SUDO rm -rf $builddir_mcpu
       fi
       mkdir -p $builddir_mcpu
       cd $builddir_mcpu
@@ -147,11 +174,8 @@ if [ "$1" != "install" ] ; then
       echo DOING BUILD FOR $MCPU in Directory $builddir_mcpu
       echo 
       installdir_gfx="$INSTALL_DIR/$MCPU"
-      sed -i -e"s/$LASTMCPU/$MCPU/" $sedfile1
-      if [ "$MCPU" != "gfx803" ] ; then
-         sed -i -e"s/gfx803/$MCPU/" $sedfile1
-      fi
-      sed -i -e"s/$LASTMCPU/$MCPU/" $sedfile2
+
+      change_mcpu_in_the_sedfiles
       LASTMCPU="$MCPU"
 
       CC="$LLVM_BUILD/bin/clang"
@@ -161,34 +185,17 @@ if [ "$1" != "install" ] ; then
       if [ $? != 0 ] ; then 
          echo "ERROR cmake failed for $MCPU, command was \n"
          echo "      cmake $MYCMAKEOPTS -DCMAKE_INSTALL_PREFIX=$installdir_gfx $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME"
-         if [ ! $COPYSOURCE ] ; then
-            #  Put the cmake files in repository back to original condition.
-            cd $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
-            git checkout $sedfile1
-            cp $origsedfile2 $sedfile2
-            git checkout $sedfile1
-         fi
+         cleanup_sedfiles
          exit 1
       fi
       make -j $NUM_THREADS 
       if [ $? != 0 ] ; then 
          echo "ERROR make failed for $MCPU "
-         if [ ! $COPYSOURCE ] ; then
-            #  Put the cmake files in repository back to original condition.
-            cd $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
-            git checkout $sedfile1
-            cp $origsedfile2 $sedfile2
-         fi
+         cleanup_sedfiles
          exit 1
       fi
    done
-   if [ ! $COPYSOURCE ] ; then
-      #  Put the cmake files in repository back to original condition.
-      cd $BUILD_DIR/$HCC2_LIBDEVICE_REPO_NAME
-      git checkout $sedfile1
-      cp $origsedfile2 $sedfile2
-      rm $origsedfile2 
-   fi
+   cleanup_sedfiles
    echo 
    echo "  Done with all makes"
    echo "  Please run ./build_libdevice.sh install "
@@ -208,6 +215,10 @@ if [ "$1" != "install" ] ; then
 fi
 
 if [ "$1" == "install" ] ; then 
+
+   define_and_ensure_sedfiles_have_the_fiji_string
+
+   LASTMCPU="fiji"
    for MCPU in $MCPU_LIST  ; do 
       echo 
       installdir_gfx="$INSTALL_DIR/$MCPU"
@@ -217,6 +228,10 @@ if [ "$1" == "install" ] ; then
       builddir_mcpu=$BUILD_DIR/build/libdevice/$MCPU
       codename=$(gfx2code $MCPU)
       installdir_codename=$INSTALL_DIR/${codename}
+
+      change_mcpu_in_the_sedfiles
+      LASTMCPU="$MCPU"
+
       echo "running make install from $builddir_mcpu"
       cd $builddir_mcpu
       echo $SUDO make -j $NUM_THREADS install
@@ -227,7 +242,9 @@ if [ "$1" == "install" ] ; then
       cd $installdir_gfx/..
       echo $SUDO ln -sf $MCPU ${codename}
       $SUDO ln -sf $MCPU ${codename}
+
    done
+   cleanup_sedfiles
 
    # Make sure the ocl_isa_version returns correct version
    for fixdir in `ls -d $INSTALL_DIR/gfx*` ; do 
