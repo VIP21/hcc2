@@ -77,23 +77,23 @@ COBRANCH="master"
 #clone_or_pull
 
 reponame="openmp"
-COBRANCH="HCC2-180605"
+COBRANCH="HCC2-180619"
 clone_or_pull
 
 reponame="llvm"
-COBRANCH="HCC2-180605"
+COBRANCH="HCC2-180619"
 clone_or_pull
 
 reponame="clang"
-COBRANCH="HCC2-180605"
+COBRANCH="HCC2-180619"
 clone_or_pull
 
 reponame="lld"
-COBRANCH="HCC2-180605"
+COBRANCH="HCC2-180619"
 clone_or_pull
 
 reponame="hip"
-COBRANCH="hip-clang"
+COBRANCH="HCC2-180619"
 clone_or_pull
 
 # ---------------------------------------
@@ -103,7 +103,7 @@ repo_web_location=$GITROC
 
 # This repo is used to build /opt/rocm/libamdgcn
 reponame="rocm-device-libs"
-COBRANCH="hip-clang"
+COBRANCH="HCC2-180619"
 clone_or_pull
 
 # This is the ATMI repo for ATMI 0.4 in development

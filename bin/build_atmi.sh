@@ -50,6 +50,30 @@ fi
 export HCC2_VERSION_STRING
 INSTALL_DIR=${INSTALL_ATMI:-"${HCC2}_${HCC2_VERSION_STRING}"}
 
+# FIXME : pickup atmi from fixed dev branch
+REPO_BRANCH=${REPO_BRANCH:-master}
+#  Check the repositories exist and are on the correct branch
+function checkrepo(){
+   cd $REPO_DIR
+   COBRANCH=`git branch --list | grep "\*" | cut -d" " -f2`
+   if [ "$COBRANCH" != "$REPO_BRANCH" ] ; then
+      if [ "$COBRANCH" == "master" ] ; then 
+        echo "EXIT:  Repository $REPO_DIR is on development branch: master"
+        exit 1
+      else 
+        echo "ERROR:  The repository at $REPO_DIR is not on branch $REPO_BRANCH"
+        echo "          It is on branch $COBRANCH"
+        exit 1
+     fi
+   fi
+   if [ ! -d $REPO_DIR ] ; then
+      echo "ERROR:  Missing repository directory $REPO_DIR"
+      exit 1
+   fi
+}
+REPO_DIR=$HCC2_REPOS/$ATMI_REPO_NAME
+checkrepo
+
 if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then 
   echo " "
   echo " This script builds release and debug versions of ATMI libraries."

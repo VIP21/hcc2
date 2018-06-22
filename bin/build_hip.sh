@@ -39,8 +39,7 @@ HIP_REPO_NAME=${HIP_REPO_NAME:-hip}
 HCC2_REPO_NAME=${HCC2_REPO_NAME:-hcc2}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 HIP_REPO_DIR=$HCC2_REPOS/$HIP_REPO_NAME
-#GFXLIST=${GFXLIST:-"gfx700 gfx701 gfx801 gfx803 gfx900"}
-GFXLIST=${GFXLIST:-"gfx803"}
+GFXLIST=${GFXLIST:-"gfx700 gfx701 gfx801 gfx803 gfx900"}
 export GFXLIST
 export HIP_PLATFORM="hcc"
 
@@ -59,6 +58,29 @@ BUILDTYPE="Release"
 
 INSTALL_DIR=${INSTALL_HIP:-"${HCC2}_${HCC2_VERSION}-${HCC2_MOD}"}
 LLVM_BUILD=$HCC2
+
+REPO_BRANCH=${REPO_BRANCH:-HCC2-180619}
+#  Check the repositories exist and are on the correct branch
+function checkrepo(){
+   cd $REPO_DIR
+   COBRANCH=`git branch --list | grep "\*" | cut -d" " -f2`
+   if [ "$COBRANCH" != "$REPO_BRANCH" ] ; then
+      if [ "$COBRANCH" == "master" ] ; then 
+        echo "EXIT:  Repository $REPO_DIR is on development branch: master"
+        exit 1
+      else 
+        echo "ERROR:  The repository at $REPO_DIR is not on branch $REPO_BRANCH"
+        echo "          It is on branch $COBRANCH"
+        exit 1
+     fi
+   fi
+   if [ ! -d $REPO_DIR ] ; then
+      echo "ERROR:  Missing repository directory $REPO_DIR"
+      exit 1
+   fi
+}
+REPO_DIR=$HCC2_REPOS/$HIP_REPO_NAME
+checkrepo
 
 if [ "$1" == "-h" ] || [ "$1" == "help" ] || [ "$1" == "-help" ] ; then
   echo " "
@@ -143,6 +165,4 @@ if [ "$1" == "install" ] ; then
       echo " -----Installing to $INSTALL_DIR/lib ----- "
       $SUDO cp -p libhip_hcc.so $INSTALL_DIR/lib/.
       $SUDO rsync -a $HIP_REPO_DIR/include/hip $INSTALL_DIR/lib/clang/7.0.0/include
-      # FIXME:  Remove this if that file ever lands in the hip headers
-      $SUDO cp -p $HCC2_REPOS/$HCC2_REPO_NAME/fixes/hip_host_runtime_api.h $INSTALL_DIR/lib/clang/7.0.0/include/hip/hip_host_runtime_api.h
 fi
