@@ -23,6 +23,7 @@
 // SOFTWARE.
 
 #include <stdio.h>
+#include <hip/hip_host_runtime_api.h>
 
 #define N 10
 
