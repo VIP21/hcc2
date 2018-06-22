@@ -226,8 +226,6 @@ if [ "$1" == "install" ] ; then
       $SUDO mkdir -p $installdir_gfx/include
       $SUDO mkdir -p $installdir_gfx/lib
       builddir_mcpu=$BUILD_DIR/build/libdevice/$MCPU
-      codename=$(gfx2code $MCPU)
-      installdir_codename=$INSTALL_DIR/${codename}
 
       change_mcpu_in_the_sedfiles
       LASTMCPU="$MCPU"
@@ -236,40 +234,49 @@ if [ "$1" == "install" ] ; then
       cd $builddir_mcpu
       echo $SUDO make -j $NUM_THREADS install
       $SUDO make -j $NUM_THREADS install
-      if [ -L $installdir_codename ] ; then 
-         $SUDO rm $installdir_codename
-      fi
-      cd $installdir_gfx/..
-      echo $SUDO ln -sf $MCPU ${codename}
-      $SUDO ln -sf $MCPU ${codename}
 
    done
    cleanup_sedfiles
 
-   # Make sure the ocl_isa_version returns correct version
-   for fixdir in `ls -d $INSTALL_DIR/gfx*` ; do 
-      id=${fixdir##*gfx}
-      for fixfile in `ls $fixdir/lib/oclc_isa_version_* 2>/dev/null` ; do
+   # rocm-device-lib cmake installs to lib dir, move all bc files up one level
+   # and cleanup unused oclc_isa_version bc files and link correct one
+   echo
+   echo "POST-INSTALL REORG OF SUBDIRECTORIES $INSTALL_DIR"
+   for MCPU in $MCPU_LIST  ; do 
+      installdir_gfx="$INSTALL_DIR/$MCPU"
+      echo "--"
+      echo "-- $installdir_gfx"
+      echo "-- MOVING bc FILES FROM lib DIRECTORY UP ONE LEVEL"
+      $SUDO mv $installdir_gfx/lib/*.bc $installdir_gfx
+      $SUDO rmdir $installdir_gfx/lib 
+
+      codename=$(gfx2code $MCPU)
+      installdir_codename=$INSTALL_DIR/${codename}
+      if [ -L $installdir_codename ] ; then 
+         $SUDO rm $installdir_codename
+      fi
+      cd $INSTALL_DIR
+      echo "-- LINKING CODENAME '$codename' TO $MCPU"
+      $SUDO ln -sf $MCPU ${codename}
+
+      cd $installdir_gfx
+      id=${installdir_gfx##*gfx}
+      for fixfile in `ls $installdir_gfx/oclc_isa_version_* 2>/dev/null` ; do
          idfile=${fixfile##*isa_version_}
+         relfile=oclc_isa_version_$idfile
          idfile=${idfile%*.amdgcn.bc}
          if [ "$id" == "$idfile" ] ; then 
-            if [ -f $fixdir/lib/oclc_isa_version.amdgcn.bc ] ; then
-              $SUDO rm -f $fixdir/lib/oclc_isa_version.amdgcn.bc
+            if [ -f oclc_isa_version.amdgcn.bc ] ; then
+              $SUDO rm -f oclc_isa_version.amdgcn.bc
             fi
-            $SUDO ln -sf $fixfile $fixdir/lib/oclc_isa_version.amdgcn.bc
+            echo "-- LINKING oclc_isa_version.amdgcn.bc TO $relfile"
+            $SUDO ln -sf $relfile oclc_isa_version.amdgcn.bc
          else
             $SUDO rm $fixfile
          fi
       done
    done
-
-   # rocm-device-lib cmake installs to lib dir, move all bc files up one level
-   for MCPU in $MCPU_LIST  ; do 
-      installdir_gfx="$INSTALL_DIR/$MCPU"
-      echo "MOVING ALL bc FILES IN $installdir_gfx/lib TO $installdir_gfx"
-      $SUDO mv $installdir_gfx/lib/*.bc $installdir_gfx
-      $SUDO rmdir $installdir_gfx/lib 
-   done
+   # END OF POST-INSTALL REORG 
 
    echo 
    echo " $0 Installation complete into $INSTALL_DIR"
