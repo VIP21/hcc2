@@ -31,7 +31,7 @@
 #  This script can be controlled with these environment variables
 HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
-HCC2_REPO_NAME=${HCC2_REPO_NAME:-hcc2}
+HCC2_REPO_NAME=${HCC2_REPO_NAME}
 INSTALL_UTILS=${INSTALL_UTILS:-$HCC2}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 SUDO=${SUDO:-set}
