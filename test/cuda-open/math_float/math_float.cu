@@ -131,7 +131,44 @@ void testFloatMath(float *b)
     // b[i] += ynf(1,f); // Fixme: missing function __nv_ynf
 
    // 1.5 Single Presicion Intrinsics
-    // FIXME: Add instrinsics
+
+    b[i] += __cosf(f);
+    b[i] += __exp10f(f);
+    b[i] += __expf(f);
+    //    b[i] += __fadd_rd(f, f); // Fixme: missing function __nv_fadd_rd
+    //    b[i] += __fadd_rn(f, f); // Fixme: missing function __nv_fadd_rn
+    //    b[i] += __fadd_ru(f, f); // Fixme: missing function __nv_fadd_ru
+    //    b[i] += __fadd_rz(f, f); // Fixme: missing function __nv_fadd_rz
+    //    b[i] += __fdiv_rd(f, f); // Fixme: missing function __nv_fdiv_rd
+    //    b[i] += __fdiv_rn(f, f); // Fixme: missing function __nv_fdiv_rn
+    //    b[i] += __fdiv_ru(f, f); // Fixme: missing function __nv_fdiv_ru
+    //    b[i] += __fdiv_rz(f, f); // Fixme: missing function __nv_fdiv_rz
+    b[i] += __fdividef(f, f);
+    // b[i] += __fmaf_rd(f, f, f); // Fixme: missing function __nv_fmaf_rd
+    // b[i] += __fmaf_rn(f, f, f); // Fixme: missing function __nv_fmaf_rn
+    // b[i] += __fmaf_ru(f, f, f); // Fixme: missing function __nv_fmaf_ru
+    // b[i] += __fmaf_rz(f, f, f); // Fixme: missing function __nv_fmaf_rz
+    // b[i] += __fmul_rd(f, f); // Fixme: missing function: __nv_fmul_rd
+    // b[i] += __fmul_rn(f, f); // Fixme: missing function: __nv_fmul_rn
+    // b[i] += __fmul_ru(f, f); // Fixme: missing function: __nv_fmul_ru
+    // b[i] += __fmul_rz(f, f); // Fixme: missing function: __nv_fmul_rz
+    // b[i] += __frcp_rd(f); // Fixme: missing function: __nv_frcp_rd
+    // b[i] += __frcp_rn(f); // Fixme: missing function: __nv_frcp_rn
+    // b[i] += __frcp_ru(f); // Fixme: missing function: __nv_frcp_ru
+    // b[i] += __frcp_rz(f); // Fixme: missing function: __nv_frcp_rz
+    // b[i] += __fsqrt_rd(f); // Fixme: missing function: __nv_fsqrt_rd
+    // b[i] += __fsqrt_rn(f); // Fixme: missing function: __nv_fsqrt_rn
+    // b[i] += __fsqrt_ru(f); // Fixme: missing function: __nv_fsqrt_ru
+    // b[i] += __fsqrt_rz(f); // Fixme: missing function: __nv_fsqrt_rz
+    // b[i] += __fsub_rd(f, f); // Fixme: missinf function: __nv_fsub_rd
+    b[i] += __log10f(f);
+    b[i] += __log2f(f);
+    b[i] += __logf(f);
+    b[i] += __powf(f, f);
+    b[i] += __saturatef(f);
+    // __sincosf(f, &dummy, &dummy2); // Fixme: indirect call error to __nv_fast_sincosf
+    b[i] += __sinf(f);
+    b[i] += __tanf(f);
   }
 }
 
