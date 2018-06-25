@@ -94,14 +94,14 @@ void testFloatMath(float *b)
     b[i] += (float) lrintf(f);
     b[i] += (float) lroundf(f);
     // b[i] += modff(f, &dummy); // Fixme: missing function _nv_modff
-    // b[i] += nanf(""); // Fixme: missing function _nv_jnf
+    // b[i] += nanf(""); // Fixme: Add to cuda_open headers
     b[i] += nearbyintf(f);
     b[i] += nextafterf(f,f);
     b[i] += norm3df(f,f,f);
     b[i] += norm4df(f,f,f,f);
     b[i] += normcdff(f);
     b[i] += normcdfinvf(f);
-    // b[i] += normf(1,f); // Fixme: const -> non const conversion
+    //    b[i] += normf(1,&f); // Fixme: missing function __nv_normf
     b[i] += powf(f,f);
     b[i] += rcbrtf(f);
     b[i] += remainderf(f,f);
