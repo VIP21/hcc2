@@ -76,9 +76,9 @@ void testFloatMath(float *b)
     // b[i] += frexpf(f, &idummy); // Fixme: missing function _nv_frexpf
     b[i] += hypotf(f,f);
     b[i] += (float) ilogbf(f);
-    // b[i] += isfinite(f); // Fixme: Add to cuda_open headers
-    // b[i] += isinf(f); // Fixme: Add to cuda_open headers
-    // b[i] += isnan(f); // Fixme: Add to cuda_open headers
+    b[i] += isfinite(f);
+    b[i] += isinf(f);
+    b[i] += isnan(f);
     b[i] += j0f(f);
     b[i] += j1f(f);
     // b[i] += jnf(1,f); // Fixme: missing function _nv_jnf
@@ -115,7 +115,7 @@ void testFloatMath(float *b)
     b[i] += rsqrtf(f);
     //b[i] += scalblnf(f, 1); // Fixme: missing function __nv_scalbnf
     //b[i] += scalbnf(f, 1);  // Fixme: missing function __nv_scalbnf
-    // b[i] += signbit(f); // Fixme: Add to cuda_open headers
+    b[i] += signbit(f);
     // sincosf(f, &dummy, &dummy2); // Fixme: missing function __nv_sincosf
     // sincospif(f, &dummy, &dummy2); // Fixme: missing function __nv_sincospif
     b[i] += sinf(f);
