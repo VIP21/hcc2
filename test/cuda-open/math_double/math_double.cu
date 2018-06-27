@@ -75,9 +75,9 @@ void testDoubleMath(double *b)
     // b[i] += frexp(f, &idummy); // Fixme: Unsupported indirect call to __nv_frexp
     b[i] += hypot(f,f);
     b[i] += (double) ilogb(f);
-    // b[i] += isfinite(f); // Fixme: Add to cuda_open headers
-    // b[i] += isinf(f); // Fixme: Add to cuda_open headers
-    // b[i] += isnan(f); // Fixme: Add to cuda_open headers
+    b[i] += isfinite(f);
+    b[i] += isinf(f);
+    b[i] += isnan(f);
     b[i] += j0(f);
     b[i] += j1(f);
     // b[i] += jn(1,f); // Fixme: missing function _nv_jn
@@ -93,7 +93,7 @@ void testDoubleMath(double *b)
     b[i] += (double) lrint(f);
     b[i] += (double) lround(f);
     // b[i] += modf(f, &dummy); // Fixme: missing function _nv_modf
-    // b[i] += nan(""); // Fixme: add nan to cuda_open headers
+    // b[i] += nan(""); // Fixme: add nan to cuda_open headers, does not exist in the libraries
     b[i] += nearbyint(f);
     b[i] += nextafter(f,f);
     // b[i] += norm(1,&f); // Fixme: missing function _nv_norm
@@ -114,7 +114,7 @@ void testDoubleMath(double *b)
     b[i] += rsqrt(f);
     // b[i] += scalbln(f, 1); // Fixme: Unsupported indirect call to __nv_scalbn
     // b[i] += scalbn(f, 1);  // Fixme: Unsupported indirect call to __nv_scalbn
-    // b[i] += signbit(f); // Fixme: Add to cuda_open headers
+    b[i] += signbit(f);
     b[i] += sin(f);
     // sincos(f, &dummy, &dummy2); // Fixme: Unsupported indirect call to __nv_sincos
     // sincospi(f, &dummy, &dummy2); // Fixme: Unsupported indirect call to __nv_sincospi
