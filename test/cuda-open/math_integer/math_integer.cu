@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2017 Advanced Micro Devices, Inc. All Rights Reserved.
+// Copyright (c) 2018 Advanced Micro Devices, Inc. All Rights Reserved.
 //
 // Permission is hereby granted, free of charge, to any person
 // obtaining a copy of this software and associated documentation
@@ -22,17 +22,54 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// These test only check if the code compiles, we don't test
+// functionality yet.
+// Reference: Cuda Toolkit v 9.2.88
+//  1.7 Integer Intrinsics
+
 #include <stdio.h>
 #include <hip/hip_host_runtime_api.h>
 #define N 10
 
 __global__
-void writeIndex(int *b)
+void testIntMath(int *b)
 {
-  //    int i = hipBlockIdx_x;
-      int i = blockIdx.x;
+  int i = blockIdx.x;
+  long long ll = (long long)i;
+  unsigned u = (unsigned) i;
+  unsigned long long ull = (unsigned long long) i;
+  int f = (int) i;
+  int dummy;
+  int dummy2;
+  int idummy;
   if (i<N) {
-    b[i] = i;
+    // 1.7 Single Presicion Mathematical Functions
+
+    b[i] = (int) __brev(u);
+    b[i] += (int) __brevll(ull);
+    // b[i] += (int) __byte_perm(u, u, u); // Fixme: missing function __nv_byte_perm
+    b[i] += __clz(i);
+    b[i] += __clzll(ll);
+    b[i] += __ffs(i);
+    b[i] += __ffsll(ll);
+    //   b[i] += (int) __funnelshift_l(u, u, 2);  // Fixme: Add __funnelshift_l to cuda_open headers
+    // b[i] += (int) __funnelshift_lc(u, u, 2);  // Fixme: Add __funnelshift_lc to cuda_open headers
+    // b[i] += (int) __funnelshift_r(u, u, 2);  // Fixme: Add __funnelshift_r to cuda_open headers
+    // b[i] += (int) __funnelshift_rc(u, u, 2);  // Fixme: Add __funnelshift_rc to cuda_open headers
+    // b[i] += __hadd(i,i); // Fixme: missing function __nv_hadd
+    b[i] += __mul24(i,i);
+    b[i] += (int) __mul64hi(ll, ll);
+    b[i] += __mulhi(i,i);
+    b[i] += __popc(u);
+    b[i] += __popcll(ull);
+    // b[i] += __rhadd(i,i); // Fixme: missing function __nv_rhadd
+    b[i] += (int) __sad(i, i, u);
+    // b[i] += (int) __uhadd(u,u); // Fixme: missing function __uhadd
+    b[i] += (int) __umul24(u, u);
+    b[i] += (int) __umul64hi(u, u);
+    b[i] += (int) __umulhi(u, u);
+    // b[i] += (int) __urhadd(u, u); // Fixme: missing function __urhadd
+    b[i] += (int) __usad(u, u, u);
   }
 }
 
@@ -106,7 +143,7 @@ int main()
   }
 
   for (int i = 0; i<N; ++i)
-    hostArray[i] = 0;
+    hostArray[i] = 0.0;
 
   printf("Array content before kernel:\n");
   printArray(hostArray);
@@ -119,7 +156,7 @@ int main()
     return 0;
   }
 
-  hipLaunchKernelGGL((writeIndex), dim3(N), dim3(1), 0, 0, deviceArray);
+  hipLaunchKernelGGL((testIntMath), dim3(N), dim3(1), 0, 0, deviceArray);
 
   if (hipCallSuccessful(hipMemcpy(hostArray,
                                      deviceArray,
