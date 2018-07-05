@@ -73,7 +73,7 @@ void testFloatMath(float *b)
     b[i] += fmaxf(f,f);
     b[i] += fminf(f,f);
     b[i] += fmodf(f,f);
-    // b[i] += frexpf(f, &idummy); // Fixme: Unsupported indirecty function all to __nv_frexpf. Function exists, but something wrong with compilation, since Lightning backend fails.
+    b[i] += frexpf(f, &idummy);
     b[i] += hypotf(f,f);
     b[i] += (float) ilogbf(f);
     b[i] += isfinite(f);
@@ -93,7 +93,7 @@ void testFloatMath(float *b)
     b[i] += logf(f);
     b[i] += (float) lrintf(f);
     b[i] += (float) lroundf(f);
-    // b[i] += modff(f, &dummy); // Fixme: unsupported indirect call _nv_modff
+    b[i] += modff(f, &dummy); 
     // b[i] += nanf(""); // Fixme: Add to cuda_open headers, need to convert unsigned value string to unsigned int and call __ocml_nan_f32.
     b[i] += nearbyintf(f);
     b[i] += nextafterf(f,f);
@@ -105,7 +105,7 @@ void testFloatMath(float *b)
     b[i] += powf(f,f);
     b[i] += rcbrtf(f);
     b[i] += remainderf(f,f);
-    // b[i] += remquof(f,f, &idummy); // Unsupported indirect call to __nv_remquof
+    b[i] += remquof(f,f, &idummy);
     b[i] += rhypotf(f,f);
     b[i] += rintf(f);
     b[i] += rnorm3df(f,f,f);
@@ -113,11 +113,11 @@ void testFloatMath(float *b)
     // b[i] += rnormf(1, &f); // Fixme: missing function __nv_rnormf, no corresponding function in ocml
     b[i] += roundf(f);
     b[i] += rsqrtf(f);
-    // b[i] += scalblnf(f, 1); // Fixme: Unsupported indirect call to __nv_scalbnf
-    //  b[i] += scalbnf(f, 1);  // Fixme: Unsupported indirect call to  __nv_scalbnf
+    b[i] += scalblnf(f, 1);
+    b[i] += scalbnf(f, 1);
     b[i] += signbit(f);
-    // sincosf(f, &dummy, &dummy2); // Fixme: Unsupported indirect call to  __nv_sincosf
-    // sincospif(f, &dummy, &dummy2); // Fixme: Unsupported indirect call to __nv_sincospif
+    sincosf(f, &dummy, &dummy2);
+    sincospif(f, &dummy, &dummy2);
     b[i] += sinf(f);
     b[i] += sinhf(f);
     b[i] += sinpif(f);
@@ -166,7 +166,7 @@ void testFloatMath(float *b)
     b[i] += __logf(f);
     b[i] += __powf(f, f);
     b[i] += __saturatef(f);
-    // __sincosf(f, &dummy, &dummy2); // Fixme: indirect call error to __nv_fast_sincosf
+    __sincosf(f, &dummy, &dummy2);
     b[i] += __sinf(f);
     b[i] += __tanf(f);
   }
