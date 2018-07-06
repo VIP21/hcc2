@@ -88,6 +88,7 @@ help:
 	@echo 
 	@echo " Environment variables to control compilation & execution"
 	@echo "    VERBOSE=1        See lots of compiler messages and driver actions"
+	@echo "    TEMPS=1          Do not delete intermediate files"
 	@echo "    OFFLOAD_DEBUG=1  See Runtime diagnostics for each call to libomptarget API"
 	@echo "    TARGET=          Override Makefile target"
 	@echo
