@@ -72,7 +72,7 @@ void testDoubleMath(double *b)
     b[i] += fmax(f,f);
     b[i] += fmin(f,f);
     b[i] += fmod(f,f);
-    // b[i] += frexp(f, &idummy); // Fixme: Unsupported indirect call to __nv_frexp
+    b[i] += frexp(f, &idummy);
     b[i] += hypot(f,f);
     b[i] += (double) ilogb(f);
     b[i] += isfinite(f);
@@ -80,7 +80,7 @@ void testDoubleMath(double *b)
     b[i] += isnan(f);
     b[i] += j0(f);
     b[i] += j1(f);
-    // b[i] += jn(1,f); // Fixme: missing function _nv_jn
+    // b[i] += jn(1,f); // Fixme: missing function _nv_jn, no corresponding function in ocml
     b[i] += ldexp(f,1);
     b[i] += lgamma(f);
     b[i] += (double) llrint(f);
@@ -92,11 +92,11 @@ void testDoubleMath(double *b)
     b[i] += logb(f);
     b[i] += (double) lrint(f);
     b[i] += (double) lround(f);
-    // b[i] += modf(f, &dummy); // Fixme: missing function _nv_modf
-    // b[i] += nan(""); // Fixme: add nan to cuda_open headers, does not exist in the libraries
+    b[i] += modf(f, &dummy);
+    // b[i] += nan(""); // Fixme: add nan to cuda_open headers, does not exist in the libraries, need to translate string to unsigned int
     b[i] += nearbyint(f);
     b[i] += nextafter(f,f);
-    // b[i] += norm(1,&f); // Fixme: missing function _nv_norm
+    // b[i] += norm(1,&f); // Fixme: missing function _nv_norm, no corresponding function in ocml
     b[i] += norm3d(f,f,f);
     b[i] += norm4d(f,f,f,f);
     b[i] += normcdf(f);
@@ -104,20 +104,20 @@ void testDoubleMath(double *b)
     b[i] += pow(f,f);
     b[i] += rcbrt(f);
     b[i] += remainder(f,f);
-    // b[i] += remquo(f,f, &idummy); // Fixme: Unsupported indirect call to  __nv_remquo
+    b[i] += remquo(f,f, &idummy);
     b[i] += rhypot(f,f);
     b[i] += rint(f);
-    // b[i] += rnorm(1, &f); // Fixme: missing function __nv_rnorm
-    // b[i] += rnorm3d(f,f,f); // Fixme: missing function __nv_rnorm3d
-    // b[i] += rnorm4d(f,f,f,f); // Fixme: missing function __nv_rnorm4d
+    // b[i] += rnorm(1, &f); // Fixme: missing function __nv_rnorm, no corresponding function in ocml
+    b[i] += rnorm3d(f,f,f);
+    b[i] += rnorm4d(f,f,f,f);
     b[i] += round(f);
     b[i] += rsqrt(f);
-    // b[i] += scalbln(f, 1); // Fixme: Unsupported indirect call to __nv_scalbn
-    // b[i] += scalbn(f, 1);  // Fixme: Unsupported indirect call to __nv_scalbn
+    b[i] += scalbln(f, 1);
+    b[i] += scalbn(f, 1);
     b[i] += signbit(f);
     b[i] += sin(f);
-    // sincos(f, &dummy, &dummy2); // Fixme: Unsupported indirect call to __nv_sincos
-    // sincospi(f, &dummy, &dummy2); // Fixme: Unsupported indirect call to __nv_sincospi
+    sincos(f, &dummy, &dummy2);
+    sincospi(f, &dummy, &dummy2);
     b[i] += sinh(f);
     b[i] += sinpi(f);
     b[i] += sqrt(f);
@@ -127,43 +127,43 @@ void testDoubleMath(double *b)
     b[i] += trunc(f);
     b[i] += y0(f);
     b[i] += y1(f);
-    // b[i] += yn(1,f); // Fixme: missing function __nv_yn
+    // b[i] += yn(1,f); // Fixme: missing function __nv_yn, no corresponding function in ocml
 
    // 1.6 Single Presicion Intrinsics
     b[i] += __cosf(f);
     b[i] += __exp10f(f);
     b[i] += __expf(f);
-    //    b[i] += __dadd_rd(f, f); // Fixme: missing function __nv_dadd_rd
-    //    b[i] += __dadd_rn(f, f); // Fixme: missing function __nv_dadd_rn
-    //    b[i] += __dadd_ru(f, f); // Fixme: missing function __nv_dadd_ru
-    //    b[i] += __dadd_rz(f, f); // Fixme: missing function __nv_dadd_rz
-    //    b[i] += __ddiv_rd(f, f); // Fixme: missing function __nv_ddiv_rd
-    //    b[i] += __ddiv_rn(f, f); // Fixme: missing function __nv_ddiv_rn
-    //    b[i] += __ddiv_ru(f, f); // Fixme: missing function __nv_ddiv_ru
-    //    b[i] += __ddiv_rz(f, f); // Fixme: missing function __nv_ddiv_rz
+    //    b[i] += __dadd_rd(f, f); // Unsupported rounding mode in LLVM
+    //    b[i] += __dadd_rn(f, f); // Unsupported rounding mode in LLVM
+    //    b[i] += __dadd_ru(f, f); // Unsupported rounding mode in LLVM
+    //    b[i] += __dadd_rz(f, f); // Unsupported rounding mode in LLVM
+    //    b[i] += __ddiv_rd(f, f); // Unsupported rounding mode in LLVM
+    //    b[i] += __ddiv_rn(f, f); // Unsupported rounding mode in LLVM
+    //    b[i] += __ddiv_ru(f, f); // Unsupported rounding mode in LLVM
+    //    b[i] += __ddiv_rz(f, f); // Unsupported rounding mode in LLVM
     b[i] += __fdividef(f, f);
-    // b[i] += __dmul_rd(f, f); // Fixme: missing function: __nv_dmul_rd
-    // b[i] += __dmul_rn(f, f); // Fixme: missing function: __nv_dmul_rn
-    // b[i] += __dmul_ru(f, f); // Fixme: missing function: __nv_dmul_ru
-    // b[i] += __dmul_rz(f, f); // Fixme: missing function: __nv_dmul_rz
-    // b[i] += __drcp_rd(f); // Fixme: missing function: __nv_drcp_rd
-    // b[i] += __drcp_rn(f); // Fixme: missing function: __nv_drcp_rn
-    // b[i] += __drcp_ru(f); // Fixme: missing function: __nv_drcp_ru
-    // b[i] += __drcp_rz(f); // Fixme: missing function: __nv_drcp_rz
-    // b[i] += __dsqrt_rd(f); // Fixme: missing function: __nv_dsqrt_rd
-    // b[i] += __dsqrt_rn(f); // Fixme: missing function: __nv_dsqrt_rn
-    // b[i] += __dsqrt_ru(f); // Fixme: missing function: __nv_dsqrt_ru
-    // b[i] += __dsqrt_rz(f); // Fixme: missing function: __nv_dsqrt_rz
+    // b[i] += __dmul_rd(f, f); // Unsupported rounding mode in LLVM
+    // b[i] += __dmul_rn(f, f); // Unsupported rounding mode in LLVM
+    // b[i] += __dmul_ru(f, f); // Unsupported rounding mode in LLVM
+    // b[i] += __dmul_rz(f, f); // Unsupported rounding mode in LLVM
+    // b[i] += __drcp_rd(f); // Unsupported rounding mode in LLVM
+    // b[i] += __drcp_rn(f); // Unsupported rounding mode in LLVM
+    // b[i] += __drcp_ru(f); // Unsupported rounding mode in LLVM
+    // b[i] += __drcp_rz(f); // Unsupported rounding mode in LLVM
+    // b[i] += __dsqrt_rd(f); // Unsupported rounding mode in LLVM
+    // b[i] += __dsqrt_rn(f); // Unsupported rounding mode in LLVM
+    // b[i] += __dsqrt_ru(f); // Unsupported rounding mode in LLVM
+    // b[i] += __dsqrt_rz(f); // Unsupported rounding mode in LLVM
 
-    // b[i] += __dsub_rd(f, f); // Fixme: missinf function: __nv_dsub_rd
-    // b[i] += __dsub_rn(f, f); // Fixme: missinf function: __nv_dsub_rn
-    // b[i] += __dsub_ru(f, f); // Fixme: missinf function: __nv_dsub_ru
-    // b[i] += __dsub_rz(f, f); // Fixme: missinf function: __nv_dsub_rz
+    // b[i] += __dsub_rd(f, f); // Unsupported rounding mode in LLVM
+    // b[i] += __dsub_rn(f, f); // Unsupported rounding mode in LLVM
+    // b[i] += __dsub_ru(f, f); // Unsupported rounding mode in LLVM
+    // b[i] += __dsub_rz(f, f); // Unsupported rounding mode in LLVM
 
-    // b[i] += __fma_rd(f, f, f); // Fixme: missing function __nv_fma_rd
-    // b[i] += __fma_rn(f, f, f); // Fixme: missing function __nv_fma_rn
-    // b[i] += __fma_ru(f, f, f); // Fixme: missing function __nv_fma_ru
-    // b[i] += __fma_rz(f, f, f); // Fixme: missing function __nv_fma_rz
+    // b[i] += __fma_rd(f, f, f); // Unsupported rounding mode in LLVM
+    // b[i] += __fma_rn(f, f, f); // Unsupported rounding mode in LLVM
+    // b[i] += __fma_ru(f, f, f); // Unsupported rounding mode in LLVM
+    // b[i] += __fma_rz(f, f, f); // Unsupported rounding mode in LLVM
   }
 }
 

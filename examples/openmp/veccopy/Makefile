@@ -36,6 +36,11 @@ ifeq ($(VERBOSE),1)
   VERBOSE = -v
 endif
 
+ifeq ($(TEMPS),1)
+  $(info    Compilation and linking save-temp Mode ON)
+  VERBOSE += -save-temps -fopenmp-dump-offload-linker-script
+endif
+
 OMPRT_INC    = $(OMPRT)/include
 OMPRT_LIB    = $(OMPRT)/lib$(DEBUG)
 OMPRT_LIB_BC = $(OMPRT)/lib$(DEBUG)/libdevice
@@ -82,27 +87,27 @@ CFLAGS += $(EXTRA_CFLAGS)
 
 # ----- Demo compile and link in one step, no object code saved
 $(TESTNAME): $(TESTSRC)
-	$(CCENV)  $(CC) $(CFLAGS) $(LFLAGS) $^ -o $@
+	$(CCENV)  $(CC) $(VERBOSE) $(CFLAGS) $(LFLAGS) $^ -o $@
 
 run: $(TESTNAME)
 	$(RUNENV) ./$(TESTNAME) 2>&1 | tee $@.log
 
 #  ----   Demo compile and link in two steps, object saved
 .o: $(TESTSRC)
-	$(CCENV)  $(CC) -c $(CFLAGS) $^
+	$(CCENV)  $(CC) $(VERBOSE) -c $(CFLAGS) $^
 
 obin:	.o
-	$(CCENV)  $(CC) $(CFLAGS) $(LFLAGS) $(addsuffix .o, $(basename $(TESTSRC))) -o obin
+	$(CCENV)  $(CC) $(VERBOSE) $(CFLAGS) $(LFLAGS) $(addsuffix .o, $(basename $(TESTSRC))) -o obin
 
 run_obin: obin
 	$(RUNENV) ./obin 2>&1 | tee $@.log
 
 #  ----   Demo compile to intermediates LLVMIR or assembly
 .ll: $(TESTSRC)
-	$(CCENV)  $(CC) -c -S -emit-llvm $(CFLAGS) $^
+	$(CCENV)  $(CC) $(VERBOSE) -c -S -emit-llvm $(CFLAGS) $^
 
 .s: $(TESTSRC)
-	$(CCENV)  $(CC) -c -S $(CFLAGS) $^
+	$(CCENV)  $(CC) $(VERBOSE) -c -S $(CFLAGS) $^
 
 help:
 	@echo
@@ -140,6 +145,7 @@ help:
 	@echo "  EXTRA_CFLAGS=<args>   compilation extra arguments"
 	@echo "  OFFLOAD_DEBUG=n       if n=1, compile and run in Debug mode"
 	@echo "  VERBOSE=n             if n=1, add verbose output"
+	@echo "  TEMPS=1               do not delete intermediate files"
 	@echo "  UNAMEP=<arch>         host arch, default=x86_64"
 	@echo "  HOST_TARGET=<target>  host target, default=x86_64-pc-linux-gnu"
 	@echo "  ATMI=<dir>            ATMI install dir, default=$(HCC2)"
@@ -148,7 +154,7 @@ help:
 
 # Cleanup anything this makefile can create
 clean:
-	rm -f $(TESTNAME) obin *.ll *.s *.o *.log
+	rm -f $(TESTNAME) obin *.i *.ii *.bc *.lk a.out-* *.ll *.s *.o *.log
 
 clean_log:
 	rm -f *.log
