@@ -9,7 +9,7 @@ HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 OPENMP_REPO_NAME=${OPENMP_REPO_NAME:-openmp}
-REPO_BRANCH=${REPO_BRANCH:-HCC2-180713}
+REPO_BRANCH=${REPO_BRANCH:-HCC2-180718}
 
 # We can now provide a list of sm architectures, but they must support long long maxAtomic 
 NVPTXGPUS=${NVPTXGPUS:-30,35,50,60}
@@ -183,7 +183,7 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
       echo rm -rf $BUILD_DIR/build/openmp_debug
       rm -rf $BUILD_DIR/build/openmp_debug
       export OMPTARGET_DEBUG=1
-      MYCMAKEOPTS="$COMMON_CMAKE_OPTS -DLIBOMPTARGET_NVPTX_DEBUG=ON -DLIBOMPTARGET_AMDGCN_DEBUG=ON -DCMAKE_BUILD_TYPE=Debug -DOMPTARGET_DEBUG=1"
+      MYCMAKEOPTS="$COMMON_CMAKE_OPTS -DLIBOMPTARGET_NVPTX_DEBUG=ON -DCMAKE_BUILD_TYPE=Debug -DOMPTARGET_DEBUG=1"
       mkdir -p $BUILD_DIR/build/openmp_debug
       cd $BUILD_DIR/build/openmp_debug
       echo
@@ -211,6 +211,8 @@ if [ $? != 0 ] ; then
 fi
 
 cd $BUILD_DIR/build/openmp_debug
+echo
+echo
 echo " -----Running make for $BUILD_DIR/build/openmp_debug ---- "
 export OMPTARGET_DEBUG=1
 make -j $NUM_THREADS
@@ -228,6 +230,7 @@ fi
 #  ----------- Install only if asked  ----------------------------
 if [ "$1" == "install" ] ; then 
       cd $BUILD_DIR/build/openmp
+      echo
       echo " -----Installing to $INSTALL_DIR/lib ----- " 
       $SUDO make install 
       if [ $? != 0 ] ; then 
