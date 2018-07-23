@@ -76,9 +76,9 @@ void testFloatMath(float *b)
     b[i] += frexpf(f, &idummy);
     b[i] += hypotf(f,f);
     b[i] += (float) ilogbf(f);
-    b[i] += isfinite(f);
-    b[i] += isinf(f);
-    b[i] += isnan(f);
+    //  b[i] += isfinite(f);  // undefined symbol isfinite(float)
+    //  b[i] += isinf(f);     // undefined symbol isinf(float)
+    //  b[i] += isnan(f);     // undefined symbol isnan(Float)
     b[i] += j0f(f);
     b[i] += j1f(f);
     // b[i] += jnf(1,f); // Fixme: missing function _nv_jnf, no corresponding function in ocml.
@@ -91,7 +91,7 @@ void testFloatMath(float *b)
     b[i] += log2f(f);
     b[i] += logbf(f);
     b[i] += logf(f);
-    b[i] += (float) lrintf(f);
+//    b[i] += (float) lrintf(f);
     b[i] += (float) lroundf(f);
     b[i] += modff(f, &dummy); 
     // b[i] += nanf(""); // Fixme: Add to cuda_open headers, need to convert unsigned value string to unsigned int and call __ocml_nan_f32.
@@ -143,7 +143,7 @@ void testFloatMath(float *b)
     //    b[i] += __fdiv_rn(f, f); // LLVM unsupported rounding mode
     //    b[i] += __fdiv_ru(f, f); // LLVM unsupported rounding mode
     //    b[i] += __fdiv_rz(f, f); // LLVM unsupported rounding mode
-    b[i] += __fdividef(f, f);
+    //    b[i] += __fdividef(f, f); // Undefined symbol native_div
     // b[i] += __fmaf_rd(f, f, f); // LLVM unsupported rounding mode
     // b[i] += __fmaf_rn(f, f, f); // LLVM unsupported rounding mode
     // b[i] += __fmaf_ru(f, f, f); // LLVM unsupported rounding mode

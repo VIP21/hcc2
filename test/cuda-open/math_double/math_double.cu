@@ -75,9 +75,9 @@ void testDoubleMath(double *b)
     b[i] += frexp(f, &idummy);
     b[i] += hypot(f,f);
     b[i] += (double) ilogb(f);
-    b[i] += isfinite(f);
-    b[i] += isinf(f);
-    b[i] += isnan(f);
+    // b[i] += isfinite(f);  // Undefined symbol isfinte(double)
+    // b[i] += isinf(f);     // Undefined symbol isinf(double)
+    // b[i] += isnan(f);     // Undefined symbol isnand(double)
     b[i] += j0(f);
     b[i] += j1(f);
     // b[i] += jn(1,f); // Fixme: missing function _nv_jn, no corresponding function in ocml
@@ -141,7 +141,7 @@ void testDoubleMath(double *b)
     //    b[i] += __ddiv_rn(f, f); // Unsupported rounding mode in LLVM
     //    b[i] += __ddiv_ru(f, f); // Unsupported rounding mode in LLVM
     //    b[i] += __ddiv_rz(f, f); // Unsupported rounding mode in LLVM
-    b[i] += __fdividef(f, f);
+    // b[i] += __fdividef(f, f); // Undefined symbol: native_divide
     // b[i] += __dmul_rd(f, f); // Unsupported rounding mode in LLVM
     // b[i] += __dmul_rn(f, f); // Unsupported rounding mode in LLVM
     // b[i] += __dmul_ru(f, f); // Unsupported rounding mode in LLVM
