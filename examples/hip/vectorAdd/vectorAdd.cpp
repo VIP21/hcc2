@@ -128,7 +128,7 @@ int main() {
         deviceSrcVecB, hostSrcVecB, N * sizeof(int), hipMemcpyHostToDevice));
 
     if (copiedSrcVecA && copiedSrcVecB) {
-      addVector<<<N, 1>>>(deviceSrcVecA, deviceSrcVecB, deviceDstVec);
+      addVector<<<N, 1, 0, 0>>>(deviceSrcVecA, deviceSrcVecB, deviceDstVec);
 
       if (hipCallSuccessful(hipMemcpy(hostDstVec, deviceDstVec, N * sizeof(int),
                                       hipMemcpyDeviceToHost))) {
