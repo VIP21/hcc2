@@ -64,10 +64,11 @@ help:
 	@echo " Environment variables to control compilation & execution"
 	@echo "    VERBOSE=1        See lots of compiler messages and driver actions"
 	@echo "    TEMPS=1          Do not delete intermediate files"
-	@echo "    OFFLOAD_DEBUG=1  See Runtime diagnostics for each call to libomptarget API"
-	@echo "    ATMI_DEBUG=1     See ATMI runtime diagnostics"
-	@echo "    NOEXTRAINFER=1   Do not add opt pass after clang device compile"
-	@echo "    TARGET=          Override Makefile target"
+	@echo "    OFFLOAD_DEBUG=1-4  Runtime diagnostics:"
+	@echo "       1 - LIBOMPTARGET"
+	@echo "       2 - LIBOMPTARGET_DEVICE_RTL_DEBUG"
+	@echo "       3 - LIBOMPTARGET AND LIBOMPTARGET_DEVICE_RTL_DEBUG"
+	@echo "       4 - ATMI debug only"
 	@echo
 	@echo " Compile Environment:  $(SETENV)"
 	@echo

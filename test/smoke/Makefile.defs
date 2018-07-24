@@ -13,16 +13,6 @@ ifeq ($(OMPRT),)
 else
   $(info    WARNING! OMPRT environment is set, using $(OMPRT))
 endif
-ifeq ($(ATMI),)
-  ifneq ("$(wildcard $(HCC2)/include/atmi.h)","")
-    ATMI = $(HCC2)
-  else
-    $(info    WARNING! No $(HCC2)/include/atmi.h and ATMI environment variable isn't set, using /opt/rocm/atmi)
-    ATMI = /opt/rocm/atmi
-  endif
-else
-  $(info    WARNING! ATMI environment variable is set, using $(ATMI))
-endif
 
 ifneq ($(TIMEOUT),)
   TKILL= timeout $(TIMEOUT)
@@ -57,10 +47,26 @@ ifeq ($(TARGET),)
   TARGET  =  -fopenmp-targets=$(DEVICE_TARGET) -Xopenmp-target=$(DEVICE_TARGET) -march=$(DEVICE_ARCH)
 endif
 
+# OFFLOAD_DEBUG is used by this test harnass to turn on HOST and/or DEVICE level debug
 ifeq ($(OFFLOAD_DEBUG),1)
   $(info    DEBUG Mode ON)
-  DEBUG   = -debug
-  SET_DEVICE_DEBUG = DEVICE_DEBUG=1
+  SET_DEVICE_DEBUG =  LIBOMPTARGET_DEBUG=1
+  SETENV  = env LIBRARY_PATH=$(HCC2)/lib-debug
+endif
+ifeq ($(OFFLOAD_DEBUG),2)
+  $(info    DEBUG Mode ON)
+  SET_DEVICE_DEBUG = LIBOMPTARGET_DEVICE_RTL_DEBUG=-1
+  SETENV  = env LIBRARY_PATH=$(HCC2)/lib-debug
+endif
+ifeq ($(OFFLOAD_DEBUG),3)
+  $(info    DEBUG Mode ON)
+  SET_DEVICE_DEBUG = LIBOMPTARGET_DEBUG=1 LIBOMPTARGET_DEVICE_RTL_DEBUG=-1
+  SETENV  = env LIBRARY_PATH=$(HCC2)/lib-debug
+endif
+ifeq ($(OFFLOAD_DEBUG),4)
+  $(info    DEBUG Mode ON)
+  SET_DEVICE_DEBUG = ATMI_DEBUG=1
+  SETENV  = env LIBRARY_PATH=$(HCC2)/lib-debug
 endif
 
 ifeq ($(OMP_FLAGS),)
@@ -85,7 +91,7 @@ CFLAGS = -O2
 endif
 
 ifeq ($(findstring amdgcn,$(OMP_FLAGS)),)
-LINK_FLAGS = -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart #FIXME, need to check if this is really needed
+LINK_FLAGS = -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart  -L$(HCC2)/lib-debug -lomp
 else
 LINK_FLAGS =
 endif
@@ -95,41 +101,4 @@ CUDA      = /usr/local/cuda
 RUNPROF =  $(CUDA)/bin/nvprof 
 RUNPROF =  
 
-# Check if the OMPRT is an install or local build
-ifeq ("$(wildcard $(OMPRT)/CMakeFiles)","")
-  OMPRT_INC    = $(OMPRT)/include
-  OMPRT_LIB    = $(OMPRT)/lib$(DEBUG)
-  OMPRT_LIB_BC = $(OMPRT)/lib$(DEBUG)/libdevice
-else
-  OMPRT_INC    = $(OMPRT)/runtime/src
-  OMPRT_LIB    = $(OMPRT)/libomptarget/plugins/$(UNAMEP):$(OMPRT)/libomptarget/plugins/hsa:$(OMPRT)/libomptarget/plugins/cuda:$(OMPRT)/libomptarget:$(OMPRT)/runtime/src
-  OMPRT_LIB_BC = $(OMPRT)/libomptarget/deviceRTLs/amdgcn:$(OMPRT)/libomptarget/deviceRTLs/nvptx:$(OMPRT)/cugcn/libdevice
-endif
-
-# Check if the ATMI is an install or local build
-ifeq ("$(wildcard $(ATMI)/CMakeFiles)","")
-  ATMI_LIB    = $(ATMI)/lib$(DEBUG)
-  ATMI_LIB_BC = $(ATMI)/lib$(DEBUG)/libdevice
-else
-  ATMI_LIB    = $(ATMI)/lib
-  ATMI_LIB_BC = $(ATMI)/lib/libdevice
-endif
-
-# Compilation and link require at LIBRARY_PATH
-ifeq ($(findstring amdgcn,$(OMP_FLAGS)),)
-_LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib
-else
-_LIBPATH = $(OMPRT_LIB_BC):$(OMPRT_LIB):$(ATMI_LIB_BC):$(ATMI_LIB):$(LIBAMDGCN)/$(GFXNAME)/lib
-endif
-
-SETENV   = env C_INCLUDE_PATH=$(OMPRT_INC):$(C_INCLUDE_PATH) CPLUS_INCLUDE_PATH=$(OMPRT_INC):$(CPLUS_INCLUDE_PATH) LIBRARY_PATH=$(_LIBPATH):$(LIBRARY_PATH) PATH=$(HCC2)/bin:$(PATH) $(TKILL)
-
-# The ATMI and LOCH libraries are needed for dynamic runtime linking.
-ifeq ($(findstring amdgcn,$(OMP_FLAGS)),)
-_LDPATH  = $(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib
-else
-_LDPATH  = $(OMPRT_LIB):$(ATMI_LIB)
-endif
-
-RUNENV   = env LD_LIBRARY_PATH=$(_LDPATH):$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG) $(TKILL)
-
+RUNENV   = env $(SET_DEVICE_DEBUG) $(TKILL)
