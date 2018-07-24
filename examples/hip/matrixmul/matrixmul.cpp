@@ -142,7 +142,7 @@ int main() {
 
     if (copiedSrcMatA && copiedSrcMatB) {
       dim3 dimGrid(N, P);
-      matrixMul<<<dimGrid, 1>>>(deviceSrcMatA, deviceSrcMatB, deviceDstMat, N,
+      matrixMul<<<dimGrid, 1, 0, 0>>>(deviceSrcMatA, deviceSrcMatB, deviceDstMat, N,
                                 M, P);
       if (hipCallSuccessful(hipMemcpy(hostDstMat, deviceDstMat,
                                       N * P * sizeof(int),
