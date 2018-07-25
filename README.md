@@ -1,11 +1,11 @@
-HCC2 - V 0.4-0
+HCC2 - V 0.5-0
 ==============
 
 hcc2:  Heterogeneous Compiler Collection (Version 2). 
 
 This is README.md for https:/github.com/ROCM-Developer-Tools/hcc2 .  This is the base repository for HCC2,  Use this for issues, documentation, packaging, examples, build.  
 
-HCC2 is an experimental PROTOTYPE that is intended to support multiple programming models including OpenMP 4.5+, C++ parallel extentions (original HCC), and cuda clang.  It supports offloading to multiple GPU acceleration targets(multi-target).  It also supports different host platforms such as AMD64, PPC64LE, and AARCH64. (multi-platform). 
+HCC2 is an experimental PROTOTYPE that is intended to support multiple programming models including OpenMP 4.5+, C++ parallel extentions (original HCC), HIP, and cuda clang.  It supports offloading to multiple GPU acceleration targets(multi-target).  It also supports different host platforms such as AMD64, PPC64LE, and AARCH64. (multi-platform). 
 
 The bin directory of this repository contains a README and build scripts needed to build HCC2. However, we recommend that you install from the debian or rpm packages provided as described below.
 
@@ -69,27 +69,22 @@ Software License Agreement.
 On Ubuntu 16.04 LTS (xenial), run these commands:
 
 ```
-wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.4-0/hcc2_0.4-0_amd64.deb
-wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.4-0/libamdgcn_0.4-0_all.deb
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-0/hcc2_0.5-0_amd64.deb
 sudo dpkg -P hcc2
 sudo dpkg -P libamdgcn
 sudo dpkg -P amdcloc
 sudo dpkg -P mymcpu
-sudo dpkg -i hcc2_0.4-0_amd64.deb
-sudo dpkg -i libamdgcn_0.4-0_all.deb
+sudo dpkg -i hcc2_0.5-0_amd64.deb
 ```
 The "dpkg -P" commands are used to delete previous versions of hcc2, libamdgcn, amdcloc, and mymcpu which may conflict with the installation.  If these are not installed it is ok to just let the "dpkg -P" commands fail.
 
 HCC2 does not conflict with the production HCC. There is no reason to delete HCC to use HCC2. The HCC2 bin directory (which includes the standard clang and llvm binaries) is not intended to be in your PATH for typical operation.
 
-
-For rpm-based Linux systems, run the following commands:
-
+The rpms for release 0.5-0 are not available yet. 
 ```
-wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.4-0/hcc2-0.4-0.x86_64.rpm
-wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.4-0/libamdgcn-0.4-0.noarch.rpm
-sudo rpm -i hcc2-0.4-0.x86_64.rpm
-sudo rpm -i libamdgcn-0.4-0.noarch.rpm
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-0/hcc2-0.5-0.x86_64.rpm
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-0/libamdgcn-0.5-0.noarch.rpm
+sudo rpm -i hcc2-0.5-0.x86_64.rpm
 ```
 
 Build and install from sources is possible, though due to many different repos involved it is a complex build. For details on the source build see [README](bin/README).
@@ -97,4 +92,4 @@ Build and install from sources is possible, though due to many different repos i
 ## HCC2 Limitations
 
 <A NAME="Limitations">
-There are too many to mention at this time.  Hey, this is a prototype.
+There are too many to mention at this time.  Hey, this is a prototype. For example multiple target regions with teams distribute does not work.  This is one focus for 0.5-1. 
