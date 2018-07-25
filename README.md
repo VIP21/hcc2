@@ -80,10 +80,9 @@ The "dpkg -P" commands are used to delete previous versions of hcc2, libamdgcn, 
 
 HCC2 does not conflict with the production HCC. There is no reason to delete HCC to use HCC2. The HCC2 bin directory (which includes the standard clang and llvm binaries) is not intended to be in your PATH for typical operation.
 
-The rpms for release 0.5-0 are not available yet. 
+The rpms for release 0.5-0 are not available yet. When it is available, run these commands.
 ```
 wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-0/hcc2-0.5-0.x86_64.rpm
-wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-0/libamdgcn-0.5-0.noarch.rpm
 sudo rpm -i hcc2-0.5-0.x86_64.rpm
 ```
 
