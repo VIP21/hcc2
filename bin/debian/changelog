@@ -1,4 +1,4 @@
-hcc2 (0.4-0) UNRELEASED; urgency=medium
+hcc2 (0.5-0) UNRELEASED; urgency=medium
 
   * Initial release of hcc2 is 0.3-2
   *   Please see example in /opt/rocm/hcc2/examples/vmuldemo 
@@ -35,5 +35,10 @@ hcc2 (0.4-0) UNRELEASED; urgency=medium
   *   Tasklist is currently managed in hcc2/hcc2/bin/TODOs. 
   *   Testing removed from "examples" directory into test/smoke directories. 
   *   Added test/omptests directory for enhanced testing. 
+  * 0.5-0 is a major upgrade
+  *   This clang 7.0 is a large patch to support OpenMP on amdgcn.  
+  *   Patch is against the clang and openmp development trunks as of 
+  *   July 18 2018
+  * 
 
- -- Greg Rodgers <Gregory.Rodgers@amd.com>  Thu, 28 Dec 2017 09:41:30 -0600
+ -- Greg Rodgers <Gregory.Rodgers@amd.com>  Tue, 24 Jul 2018 22:23:39 -0500

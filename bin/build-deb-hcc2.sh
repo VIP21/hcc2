@@ -10,7 +10,7 @@
 #
 pkgname=hcc2
 # FIXME: Get version and mod from HCC2_VERSION_STRING file in directory with this script
-version="0.4"
+version="0.5"
 mod="0"
 dirname="hcc2_$version-$mod"
 sourcedir="/opt/rocm/$dirname"
