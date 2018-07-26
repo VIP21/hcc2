@@ -79,7 +79,12 @@ environment variable HCC2_REPOS.
 To set alternative installation path for the component INSTALL_<COMPONENT> environment 
 variable can be used, e.g. INSTALL_HCC2
 
-To build all components, run the scripts in the following order:
+To build all components, clone hcc2 repo and checkout it to rel_0.5-0 
+
+	git clone https://github.com/ROCm-Developer-Tools/hcc2.git
+	git checkout rel_0.5-0
+	
+then run the scripts from hcc2/bin in the following order:
 
 	./build_hcc2.sh
 	./build_hcc2.sh install
