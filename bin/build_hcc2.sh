@@ -20,7 +20,7 @@ LLD_REPO_NAME=${LLD_REPO_NAME:-lld}
 LLVM_REPO_NAME=${LLVM_REPO_NAME:-llvm}
 RT_REPO_NAME=${RT_REPO_NAME:-openmp}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
-REPO_BRANCH=${REPO_BRANCH:-HCC2-180718}
+REPO_BRANCH=${REPO_BRANCH:-HCC2-180727}
 
 if [ "$SUDO" == "set" ]  || [ "$SUDO" == "yes" ] || [ "$SUDO" == "YES" ] ; then
    SUDO="sudo"
@@ -60,7 +60,7 @@ thisdir=$(getdname $0)
 if [ -f $thisdir/HCC2_VERSION_STRING ] ; then
    HCC2_VERSION_STRING=`cat $thisdir/HCC2_VERSION_STRING`
 else
-   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.5-0"}
+   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.5-1"}
 fi
 export HCC2_VERSION_STRING
 INSTALL_DIR=${INSTALL_HCC2:-"${HCC2}_${HCC2_VERSION_STRING}"}
@@ -250,11 +250,11 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
       echo "SO RSYNCING HCC2_REPOS TO: $BUILD_DIR"
       echo
       echo rsync -av --exclude ".git" --exclude "CommandLine.cpp" --delete $HCC2_REPOS/$LLVM_REPO_NAME $BUILD_DIR 2>&1 
-      rsync -av --exclude ".git" --exclude "CommandLine.cpp" --delete $HCC2_REPOS/$LLVM_REPO_NAME $BUILD_DIR 2>&1 
+      rsync -a --exclude ".git" --exclude "CommandLine.cpp" --delete $HCC2_REPOS/$LLVM_REPO_NAME $BUILD_DIR 2>&1 
       echo rsync -a --exclude ".git" --delete $HCC2_REPOS/$CLANG_REPO_NAME $BUILD_DIR
-      rsync -av --exclude ".git" --delete $HCC2_REPOS/$CLANG_REPO_NAME $BUILD_DIR 2>&1 
+      rsync -a --exclude ".git" --delete $HCC2_REPOS/$CLANG_REPO_NAME $BUILD_DIR 2>&1 
       echo rsync -a --exclude ".git" --delete $HCC2_REPOS/$LLD_REPO_NAME $BUILD_DIR
-      rsync -av --exclude ".git" --delete $HCC2_REPOS/$LLD_REPO_NAME $BUILD_DIR 2>&1
+      rsync -a --exclude ".git" --delete $HCC2_REPOS/$LLD_REPO_NAME $BUILD_DIR 2>&1
       mkdir -p $BUILD_DIR/$LLVM_REPO_NAME/tools
       if [ -L $BUILD_DIR/$LLVM_REPO_NAME/tools/clang ] ; then 
         rm $BUILD_DIR/$LLVM_REPO_NAME/tools/clang

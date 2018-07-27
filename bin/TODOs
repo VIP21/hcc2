@@ -5,142 +5,71 @@ Please mark an item with an X when they are done.
 Note: There is no committment to complete any or all items
       on this list.
 
-001  _X_ Get example simd working (Greg)
+001  ___ Fix smoke tests device, vmulsum, and assertok_error
+ 
+002  ___ Move to trunk branches for 180727
 
-002  _X_ Get example assertok_errors working (Greg)
+003  ___ Fix problem with missing omp.h on nvidia smoke tests
 
-003  _X_ Get example target-in-other-source working (Greg)
+004  ___ Run smoke tests in debug mode and get them working.
 
-004  _X_ Add cudaclang examples dir and example.  Nvidia only for now
-         Greg promoted the fixup-fatbin clang tool written by
-         Andrey so gcn examples can build. I also cleaned
-         up the cudaclang makefile and gave to Jan for testing. (Jan)
+005  ___ demo use of debugging runtime in at least one openmp example
 
-005  ___ Add hc examples dir and an hc example.  amdgcn only for now
-         (Greg)  0.4-1
+006  ___ Explain hip automatic mode in at least one hip example
 
-006  _X_ Get cloc.sh utility working. The utility is now in hcc2-rt
-         Examples for compiling OpenCL and Cuda kernels are in 
-         hcc2/examples/cloc (Greg)
+007  ___ Test cloc.sh examples
 
-007  _X_ Add Debian packaging control files to this bin directory
-         with versions for amd64, ppc64el, and aarch64
-         (Greg) (0.4-1)
-007.1 X  Make libamdgcn a noarch pachage
+008  ___ Fix driver to allow for multiple offload targets frmo 
+         different archs.  Multiple offload targets already work 
+         if on the same arch
 
-008  ___ Fix driver to allow for multiple offload targets (Greg) (0.4-1)
-
-009  _X_ Move vprintfl to atmi 0.4 device library (Guansong)
-         (0.3-9)
+009  ___ Fix vprintfl to only use a single atomic. Requires changes
+         to the hsa plugin. 
 
 010  ___ Get a public version of the ATMI source code available (Ashwin)
          Note: ATMI libs and devicelibs are built into the release. 
          This is only a problem for people building from source.
-         (TBD)
 
-011  ___ Add the cuda clang runtime for amdgcn (Jan)
-         (0.4-X) 
+011  ___ Merge hip, cuda2gcn, and some functions from libomptarget
+         somewhere in libomptarget/deviceRTLs but not in amdgcn/src. 
 
-012  _X_ Remove need for ncurses lib when building set-linkage
+012  ___ Check install and applcation build on systems WITHOUT cuda or rocm. 
+         Make sure runtime gives a good message if no available runtime 
+         for any of the available offload images.
 
-013  ___ Add printf capability to hc and opencl , need 005 006 (Greg)
-         (0.4-X)
+013  ___ Get stream example working
 
-014  _X_ Move to new rocm device lib atomics for atmi services
-         atomic_load_explicit(...)
-         atomic_compare_exchange_strong_explicit(...)
-         needs 009 (Guansong)
-         (0.3-9)
+014  ___ test proxy app
 
-015  _X_ Create a fail message (in driver) if libamdgcn not installed 
-         when --cuda-gpu-arch=gfxXXX. Also, create a fail message when 
-         --cuda-gpu-arch=sm_XXX and cuda is not installed. (Guansong)
-         (0.4-0)
+015  ___ Test on carrizo and good HSA installed kaveris  
 
-016  _X_ Reverse Makefile warnings for LIBAMDGCN and HCC2 env variables (Andrey)
-         (0.3-9)
+016  ___ Test SpecAccel benchmark (Andrey)
 
-017  _X_ Merge with latest yorktown coral repos (Greg) (Dec 2017)
-         (0.4-0)
+017  ___ Review READMEs for all examples
 
-017a _X_ Merge hcc2-clang with latest yorktown coral repos (Dec 2017)
-         (0.4-0)
-         
-017b _X_ Merge hcc2-llvm with latest yorktown coral repos (Dec 2017)
-         (0.4-0)
-         
-017c _X_ Merge hcc2-rt with latest yorktown coral repo (Guansong) (Dec 2017)
-         (0.4-0)
-
-018  _X_ make utilities in hcc2-rt/utils/bin executable with package
-         install, needs 007 
-
-019  ___ Test on carrizo and good HSA installed kaveris  
-         (TBD)
-
-020  _X_ Add autodiscover of subarch/gpu for both amdgcn and nvptx (Greg)
-         (0.4-0) see updated utils/bin/mymcpu
-
-021  ___ Make printf more robust, especially with large blocks 
-         where all lanes are active. Create and use a new atmi service
-         for wvprintf which works for an entire wavefront. 
-         This should also fix examples that fail when they are built 
-         with OFFLOAD_DEBUG=1 turned on.  (Greg)
-         (0.4-X)
-
-022  _X_ Run omp test suite (Andrey)
-         Please add a script in hcc2/bin that runs these tests. 
-         (0.3-9)
-
-023  ___ Test SpecAccel benchmark (Andrey)
-         (0.4-X)
-
-024  _X_ Move examples/openmp to examples/test and put simple useful
-         examples in examples/openmp in self-contained directories
-         (no Makefile.defs etc.) (Andrey)
-         (0.3-9)
-
-025  ___ Add only OS dependencies to packages. libelf-dev? libc++1
-         Do not add ROCm or CUDA dependencies. These need to be
-         part of the improved messages in 015 task. (Greg)
-         (0.4-X)
-
-026  _X_ URGENT!!! Change the submit bug report message from 
-         “PLEASE submit a bug report to http://llvm.org/bugs/” to
+018  ___ Check the bug report message in hcc2. llvm is 
+         “PLEASE submit a bug report to http://llvm.org/bugs/” 
+         Our messages should be
          “PLEASE open an issue in https://github.com/ROCm-Developer-Tools/hcc2”
-         (Guansong) 
 
-027  _X_ Replace the use of macro GPUCC_AMDGC in libomptarget/deviceRTLs/amdgcn
-         with __AMDGCN__.  Do not set __AMDGCN__ in the cmake file.  This is set 
-         automatically by clang in getTargetDefines in the file 
-         hcc2-clang/lib/Basic/Targets/AMDGPU.cpp. (Guansong)
+019 ___ Fix the __AMDGCN__ macro to have the gfx name that is being compiled.
 
-028  ___ Fix build of libamdgcn.  Unresolved refs to __opencl_atomic ... _4
-         in the opencl.bc (Guansong)
+020 ___  Get status of Chip's OpenMP Apps on AMDGPU and Nvidia 
 
-029 _X_  Switch from using git branches to git tag for releases. We should 
-         then be able to attach full deb and rpms to the release without 
-         the need for gitlfs as we currently do in packages directory. 
-         (Andrey)
+021 ___  Investigate root cause for Assert in /lib/Target/AMDGPU/SIInstrInfo.cpp:4176 (hpgmp-mp4, lulesh-mp4)
 
-030 ___  Reenable "Free device allocation entry" in hcc2-rc master, at the moment
-         it is guarded by "#if 0" at libomptarget/plugins/hsa/src/rtl.cpp@258.
-         The experiment with 0.3-9 branch shows no regerssions on AMDGPU hcc2/test.
+022 ___  Investigate root cause of HSA_STATUS_ERROR_INVALID_ALLOCATION for xsbench-mp4 
+
+023 ___  Investigate root cause of HSA_STATUS_ERROR_INVALID_ISA for snap-mp4 
+
+024 ___  Move to latest version of hip development repository, lots of warnings 
+         on current version
+
+025 ___  Move to latest version of atmi dev repository
+
+026 ___  Move to latest version of rocm-device-libs
+
+027 ___  Fix build_hip.sh script to get version from the version file in this bin directory.
          
-031 ___  Upstream ATMI 0.4 branch to the master branch
-
-032 ___  Get status of Chip's OpenMP Apps on AMDGPU and Nvidia (Andrey)
-
-033 ___  Investigate hang in ATMI examples (Guansong)
-
-035 ___  Investigate root cause of issue #1, HSA_STATUS_ERROR_OUT_OF_RESOURCES (Guansong)
-
-034 ___  Request a performance tool example (Guansong)
-
-035 ___  Investigate root cause for Assert in /lib/Target/AMDGPU/SIInstrInfo.cpp:4176 (hpgmp-mp4, lulesh-mp4)
-
-036 ___  Investigate root cause of HSA_STATUS_ERROR_INVALID_ALLOCATION for xsbench-mp4 (Guansong)
-
-037 ___  Investigate root cause of HSA_STATUS_ERROR_INVALID_ISA for snap-mp4 (Andrey)
 
 Move this list to Git Issues when things slow down.

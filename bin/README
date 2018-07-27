@@ -37,10 +37,10 @@ The repositories and branches needed by HCC2 are:
 DIRECTORY NAME *                  HCC2 REPOSITORY **       BRANCH
 -------------------------------   ---------------------    ------
 $HOME/git/hcc2/hcc2               %rocdev/hcc2             master ***
-$HOME/git/hcc2/clang              %rocdev/clang            HCC2-180718 ***
-$HOME/git/hcc2/llvm               %rocdev/llvm             HCC2-180718
-$HOME/git/hcc2/lld                %rocdev/lld              HCC2-180718
-$HOME/git/hcc2/openmp             %rocdev/openmp           HCC2-180718 ***
+$HOME/git/hcc2/clang              %rocdev/clang            HCC2-180727 ***
+$HOME/git/hcc2/llvm               %rocdev/llvm             HCC2-180727
+$HOME/git/hcc2/lld                %rocdev/lld              HCC2-180727
+$HOME/git/hcc2/openmp             %rocdev/openmp           HCC2-180727 ***
 $HOME/git/hcc2/hip                %rocdev/hip              HCC2-180619
 $HOME/git/hcc2/rocm-device-libs   %roc/rocm-device-libs    HCC2-180619
 $HOME/git/hcc2/atmi-staging       %roc/atmi-staging        HCC2-180619
@@ -79,10 +79,17 @@ environment variable HCC2_REPOS.
 To set alternative installation path for the component INSTALL_<COMPONENT> environment 
 variable can be used, e.g. INSTALL_HCC2
 
-To build all components, clone hcc2 repo and checkout it to rel_0.5-0 
+To build all components, first clone hcc2 repo and checkout the master branch
+to build our development repository.  Checkout a tag such as rel_0.5-0 to build
+a released version. 
 
 	git clone https://github.com/ROCm-Developer-Tools/hcc2.git
-	git checkout rel_0.5-0
+
+	git checkout master 
+
+        or to build rel_0.5-0, run this command 
+
+	git checkout rel_0.5-0  
 	
 then run the scripts from hcc2/bin in the following order:
 
