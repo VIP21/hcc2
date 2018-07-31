@@ -51,7 +51,7 @@ export HCC2_VERSION_STRING
 INSTALL_DIR=${INSTALL_ATMI:-"${HCC2}_${HCC2_VERSION_STRING}"}
 
 # FIXME : pickup atmi from fixed dev branch
-REPO_BRANCH=${REPO_BRANCH:-HCC2-180619}
+REPO_BRANCH=${REPO_BRANCH:-HCC2-180727}
 #  Check the repositories exist and are on the correct branch
 function checkrepo(){
    cd $REPO_DIR
