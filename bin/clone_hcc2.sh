@@ -108,6 +108,6 @@ clone_or_pull
 
 # This is the ATMI repo for ATMI 0.4 in development
 reponame="atmi-staging"
-COBRANCH="HCC2-180619"
+COBRANCH="HCC2-180727"
 clone_or_pull
 
