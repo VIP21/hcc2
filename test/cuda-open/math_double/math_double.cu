@@ -75,9 +75,9 @@ void testDoubleMath(double *b)
     b[i] += frexp(f, &idummy);
     b[i] += hypot(f,f);
     b[i] += (double) ilogb(f);
-    // b[i] += isfinite(f);  // Undefined symbol isfinte(double)
-    // b[i] += isinf(f);     // Undefined symbol isinf(double)
-    // b[i] += isnan(f);     // Undefined symbol isnand(double)
+    b[i] += isfinite(f);
+    b[i] += isinf(f);
+    b[i] += isnan(f);
     b[i] += j0(f);
     b[i] += j1(f);
     // b[i] += jn(1,f); // Fixme: missing function _nv_jn, no corresponding function in ocml

@@ -76,9 +76,9 @@ void testFloatMath(float *b)
     b[i] += frexpf(f, &idummy);
     b[i] += hypotf(f,f);
     b[i] += (float) ilogbf(f);
-    //  b[i] += isfinite(f);  // undefined symbol isfinite(float)
-    //  b[i] += isinf(f);     // undefined symbol isinf(float)
-    //  b[i] += isnan(f);     // undefined symbol isnan(Float)
+    b[i] += isfinite(f);
+    b[i] += isinf(f);
+    b[i] += isnan(f);
     b[i] += j0f(f);
     b[i] += j1f(f);
     // b[i] += jnf(1,f); // Fixme: missing function _nv_jnf, no corresponding function in ocml.
