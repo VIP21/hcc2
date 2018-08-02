@@ -51,7 +51,7 @@ export HCC2_VERSION_STRING
 INSTALL_DIR=${INSTALL_ATMI:-"${HCC2}_${HCC2_VERSION_STRING}"}
 
 # FIXME : pickup atmi from fixed dev branch
-REPO_BRANCH=${REPO_BRANCH:-HCC2-180619}
+REPO_BRANCH=${REPO_BRANCH:-HCC2-180727}
 #  Check the repositories exist and are on the correct branch
 function checkrepo(){
    cd $REPO_DIR
@@ -133,7 +133,7 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
    BUILDTYPE="Release"
    echo rm -rf $BUILD_HCC2/build/atmi
    rm -rf $BUILD_HCC2/build/atmi
-   MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DATMI_HSA_INTEROP_VAR=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
+   MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DATMI_HSA_INTEROP=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
    mkdir -p $BUILD_HCC2/build/atmi
    cd $BUILD_HCC2/build/atmi
    echo " -----Running atmi cmake ---- " 
@@ -148,7 +148,7 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
    BUILDTYPE="Debug"
    echo rm -rf $BUILD_HCC2/build/atmi_debug
    rm -rf $BUILD_HCC2/build/atmi_debug
-   MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DATMI_HSA_INTEROP_VAR=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
+   MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DATMI_HSA_INTEROP=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
 
    mkdir -p $BUILD_HCC2/build/atmi_debug
    cd $BUILD_HCC2/build/atmi_debug
