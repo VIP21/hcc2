@@ -43,7 +43,7 @@ $HOME/git/hcc2/lld                %rocdev/lld              HCC2-180727
 $HOME/git/hcc2/openmp             %rocdev/openmp           HCC2-180727 ***
 $HOME/git/hcc2/hip                %rocdev/hip              HCC2-180619
 $HOME/git/hcc2/rocm-device-libs   %roc/rocm-device-libs    HCC2-180619
-$HOME/git/hcc2/atmi-staging       %roc/atmi-staging        HCC2-180619
+$HOME/git/hcc2/atmi-staging       %roc/atmi-staging        HCC2-180727
 
    * Clone your repositories here or override with environment variables.
   ** Replace %roc with "https://github.com/RadeonOpenCompute"
@@ -80,18 +80,24 @@ To set alternative installation path for the component INSTALL_<COMPONENT> envir
 variable can be used, e.g. INSTALL_HCC2
 
 To build all components, first clone hcc2 repo and checkout the master branch
-to build our development repository.  Checkout a tag such as rel_0.5-0 to build
+to build our development repository.  Checkout a tag such as rel_0.5-1 to build
 a released version. 
 
 	git clone https://github.com/ROCm-Developer-Tools/hcc2.git
 
 	git checkout master 
 
-        or to build rel_0.5-0, run this command 
+Or to build rel_0.5-1, run this command:
 
-	git checkout rel_0.5-0  
+	git checkout rel_0.5-1
 	
-then run the scripts from hcc2/bin in the following order:
+To be sure you have the latest sources from the git repositories, run this command.
+The first time you do this, It could take a long time to clone all the repositories
+needed. Subsequent calls will pull the latest updats.
+
+        ./clone_hcc2.sh
+
+After you have all the source repositories, run these scripts in the following order:
 
 	./build_hcc2.sh
 	./build_hcc2.sh install
@@ -111,10 +117,11 @@ then run the scripts from hcc2/bin in the following order:
 	./build_libdevice.sh  
 	./build_libdevice.sh install
 
-These scripts do not automatically install in case their is a build failure.
-In case of a build failure, you can restart the build by running "make" or 
-"make install" in the build directory. 
+The first execution of the these scripts does not automatically install in
+case their is a build failure.  In case of a build failure, you can restart
+the build by running "make" or "make install" in the build directory. 
 
+Bootstrapping:
 The compiler created by build_hcc2.sh is needed by all of the components.
 So you must build and install hcc2 first before building any of the components.
 

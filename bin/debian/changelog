@@ -1,4 +1,4 @@
-hcc2 (0.5-0) UNRELEASED; urgency=medium
+hcc2 (0.5-1) UNRELEASED; urgency=medium
 
   * Initial release of hcc2 is 0.3-2
   *   Please see example in /opt/rocm/hcc2/examples/vmuldemo 
@@ -39,6 +39,9 @@ hcc2 (0.5-0) UNRELEASED; urgency=medium
   *   This clang 7.0 is a large patch to support OpenMP on amdgcn.  
   *   Patch is against the clang and openmp development trunks as of 
   *   July 18 2018
-  * 
+  * 0.5-1 
+  *   Cleanup the atmi-staging repo
+  *   Fix smoke tests vmulsum and assertok_error caused by missing smid function for amdgcn
+  *   Fixed the cuda toolchain to pickup includes from the compiler install first. 
 
- -- Greg Rodgers <Gregory.Rodgers@amd.com>  Tue, 24 Jul 2018 22:23:39 -0500
+ -- Greg Rodgers <Gregory.Rodgers@amd.com>  Fri, 03 Aug 2018 07:16:22 -0500

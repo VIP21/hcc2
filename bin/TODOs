@@ -5,11 +5,12 @@ Please mark an item with an X when they are done.
 Note: There is no committment to complete any or all items
       on this list.
 
-001  ___ Fix smoke tests device, vmulsum, and assertok_error
+001  _X_ Fix smoke tests vmulsum, and assertok_error (0.5-1)
+001.b  ___ Fix smoke tests reduce 
  
-002  ___ Move to trunk branches for 180727
+002  _X_ Move to trunk branches for 180727  (0.5-1)
 
-003  ___ Fix problem with missing omp.h on nvidia smoke tests
+003  _X_ Fix problem with missing omp.h on nvidia smoke tests (0.5-1)
 
 004  ___ Run smoke tests in debug mode and get them working.
 
@@ -39,7 +40,7 @@ Note: There is no committment to complete any or all items
 
 013  ___ Get stream example working
 
-014  ___ test proxy app
+014  ___ test proxy apps
 
 015  ___ Test on carrizo and good HSA installed kaveris  
 
@@ -65,7 +66,8 @@ Note: There is no committment to complete any or all items
 024 ___  Move to latest version of hip development repository, lots of warnings 
          on current version
 
-025 ___  Move to latest version of atmi dev repository
+025 _X_  Move to updated version of atmi dev repository HCC2.180727
+025.b ___  Move to latest version of atmi dev repository
 
 026 ___  Move to latest version of rocm-device-libs
 
