@@ -9,7 +9,7 @@ HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 OPENMP_REPO_NAME=${OPENMP_REPO_NAME:-openmp}
-REPO_BRANCH=${REPO_BRANCH:-HCC2-180727}
+REPO_BRANCH=${REPO_BRANCH:-HCC2-180805}
 
 # We can now provide a list of sm architectures, but they must support long long maxAtomic 
 NVPTXGPUS=${NVPTXGPUS:-30,35,50,60}
@@ -56,7 +56,7 @@ thisdir=$(getdname $0)
 if [ -f $thisdir/HCC2_VERSION_STRING ] ; then 
    HCC2_VERSION_STRING=`cat $thisdir/HCC2_VERSION_STRING`
 else 
-   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.5-1"}
+   HCC2_VERSION_STRING=${HCC2_VERSION_STRING:-"0.5-2"}
 fi
 export HCC2_VERSION_STRING
 INSTALL_DIR=${INSTALL_OPENMP:-"${HCC2}_${HCC2_VERSION_STRING}"}
