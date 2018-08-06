@@ -35,6 +35,7 @@
 #HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
+#HIP_REPO_NAME=${HIP_REPO_NAME:-hip}
 HIP_REPO_NAME=${HIP_REPO_NAME:-hip}
 HCC2_REPO_NAME=${HCC2_REPO_NAME:-hcc2}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
@@ -59,7 +60,7 @@ BUILDTYPE="Release"
 INSTALL_DIR=${INSTALL_HIP:-"${HCC2}_${HCC2_VERSION}-${HCC2_MOD}"}
 LLVM_BUILD=$HCC2
 
-REPO_BRANCH=${REPO_BRANCH:-HCC2-180619}
+REPO_BRANCH=${REPO_BRANCH:-HCC2.180805}
 #  Check the repositories exist and are on the correct branch
 function checkrepo(){
    cd $REPO_DIR
