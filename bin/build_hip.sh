@@ -164,5 +164,5 @@ if [ "$1" == "install" ] ; then
       cd $BUILD_DIR/build/hip
       echo " -----Installing to $INSTALL_DIR/lib ----- "
       $SUDO cp -p libhip_hcc.so $INSTALL_DIR/lib/.
-      $SUDO rsync -a $HIP_REPO_DIR/include/hip $INSTALL_DIR/lib/clang/7.0.0/include
+      $SUDO rsync -a $HIP_REPO_DIR/include/hip $INSTALL_DIR/lib/clang/8.0.0/include
 fi
