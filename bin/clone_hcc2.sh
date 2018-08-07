@@ -93,7 +93,7 @@ COBRANCH="HCC2-180805"
 clone_or_pull
 
 reponame="hip"
-COBRANCH="HCC2-180619"
+COBRANCH="HCC2.180805"
 clone_or_pull
 
 # ---------------------------------------
