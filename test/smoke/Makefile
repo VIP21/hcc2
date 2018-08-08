@@ -11,6 +11,9 @@ TESTS_DIR = \
     firstprivate \
     function \
     helloworld \
+    issue_001 \
+    issue_002 \
+    issue_apps_001 \
     nativetests \
     nested_loop \
     pfspecifier \
