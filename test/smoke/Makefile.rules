@@ -29,9 +29,6 @@ run_obin: obin
 help: 
 	@echo
 	@echo "Compiler: 	        $(OMP_BIN)"
-	@echo "Runtime Library: 	$(OMPRT_LIB)"
-	@echo "OpenMP BC Libs:		$(OMPRT_LIB_BC)"
-	@echo "Device BC Libs:		$(LIBAMDGCN)/$(GFXNAME)/lib"
 	@echo "LLLVM Tool Chain:	$(HCC2)/bin"
 	@echo "Offload Targets: 	$(TARGET)"
 	@echo "Host Targe:		$(HOST_TARGET)"

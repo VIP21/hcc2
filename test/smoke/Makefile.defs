@@ -1,17 +1,7 @@
-ifeq ($(LIBAMDGCN),)
-  LIBAMDGCN = /opt/rocm/libamdgcn
-else
-  $(info    WARNING! LIBAMDGCN environment variable is set, using $(LIBAMDGCN))
-endif
 ifeq ($(HCC2),)
   HCC2 = /opt/rocm/hcc2
 else
   $(info    WARNING! HCC2 environment variable is set, using $(HCC2))
-endif
-ifeq ($(OMPRT),)
-  OMPRT = $(HCC2)
-else
-  $(info    WARNING! OMPRT environment is set, using $(OMPRT))
 endif
 
 ifneq ($(TIMEOUT),)

@@ -53,9 +53,6 @@ run run_obin run_sbin run_llbin clean clean_log llbin sbin obin:
 
 help:
 	@echo 
-	@echo "Runtime Library:	$(OMPRT_LIB)"
-	@echo "OpenMP BC Libs:		$(OMPRT_LIB_BC)"
-	@echo "Device BC Libs:		$(LIBAMDGCN)/$(GFXNAME)/lib"
 	@echo "LLVM Tool Chain:		$(HCC2)/bin"
 	@echo "Offload Targets: 	$(TARGET)"
 	@echo "Host Targe:		$(HOST_TARGET)"
