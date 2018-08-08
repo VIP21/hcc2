@@ -12,24 +12,24 @@ Note: There is no committment to complete any or all items
 
 003  _X_ Fix problem with missing omp.h on nvidia smoke tests (0.5-1)
 
-004  ___ Run smoke tests in debug mode and get them working.
+004  ___ Run smoke tests in debug mode and get them working. Depends on 029
 
-005  ___ demo use of debugging runtime in at least one openmp example
+005  ___ demo use of debugging runtime in at least one openmp example (0.5-2 Andrey)
 
-006  ___ Explain hip automatic mode in at least one hip example
+006  ___ Explain hip automatic mode in at least one hip example (0.5-2 Greg)
 
-007  ___ Test cloc.sh examples
+007  ___ Test cloc.sh examples (0.5-2 Greg)
 
 008  ___ Fix driver to allow for multiple offload targets frmo 
          different archs.  Multiple offload targets already work 
          if on the same arch
 
 009  ___ Fix vprintfl to only use a single atomic. Requires changes
-         to the hsa plugin. 
+         to the hsa plugin.  Requires 029
 
 010  ___ Get a public version of the ATMI source code available (Ashwin)
          Note: ATMI libs and devicelibs are built into the release. 
-         This is only a problem for people building from source.
+         This is only a problem for people building from source. (0.5-2 Ashwin)
 
 011  ___ Merge hip, cuda2gcn, and some functions from libomptarget
          somewhere in libomptarget/deviceRTLs but not in amdgcn/src. 
@@ -38,13 +38,13 @@ Note: There is no committment to complete any or all items
          Make sure runtime gives a good message if no available runtime 
          for any of the available offload images.
 
-013  ___ Get stream example working
+013  ___ Get stream example working (Greg and Jan 0.5-2)
 
-014  ___ test proxy apps
+014  ___ test proxy apps (requires 013)
 
 015  ___ Test on carrizo and good HSA installed kaveris  
 
-016  ___ Test SpecAccel benchmark (Andrey)
+016  ___ Test SpecAccel benchmark (Andrey requires 013)
 
 017  ___ Review READMEs for all examples
 
@@ -52,26 +52,32 @@ Note: There is no committment to complete any or all items
          “PLEASE submit a bug report to http://llvm.org/bugs/” 
          Our messages should be
          “PLEASE open an issue in https://github.com/ROCm-Developer-Tools/hcc2”
+          (Greg 0.5-2)
 
 019 ___ Fix the __AMDGCN__ macro to have the gfx name that is being compiled.
+          (Greg 0.5-2) 
 
 020 ___  Get status of Chip's OpenMP Apps on AMDGPU and Nvidia 
 
-021 ___  Investigate root cause for Assert in /lib/Target/AMDGPU/SIInstrInfo.cpp:4176 (hpgmp-mp4, lulesh-mp4)
+024 _X_  Move to latest version of hip development repository, lots of warnings 
+         on current version (0.5-2)
 
-022 ___  Investigate root cause of HSA_STATUS_ERROR_INVALID_ALLOCATION for xsbench-mp4 
-
-023 ___  Investigate root cause of HSA_STATUS_ERROR_INVALID_ISA for snap-mp4 
-
-024 ___  Move to latest version of hip development repository, lots of warnings 
-         on current version
-
-025 _X_  Move to updated version of atmi dev repository HCC2.180727
-025.b ___  Move to latest version of atmi dev repository
-
-026 ___  Move to latest version of rocm-device-libs
+026 ___  Move to latest version of rocm-device-libs (Greg 0.5-2)
 
 027 ___  Fix build_hip.sh script to get version from the version file in this bin directory.
+         (Greg)
+
+028 ___ Update services to use asynchronous streams instead of end-of-kernel services. 
+
+029 ___ Improve performance of end-of-kernel services buffer management (Ashwin 0.5-2)
+
+029 ___ Fix driver for make -S and -c for amdgcn.  Works for nvidia cuda. 
+
+030 ___ Fix llc taking a long time. 
+ 
+031 ___ Replace __smid to some type of blockid (Ashwin 0.5-2)
+
+032 ___ Add current directory to include search path (Greg 0.5-2)
          
 
 Move this list to Git Issues when things slow down.
