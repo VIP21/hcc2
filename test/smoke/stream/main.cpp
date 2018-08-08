@@ -40,7 +40,7 @@
 
 // Default size of 2^25
 unsigned int ARRAY_SIZE = 33554432;
-unsigned int num_times = 100;
+unsigned int num_times = 10;
 unsigned int deviceIndex = 0;
 bool use_float = false;
 
