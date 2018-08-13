@@ -15,6 +15,7 @@ Examples:
 vectorAdd  - adds two vectors
 writeIndex - Write the thread index into an array element
 matrixmul  - simple implementation of matrix multiplication
+writeIndex_amode - Same as writeIndex but but uses automatic mode
 
 ### About this file
 
