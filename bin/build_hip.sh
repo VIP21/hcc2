@@ -150,20 +150,24 @@ fi
 cd $BUILD_DIR/build/hip
 echo
 echo " -----Running make for hip ---- "
-make -j $NUM_THREADS hip_hcc
+make -j $NUM_THREADS 
 if [ $? != 0 ] ; then
       echo " "
       echo "ERROR: make -j $NUM_THREADS  hip_hcc FAILED"
       echo "To restart:"
       echo "  cd $BUILD_DIR/build/hip"
-      echo "  make hip_hcc"
+      echo "  make "
       exit 1
 fi
 
 #  ----------- Install only if asked  ----------------------------
 if [ "$1" == "install" ] ; then
       cd $BUILD_DIR/build/hip
-      echo " -----Installing to $INSTALL_DIR/lib ----- "
-      $SUDO cp -p libhip_hcc.so $INSTALL_DIR/lib/.
-      $SUDO rsync -a $HIP_REPO_DIR/include/hip $INSTALL_DIR/lib/clang/8.0.0/include
+      echo
+      echo " -----Installing to $INSTALL_DIR ----- "
+      $SUDO make install
+      if [ $? != 0 ] ; then
+         echo "ERROR make install failed "
+         exit 1
+      fi
 fi
