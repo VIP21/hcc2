@@ -17,6 +17,9 @@ Note: There is no committment to complete any or all items
 005  ___ demo use of debugging runtime in at least one openmp example (0.5-2 Andrey)
 
 006  ___ Explain hip automatic mode in at least one hip example (0.5-2 Greg)
+006.b  ___ Fix HIP automatic mode with updated HIP repository. 
+006.c  ___ Explain hip automatic with cuda_open in examples/cuda-open (Jan)
+006.d  ___ Remove include in cuda-open examples (Jan 0.5-2)
 
 007  ___ Test cloc.sh examples (0.5-2 Greg)
 
@@ -29,7 +32,7 @@ Note: There is no committment to complete any or all items
 
 010  ___ Get a public version of the ATMI source code available (Ashwin)
          Note: ATMI libs and devicelibs are built into the release. 
-         This is only a problem for people building from source. (0.5-2 Ashwin)
+         This is only a problem for people building from source. (0.5-3 Ashwin)
 
 011  ___ Merge hip, cuda2gcn, and some functions from libomptarget
          somewhere in libomptarget/deviceRTLs but not in amdgcn/src. 
@@ -38,7 +41,8 @@ Note: There is no committment to complete any or all items
          Make sure runtime gives a good message if no available runtime 
          for any of the available offload images.
 
-013  ___ Get stream example working (Greg and Jan 0.5-2)
+013  _X_ Get stream example working (Greg and Jan 0.5-2)
+013.b  _X_ Remove vectorization warnings with SIMD. 
 
 014  ___ test proxy apps (requires 013)
 
@@ -48,36 +52,47 @@ Note: There is no committment to complete any or all items
 
 017  ___ Review READMEs for all examples
 
-018  ___ Check the bug report message in hcc2. llvm is 
+018  _X_ Check the bug report message in hcc2. llvm is 
          “PLEASE submit a bug report to http://llvm.org/bugs/” 
          Our messages should be
          “PLEASE open an issue in https://github.com/ROCm-Developer-Tools/hcc2”
           (Greg 0.5-2)
 
 019 ___ Fix the __AMDGCN__ macro to have the gfx name that is being compiled.
+019b ___ Turn on HIP macros with openmp for gfx processors
           (Greg 0.5-2) 
 
 020 ___  Get status of Chip's OpenMP Apps on AMDGPU and Nvidia 
 
 024 _X_  Move to latest version of hip development repository, lots of warnings 
          on current version (0.5-2)
+024b _X_ Install entire HIP repository
 
 026 ___  Move to latest version of rocm-device-libs (Greg 0.5-2)
 
 027 ___  Fix build_hip.sh script to get version from the version file in this bin directory.
+027b _X_  Fix build_hip.sh script to build and install ALL HIP components. 
          (Greg)
 
 028 ___ Update services to use asynchronous streams instead of end-of-kernel services. 
 
-029 ___ Improve performance of end-of-kernel services buffer management (Ashwin 0.5-2)
+029 _X_ Improve performance of end-of-kernel services buffer management (Ashwin 0.5-2)
 
 029 ___ Fix driver for make -S and -c for amdgcn.  Works for nvidia cuda. 
 
 030 ___ Fix llc taking a long time. 
  
-031 ___ Replace __smid to some type of blockid (Ashwin 0.5-2)
+031 ___ Replace __smid to some type of blockid (Ashwin 0.5-3)
 
-032 ___ Add current directory to include search path (Greg 0.5-2)
+032 ___ Add current directory to include search path
+        DEFER till problem returns.
+
+033 ___ Test eigen with hip clang , not with hipcc.
+
+034 ___ Use cherry picking process to build future dev releases (Greg)
+
+035 ___ Fix issue_002 (0.5-2) Greg
          
+0.5-2 Remaining TODOS 026, 007 , 035, 006.d, 019 .  
 
 Move this list to Git Issues when things slow down.
