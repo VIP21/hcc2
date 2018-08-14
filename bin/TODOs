@@ -19,7 +19,7 @@ Note: There is no committment to complete any or all items
 006  ___ Explain hip automatic mode in at least one hip example (0.5-2 Greg)
 006.b  ___ Fix HIP automatic mode with updated HIP repository. 
 006.c  ___ Explain hip automatic with cuda_open in examples/cuda-open (Jan)
-006.d  ___ Remove include in cuda-open examples (Jan 0.5-2)
+006.d  _X_ Remove include in cuda-open examples (Jan 0.5-2)
 
 007  ___ Test cloc.sh examples (0.5-2 Greg)
 
@@ -93,6 +93,6 @@ Note: There is no committment to complete any or all items
 
 035 ___ Fix issue_002 (0.5-2) Greg
          
-0.5-2 Remaining TODOS 026, 007 , 035, 006.d, 019 .  
+0.5-2 Remaining TODOS 026, 007 , 035, 019 .  
 
 Move this list to Git Issues when things slow down.
