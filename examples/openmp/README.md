@@ -13,6 +13,13 @@ make run
 ```
 There are many other make targets to show different ways to build the binary. Run ```make help``` to see all the possible demos as Makefile targets.
 
+E.g. to run with some debug output set OFFLOAD_DEBUG variable:
+
+```
+env OFFLOAD_DEBUG=1 make
+env OFFLOAD_DEBUG=1 make run
+```
+
 To compile and run the reduction example on Fiji card manually for x86_64 machine:
 
 ```
