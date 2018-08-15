@@ -28,7 +28,7 @@ endif
 ifeq ($(OFFLOAD_DEBUG),1)
   $(info    DEBUG Mode ON)
   DEBUG   = -debug
-  SET_DEVICE_DEBUG = DEVICE_DEBUG=1
+  SET_DEVICE_DEBUG = LIBOMPTARGET_DEBUG=1
 endif
 
 ifeq ($(VERBOSE),1)
