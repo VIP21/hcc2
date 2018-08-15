@@ -6,7 +6,8 @@ Note: There is no committment to complete any or all items
       on this list.
 
 001  _X_ Fix smoke tests vmulsum, and assertok_error (0.5-1)
-001.b  ___ Fix smoke tests reduce 
+001.b  ___ Fix smoke tests reduce , requires trunk updates
+           to support TARGET TEAMS DISTRIBUTE REDUCE
  
 002  _X_ Move to trunk branches for 180727  (0.5-1)
 
@@ -21,7 +22,7 @@ Note: There is no committment to complete any or all items
 006.c  ___ Explain hip automatic with cuda_open in examples/cuda-open (Jan)
 006.d  _X_ Remove include in cuda-open examples (Jan 0.5-2)
 
-007  ___ Test cloc.sh examples (0.5-2 Greg)
+007  ___ Test cloc.sh examples (0.5-3 Greg)
 
 008  ___ Fix driver to allow for multiple offload targets frmo 
          different archs.  Multiple offload targets already work 
@@ -40,6 +41,8 @@ Note: There is no committment to complete any or all items
 012  ___ Check install and applcation build on systems WITHOUT cuda or rocm. 
          Make sure runtime gives a good message if no available runtime 
          for any of the available offload images.
+012.b ___ Need to get hip build and install not to depend on HCC compiler.
+         Greg Emailed Sam about this. 
 
 013  _X_ Get stream example working (Greg and Jan 0.5-2)
 013.b  _X_ Remove vectorization warnings with SIMD. 
@@ -56,10 +59,11 @@ Note: There is no committment to complete any or all items
          “PLEASE submit a bug report to http://llvm.org/bugs/” 
          Our messages should be
          “PLEASE open an issue in https://github.com/ROCm-Developer-Tools/hcc2”
+         The URL is set in a cmake option. See update to build_hcc2.sh
           (Greg 0.5-2)
 
-019 ___ Fix the __AMDGCN__ macro to have the gfx name that is being compiled.
-019b ___ Turn on HIP macros with openmp for gfx processors
+019 _X_ Fix the __AMDGCN__ macro to have the gfx name that is being compiled.
+019b _X_ Turn on HIP macros with openmp for gfx processors
           (Greg 0.5-2) 
 
 020 ___  Get status of Chip's OpenMP Apps on AMDGPU and Nvidia 
@@ -68,9 +72,9 @@ Note: There is no committment to complete any or all items
          on current version (0.5-2)
 024b _X_ Install entire HIP repository
 
-026 ___  Move to latest version of rocm-device-libs (Greg 0.5-2)
+026 ___  Move to latest version of rocm-device-libs (Greg 0.5-3)
 
-027 ___  Fix build_hip.sh script to get version from the version file in this bin directory.
+027 _X_  Fix build_hip.sh script to get version from the version file in this bin directory.
 027b _X_  Fix build_hip.sh script to build and install ALL HIP components. 
          (Greg)
 
@@ -92,7 +96,14 @@ Note: There is no committment to complete any or all items
 034 ___ Use cherry picking process to build future dev releases (Greg)
 
 035 ___ Fix issue_002 (0.5-2) Greg
-         
-0.5-2 Remaining TODOS 026, 007 , 035, 019 .  
 
-Move this list to Git Issues when things slow down.
+036 ___ Fix issue_apps_001, find missing functions for lulesh in smoke test issue  .
+        Current fail is on last link step. 
+        (Andrey 0.5-3)
+
+037 ___ Check the output of smoketest pfspecifier.  Are values correct?
+        (Andrey 0.5-3)
+         
+Remaining TODOS for 0.5-2: 035  
+
+100 ___ Move this list to Git Issues when things slow down.
