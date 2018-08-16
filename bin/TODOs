@@ -68,8 +68,7 @@ Note: There is no committment to complete any or all items
 
 020 ___  Get status of Chip's OpenMP Apps on AMDGPU and Nvidia 
 
-024 _X_  Move to latest version of hip development repository, lots of warnings 
-         on current version (0.5-2)
+024 _X_  Move to latest version of hip development repository (0.5-2)
 024b _X_ Install entire HIP repository
 
 026 ___  Move to latest version of rocm-device-libs (Greg 0.5-3)
@@ -95,7 +94,12 @@ Note: There is no committment to complete any or all items
 
 034 ___ Use cherry picking process to build future dev releases (Greg)
 
-035 ___ Fix issue_002 (0.5-2) Greg
+035 _X_ Fix issue_002 (0.5-2) the -g flag turns on dwarf debugging. 
+        For openmp this requires the generation of a debug wrapper.  
+        The address space management for pointers in this wrapper 
+        is failing on both nvptx and amdgcn.  So for now we turn off
+        dwarf debugging for both nvptx and amdgcn.  The -g option 
+        will still generate dwarf debug information for the host. 
 
 036 ___ Fix issue_apps_001, find missing functions for lulesh in smoke test issue  .
         Current fail is on last link step. 
@@ -104,6 +108,6 @@ Note: There is no committment to complete any or all items
 037 ___ Check the output of smoketest pfspecifier.  Are values correct?
         (Andrey 0.5-3)
          
-Remaining TODOS for 0.5-2: 035  
+Remaining TODOS for 0.5-2:  NONE!   We are now in a freeze to build 0.5-2 packages. 
 
 100 ___ Move this list to Git Issues when things slow down.
