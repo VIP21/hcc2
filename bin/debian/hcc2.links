@@ -1,6 +1,6 @@
-opt/rocm/hcc2_0.5-1 opt/rocm/hcc2
-opt/rocm/hcc2_0.5-1/bin/bundle.sh  /usr/bin/bundle.sh
-opt/rocm/hcc2_0.5-1/bin/unbundle.sh  /usr/bin/unbundle.sh
-opt/rocm/hcc2_0.5-1/bin/cloc.sh /usr/bin/cloc.sh
-opt/rocm/hcc2_0.5-1/bin/mymcpu  /usr/bin/mymcpu
-opt/rocm/hcc2_0.5-1/bin/mygpu  /usr/bin/mygpu
+opt/rocm/hcc2_0.5-2 opt/rocm/hcc2
+opt/rocm/hcc2_0.5-2/bin/bundle.sh  /usr/bin/bundle.sh
+opt/rocm/hcc2_0.5-2/bin/unbundle.sh  /usr/bin/unbundle.sh
+opt/rocm/hcc2_0.5-2/bin/cloc.sh /usr/bin/cloc.sh
+opt/rocm/hcc2_0.5-2/bin/mymcpu  /usr/bin/mymcpu
+opt/rocm/hcc2_0.5-2/bin/mygpu  /usr/bin/mygpu

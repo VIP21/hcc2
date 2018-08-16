@@ -1,4 +1,4 @@
-hcc2 (0.5-1) UNRELEASED; urgency=medium
+hcc2 (0.5-2) UNRELEASED; urgency=medium
 
   * Initial release of hcc2 is 0.3-2
   *   Please see example in /opt/rocm/hcc2/examples/vmuldemo 
@@ -43,5 +43,12 @@ hcc2 (0.5-1) UNRELEASED; urgency=medium
   *   Cleanup the atmi-staging repo
   *   Fix smoke tests vmulsum and assertok_error caused by missing smid function for amdgcn
   *   Fixed the cuda toolchain to pickup includes from the compiler install first. 
+  * 0.5-2 
+  *   Fix all smoke tests except reduce and issue_apps_001
+  *   The __AMDGCN__ compiler macro now provides the gfx number
+  *   The bug message now points to the correct URL to report bugs. 
+  *   Started an initial list of limitations
+  *   Includes llvm/clang/openmp/lld trunk updates up to Aug 8, 2018. 
+  *      We are now at llvm/clang 8.0.0 
 
- -- Greg Rodgers <Gregory.Rodgers@amd.com>  Fri, 03 Aug 2018 07:16:22 -0500
+ -- Greg Rodgers <Gregory.Rodgers@amd.com>  Thu, 16 Aug 2018 14:27:26 -0500
