@@ -1,4 +1,4 @@
-HCC2 - V 0.5-1
+HCC2 - V 0.5-2
 ==============
 
 hcc2:  Heterogeneous Compiler Collection (Version 2). 
@@ -69,21 +69,21 @@ Software License Agreement.
 On Ubuntu 16.04 LTS (xenial), run these commands:
 
 ```
-wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-1/hcc2_0.5-1_amd64.deb
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-2/hcc2_0.5-2_amd64.deb
 sudo dpkg -P hcc2
 sudo dpkg -P libamdgcn
 sudo dpkg -P amdcloc
 sudo dpkg -P mymcpu
-sudo dpkg -i hcc2_0.5-1_amd64.deb
+sudo dpkg -i hcc2_0.5-2_amd64.deb
 ```
 The "dpkg -P" commands are used to delete previous versions of hcc2, libamdgcn, amdcloc, and mymcpu which may conflict with the installation.  If these are not installed it is ok to just let the "dpkg -P" commands fail.
 
 HCC2 does not conflict with the production HCC. There is no reason to delete HCC to use HCC2. The HCC2 bin directory (which includes the standard clang and llvm binaries) is not intended to be in your PATH for typical operation.
 
-The rpms for release 0.5-1 are not available yet. When it is available, run these commands.
+The rpms for release 0.5-2 are not available yet. When it is available, run these commands.
 ```
-wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-1/hcc2-0.5-1.x86_64.rpm
-sudo rpm -i hcc2-0.5-1.x86_64.rpm
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-2/hcc2-0.5-2.x86_64.rpm
+sudo rpm -i hcc2-0.5-2.x86_64.rpm
 ```
 
 Build and install from sources is possible, though due to many different repos involved it is a complex build. For details on the source build see [README](bin/README).
@@ -91,4 +91,13 @@ Build and install from sources is possible, though due to many different repos i
 ## HCC2 Limitations
 
 <A NAME="Limitations">
-There are too many to mention at this time.  Hey, this is a prototype. For example multiple target regions with teams distribute does not work.  This is one focus for 0.5-1. 
+There are too many to mention at this time.  Hey, this is a prototype.  Here are some limitations. 
+
+```
+ - target teams distribute reduce does not work
+ - Dwarf debugging is turned off for GPUs. -g will turn on host level debugging only.
+ - Some simd constructs fail to vectorize on both host and GPUs.  
+ - There are debug versions of the runtime libraries.  However, these use printf on the device
+   which currently print when the kernel terminates.  Not a great debug feature if the GPU 
+   kernel crashes. 
+```
