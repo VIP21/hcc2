@@ -15,7 +15,7 @@ Note: There is no committment to complete any or all items
 
 004  ___ Run smoke tests in debug mode and get them working. Depends on 029
 
-005  ___ demo use of debugging runtime in at least one openmp example (0.5-2 Andrey)
+005  _X_ demo use of debugging runtime in at least one openmp example (0.5-2 Andrey)
 
 006  ___ Explain hip automatic mode in at least one hip example (0.5-2 Greg)
 006.b  ___ Fix HIP automatic mode with updated HIP repository. 
