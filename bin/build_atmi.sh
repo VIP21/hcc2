@@ -6,7 +6,7 @@
 # your environment variables
 HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
-ATMI_REPO_NAME=${ATMI_REPO_NAME:-atmi-staging}
+ATMI_REPO_NAME=${ATMI_REPO_NAME:-atmi}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 
 SUDO=${SUDO:-set}
@@ -51,7 +51,7 @@ export HCC2_VERSION_STRING
 INSTALL_DIR=${INSTALL_ATMI:-"${HCC2}_${HCC2_VERSION_STRING}"}
 
 # FIXME : pickup atmi from fixed dev branch
-REPO_BRANCH=${REPO_BRANCH:-HCC2-180727}
+REPO_BRANCH=${REPO_BRANCH:-atmi-0.5}
 #  Check the repositories exist and are on the correct branch
 function checkrepo(){
    cd $REPO_DIR
