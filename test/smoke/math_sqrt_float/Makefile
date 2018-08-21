@@ -8,7 +8,7 @@ TESTSRC_ALL     = $(TESTSRC_MAIN) $(TESTSRC_AUX)
 CLANG           = clang
 OMP_BIN         = $(HCC2)/bin/$(CLANG)
 CC              = $(OMP_BIN) $(VERBOSE)
-EXTRA_CFLAGS    =
+EXTRA_CFLAGS    = -lm
 EXTRA_OMP_FLAGS =
 
 include ../Makefile.rules
