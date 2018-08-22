@@ -9,7 +9,7 @@ HCC2=${HCC2:-/opt/rocm/hcc2}
 HCC2_REPOS=${HCC2_REPOS:-/home/$USER/git/hcc2}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
 OPENMP_REPO_NAME=${OPENMP_REPO_NAME:-openmp}
-REPO_BRANCH=${REPO_BRANCH:-HCC2-180805}
+REPO_BRANCH=${REPO_BRANCH:-HCC2-180821}
 
 # We can now provide a list of sm architectures, but they must support long long maxAtomic 
 NVPTXGPUS=${NVPTXGPUS:-30,35,50,60}

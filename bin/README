@@ -32,18 +32,18 @@ build_libdevice.sh -  Builds the amd bc libraries from rocm-device-libs needed b
 
 HCC2_VERSION_STRING - File to set the version of HCC2 to clone and build . 
 
-The repositories and branches needed by HCC2_0.5-2 are: 
+The repositories and branches needed by HCC2_0.5-3 are: 
 
 DIRECTORY NAME *                  HCC2 REPOSITORY **       BRANCH
 -------------------------------   ---------------------    ------
 $HOME/git/hcc2/hcc2               %rocdev/hcc2             master ***
-$HOME/git/hcc2/clang              %rocdev/clang            HCC2-180805 ***
-$HOME/git/hcc2/llvm               %rocdev/llvm             HCC2-180805
-$HOME/git/hcc2/lld                %rocdev/lld              HCC2-180805
-$HOME/git/hcc2/openmp             %rocdev/openmp           HCC2-180805 ***
-$HOME/git/hcc2/hip                %rocdev/hip              HCC2-180805
+$HOME/git/hcc2/clang              %rocdev/clang            HCC2-180821 ***
+$HOME/git/hcc2/llvm               %rocdev/llvm             HCC2-180821
+$HOME/git/hcc2/lld                %rocdev/lld              HCC2-180821
+$HOME/git/hcc2/openmp             %rocdev/openmp           HCC2-180821 ***
+$HOME/git/hcc2/hip                %rocdev/hip              HCC2.180805
 $HOME/git/hcc2/rocm-device-libs   %roc/rocm-device-libs    HCC2-180619
-$HOME/git/hcc2/atmi-staging       %roc/atmi-staging        HCC2-180727
+$HOME/git/hcc2/atmi               %roc/atmi                atmi-0.5
 
    * Clone your repositories here or override with environment variables.
   ** Replace %roc with "https://github.com/RadeonOpenCompute"
