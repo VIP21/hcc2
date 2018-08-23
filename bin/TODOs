@@ -3,7 +3,7 @@ These are the TODOs for hcc2 future versions.
 Please mark an item with an X when they are done.
 
 Note: There is no committment to complete any or all items
-      on this list.
+      on this list.  But you can see we are making progress.
 
 001  _X_ Fix smoke tests vmulsum, and assertok_error (0.5-1)
 001.b  ___ Fix smoke tests reduce , requires trunk updates
@@ -22,7 +22,10 @@ Note: There is no committment to complete any or all items
 006.c  ___ Explain hip automatic with cuda_open in examples/cuda-open (Jan)
 006.d  _X_ Remove include in cuda-open examples (Jan 0.5-2)
 
-007  ___ Test cloc.sh examples (0.5-3 Greg)
+007  ___ Test cloc.sh examples and updates version number and help.  (0.5-3 Greg) 
+007.b  ___ Add 'build_utils.sh install' after "build_atmi.sh install" to get
+           hcc2 version of cloc.sh scripts.  (0.5-3)
+007.c ___ Can we get a cmake option for atmi to not install scripts? (Ashwin)
 
 008  ___ Fix driver to allow for multiple offload targets frmo 
          different archs.  Multiple offload targets already work 
@@ -31,7 +34,7 @@ Note: There is no committment to complete any or all items
 009  ___ Fix vprintfl to only use a single atomic. Requires changes
          to the hsa plugin.  Requires 029
 
-010  ___ Get a public version of the ATMI source code available (Ashwin)
+010  _X_ Get a public version of the ATMI source code available (Ashwin)
          Note: ATMI libs and devicelibs are built into the release. 
          This is only a problem for people building from source. (0.5-3 Ashwin)
 
@@ -42,18 +45,21 @@ Note: There is no committment to complete any or all items
          Make sure runtime gives a good message if no available runtime 
          for any of the available offload images.
 012.b ___ Need to get hip build and install not to depend on HCC compiler.
-         Greg Emailed Sam about this. 
+         Greg Emailed Sam about this. We may remove hipcc from install.
+         (Greg 0.5-3)
 
 013  _X_ Get stream example working (Greg and Jan 0.5-2)
 013.b  _X_ Remove vectorization warnings with SIMD. 
+           For now we remove simd in pragma because
+           host vectorization is not working
 
-014  ___ test proxy apps (requires 013)
+014  _X_ test proxy apps (requires 013) (Andrey 0.5-3) see item 020.
 
 015  ___ Test on carrizo and good HSA installed kaveris  
 
 016  ___ Test SpecAccel benchmark (Andrey requires 013)
 
-017  ___ Review READMEs for all examples
+017  ___ Review READMEs for all examples. Requires 040.
 
 018  _X_ Check the bug report message in hcc2. llvm is 
          “PLEASE submit a bug report to http://llvm.org/bugs/” 
@@ -66,16 +72,19 @@ Note: There is no committment to complete any or all items
 019b _X_ Turn on HIP macros with openmp for gfx processors
           (Greg 0.5-2) 
 
-020 ___  Get status of Chip's OpenMP Apps on AMDGPU and Nvidia 
+020 _X_  Get status of Chip's OpenMP Apps on AMDGPU and Nvidia (Andrey)
+020.b ___ Get all proxy apps working on amdgcn including update of Makefiles.
+         This requires crticial item 039. (Greg 0.5-3)
 
 024 _X_  Move to latest version of hip development repository (0.5-2)
-024b _X_ Install entire HIP repository
+024.b _X_ Install entire HIP repository
 
 026 ___  Move to latest version of rocm-device-libs (Greg 0.5-3)
 
 027 _X_  Fix build_hip.sh script to get version from the version file in this bin directory.
-027b _X_  Fix build_hip.sh script to build and install ALL HIP components. 
+027.b _X_  Fix build_hip.sh script to build and install ALL HIP components. 
          (Greg)
+027.c ___  Since hipcc requires HCC, we may want to remove this from install (? 0.5.3)
 
 028 ___ Update services to use asynchronous streams instead of end-of-kernel services. 
 
@@ -92,7 +101,9 @@ Note: There is no committment to complete any or all items
 
 033 ___ Test eigen with hip clang , not with hipcc.
 
-034 ___ Use cherry picking process to build future dev releases (Greg)
+034 _X_ Use cherry picking process to build future dev releases (0.5-3 Greg)
+034.b _X_ Create branches HCC2.180821 with development updates 
+          on HCC2.180805.  (0.5-3 Greg)
 
 035 _X_ Fix issue_002 (0.5-2) the -g flag turns on dwarf debugging. 
         For openmp this requires the generation of a debug wrapper.  
@@ -101,13 +112,60 @@ Note: There is no committment to complete any or all items
         dwarf debugging for both nvptx and amdgcn.  The -g option 
         will still generate dwarf debug information for the host. 
 
-036 ___ Fix issue_apps_001, find missing functions for lulesh in smoke test issue  .
-        Current fail is on last link step. 
+036 _x_ Fix issue_apps_001, find missing functions for lulesh in smoke test issue  .
+        Current fail is on last link step. Lets change this to compile only smoke test
         (Andrey 0.5-3)
 
 037 ___ Check the output of smoketest pfspecifier.  Are values correct?
+037.b ___ Add new smoke test for "char* hello="Hello %s\n"; printf(hello,"World");
         (Andrey 0.5-3)
+037.c _X_ Add floating point smoke test that really uses -lm (Andrey 0.5-3)
+          This is math_sqrt_float.  Getting this working requires 039.
+
+038 ___ Have everyone test mygpu and mymcpu test on all amd and nvidia cards
+        and ensure all the tables are up to date.  Should we change 
+        terminolgy for mygpu from gpu to offload-arch?  Maybe improve the help 
+        text for these scripts.  (all 0.5-3)
+
+039 ___ CRITICAL: Fix the OpenMP driver so linker flags (-lm -letc) are not treated  
+        as input files. This is a problem in Driver.cpp ActionBuilder (greg 0.5-3) 
+039.b ___ Remove hard coded -lm from Gnu.cpp. (Greg 0.5-3)
+
+040 ___ Change the examples makefiles for openmp to use environment variable HCC2_GPU.
+        in the same way we updated the proxy makefiles.  This is the common stanza
+        we would like people to use in their makefiles.  Lets clearly document this in 
+        the hcc2/examples/openmp/README.md.  We need a slightly different stanza
+        for c++.  That is, change CFLAGS and CC to CXXFLAGS and CXX.  (Andrey 0.5-3)
+----------
+  HCC2 ?= /opt/rocm/hcc2
+  HCC2_GPU ?= gfx803
+  HCC2_GPUTARGET = amdgcn-amd-amdhsa
+  ifeq (sm_,$(findstring sm_,$(HCC2_GPU)))
+    HCC2_GPUTARGET = nvptx64-nvidia-cuda
+  endif
+  HCC2_CPUTARGET ?= x86_64-pc-linux-gnu
+  CFLAGS = -O3 -target $(HCC2_CPUTARGET) -fopenmp -fopenmp-targets=$(HCC2_GPUTARGET) -Xopenmp-target=$(HCC2_GPUTARGET) -march=$(HCC2_GPU) 
+  CC = $(HCC2)/bin/clang
+  LDFLAGS = -fopenmp -fopenmp-targets=$(HCC2_GPUTARGET) -target $(HCC2_CPUTARGET)
+  ifeq (nvptx,$(findstring nvptx,$(HCC2_GPUTARGET)))
+    CUDA ?= /usr/local/cuda
+    LDFLAGS += -L$(CUDA)/lib64 -lcuda -lcudart -lelf -lffi
+  endif
+----------
+
+041 ___ Fix warning on build_openmp.sh that only occurs on debug build (Jan 0.5-3)
+
+042 ___ As a result of 034, we need to carefully compare any new logic introduced 
+        in the trunk from last release to current trunk in 
+        openmp/libomptarget/deviceRLTS/nvptx   ?? Does this warrent any changes to 
+        openmp/libomptarget/deviceRLTS/amdgcn.  (Greg 0.5-3)
+042.b ___ Likewise we need to review any new logic in 
+        openmp/libomptarget/plugins/cuda      ?? Does this warrent any changes to 
+        openmp/libomptarget/plugins/hsa  (Ashwin 0.5-3)
+
          
-Remaining TODOS for 0.5-2:  NONE!   We are now in a freeze to build 0.5-2 packages. 
+Completed TODOS for 0.5-3: 010, 014, 020, 034, 036
+Remaining TODOS for 0.5-3: 007, 020.b, 026, 027.c, 031, 053, 014, 031, 037, 038, 039, 040, 041, 042
+Goal is to get 0.5-3 out by end of August. 
 
 100 ___ Move this list to Git Issues when things slow down.
