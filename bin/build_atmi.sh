@@ -133,7 +133,7 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
    BUILDTYPE="Release"
    echo rm -rf $BUILD_HCC2/build/atmi
    rm -rf $BUILD_HCC2/build/atmi
-   MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DATMI_HSA_INTEROP=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
+   MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DATMI_HSA_INTEROP=on -DATMI_WITH_HCC2=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
    mkdir -p $BUILD_HCC2/build/atmi
    cd $BUILD_HCC2/build/atmi
    echo " -----Running atmi cmake ---- " 
@@ -148,7 +148,7 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
    BUILDTYPE="Debug"
    echo rm -rf $BUILD_HCC2/build/atmi_debug
    rm -rf $BUILD_HCC2/build/atmi_debug
-   MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DATMI_HSA_INTEROP=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
+   MYCMAKEOPTS="-DLLVM_DIR=$HCC2 -DCMAKE_BUILD_TYPE=$BUILDTYPE -DATMI_HSA_INTEROP=on -DATMI_WITH_HCC2=on -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR "
 
    mkdir -p $BUILD_HCC2/build/atmi_debug
    cd $BUILD_HCC2/build/atmi_debug
