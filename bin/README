@@ -44,10 +44,12 @@ $HOME/git/hcc2/openmp             %rocdev/openmp           HCC2-180821 ***
 $HOME/git/hcc2/hip                %rocdev/hip              HCC2.180805
 $HOME/git/hcc2/rocm-device-libs   %roc/rocm-device-libs    HCC2-180619
 $HOME/git/hcc2/atmi               %roc/atmi                atmi-0.5
+$HOME/git/hcc2/openmpapps         %roclib/openmpapps       HCC2-0.5
 
    * Clone your repositories here or override with environment variables.
   ** Replace %roc with "https://github.com/RadeonOpenCompute"
   ** Replace %rocdev with "https://github.com/ROCm-Developer-Tools"
+  ** Replace %roclib with "https://github.com/AMDComputeLibraries"
  *** These are the primary development repositories for HCC2. They are updated often.
 
 The scripts and example makefiles use these environment variables and these 

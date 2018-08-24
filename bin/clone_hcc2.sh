@@ -6,6 +6,7 @@
 #
 GITROC="https://github.com/radeonopencompute"
 GITROCDEV="https://github.com/ROCm-Developer-Tools"
+GITROCLIB="https://github.com/AMDComputeLibraries"
 STASH_BEFORE_PULL=${STASH_BEFORE_PULL:-YES}
 
 # Set the directory location for all REPOS
@@ -109,5 +110,10 @@ clone_or_pull
 # This is the ATMI repo for ATMI 0.4 in development
 reponame="atmi"
 COBRANCH="atmi-0.5"
+clone_or_pull
+
+repo_web_location=$GITROCLIB
+reponame="openmpapps"
+COBRANCH="HCC2-0.5"
 clone_or_pull
 
