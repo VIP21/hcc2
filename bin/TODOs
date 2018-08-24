@@ -153,7 +153,7 @@ Note: There is no committment to complete any or all items
   endif
 ----------
 
-041 ___ Fix warning on build_openmp.sh that only occurs on debug build (Jan 0.5-3)
+041 _X_ Fix warning on build_openmp.sh that only occurs on debug build (Jan 0.5-3)
 
 042 ___ As a result of 034, we need to carefully compare any new logic introduced 
         in the trunk from last release to current trunk in 
@@ -164,8 +164,8 @@ Note: There is no committment to complete any or all items
         openmp/libomptarget/plugins/hsa  (Ashwin 0.5-3)
 
          
-Completed TODOS for 0.5-3: 010, 014, 020, 034, 036
-Remaining TODOS for 0.5-3: 007, 020.b, 026, 027.c, 031, 053, 014, 031, 037, 038, 039, 040, 041, 042
+Completed TODOS for 0.5-3: 010, 014, 020, 034, 036, 041
+Remaining TODOS for 0.5-3: 007, 020.b, 026, 027.c, 031, 053, 014, 031, 037, 038, 039, 040, 042
 Goal is to get 0.5-3 out by end of August. 
 
 100 ___ Move this list to Git Issues when things slow down.
