@@ -4,14 +4,17 @@ https://github.com/ROCm-Developer-Tools/hcc2/bin/README
 
 HCC2 = Heterogenous Compute Compiler Version 2
 
-This bin directory contains scripts to build HCC2
+This is the developer README for HCC2.
 
-clone_hcc2.sh      -  A script to make sure the necessary repos are cloned and  up to date.
+This bin directory contains scripts to build HCC2 from source.
+
+clone_hcc2.sh      -  A script to make sure the necessary repos are up to date.
                       See below for a list of these libraries.
 
-build_hcc2.sh      -  Build the HCC2 compiler. This compiler supports cuda clang, openmp, hip, and 
-                      the OpenCL frontend for cloc.sh to build device libraries.  It contains a 
-                      recent version of the AMD Lightning compiler and the ptx backend. 
+build_hcc2.sh      -  Build the HCC2 compiler. This compiler supports openmp,
+                      clang hip, clang cuda, and the OpenCL frontend for
+                      cloc.sh to build device libraries.  It contains a recent
+                      version of the AMD Lightning compiler and the ptx backend.
                       This compiler works for both Nvidia and AMD Radeon GPUs.
                       Please read the help text,  ./build_hcc2.sh -h
 
@@ -21,13 +24,14 @@ build_utils.sh     -  Builds the HCC2 utilities
 build_atmi.sh      -  Builds early release of ATMI for hcc2.
                       This installs in /opt/rocm/hcc2 (or $HCC2)
 
-build_hip.sh       -  Builds the hip bc libraries and host runtimes needed by hcc2.
+build_hip.sh       -  Builds the hip host runtimes needed by hcc2.
                       This also installs in /opt/rocm/hcc2 (or $HCC2)
 
 build_openmp.sh    -  Builds the OpenMP libraries for hcc2.
                       This also installs in /opt/rocm/hcc2 (or $HCC2)
 
-build_libdevice.sh -  Builds the amd bc libraries from rocm-device-libs needed by hcc2.
+build_libdevice.sh -  Builds the amd bc libraries from rocm-device-libs
+                      needed by hcc2.
                       This also installs in /opt/rocm/hcc2 (or $HCC2)
 
 HCC2_VERSION_STRING - File to set the version of HCC2 to clone and build . 
@@ -93,13 +97,28 @@ Or to build rel_0.5-1, run this command:
 
 	git checkout rel_0.5-1
 	
-To be sure you have the latest sources from the git repositories, run this command.
-The first time you do this, It could take a long time to clone all the repositories
-needed. Subsequent calls will pull the latest updats.
+To be sure you have the latest sources from the git repositories, run command.
 
         ./clone_hcc2.sh
 
-After you have all the source repositories, run these scripts in the following order:
+The first time you do this, It could take a long time to clone the repositories.
+Subsequent calls will pull the latest updates.
+
+To build hcc2, you MUST have the Nvidia CUDA SDK version 8 installed because
+HCC2 can build  applications for NVIDIA GPUs. We have not done testing for CUDA
+version 9.  The current default list of Nvidia subarchs is "30,35,50,60".
+For example, that will support application builds with --offload-arch=sm_30
+and --offload-arch=sm_60 etc.
+This can be changed with the NVPTXGPUS environment variable.
+
+You also MUST have ROCm 1.7 installed because HCC2 builds applications for
+Radeon GPUs.  The current default list of Radeon GPUS is
+"gfx700 gfx701 gfx801 gfx803 gfx900". For example, that will support
+application builds with --offload-arch=gfx803 etc.
+This can be changed with the GFXLIST environment variable.
+
+After you have all the source repositories and have both cuda and rocm are
+installed, run these scripts in the following order:
 
 	./build_hcc2.sh
 	./build_hcc2.sh install
@@ -124,8 +143,9 @@ case their is a build failure.  In case of a build failure, you can restart
 the build by running "make" or "make install" in the build directory. 
 
 Bootstrapping:
-The compiler created by build_hcc2.sh is needed by all of the components.
-So you must build and install hcc2 first before building any of the components.
+The LLVM compiler created by build_hcc2.sh is needed by all of the components.
+So you must run build_hcc2.sh and build_hcc2.sh install first before building
+any of the components.
 
 The utilities created by build_utils.sh are needed by the 4 library components
 build_atmi.sh, build_openmp.sh, build_libdevice.sh and build_hip.sh. 
