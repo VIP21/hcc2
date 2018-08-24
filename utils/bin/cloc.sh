@@ -8,7 +8,7 @@
 #
 #  Written by Greg Rodgers  Gregory.Rodgers@amd.com
 #
-PROGVERSION="0.5-0"
+PROGVERSION="X.Y-Z"
 #
 # Copyright (c) 2018 ADVANCED MICRO DEVICES, INC.  
 # 

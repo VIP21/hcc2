@@ -59,6 +59,7 @@ echo "opt/rocm/$dirname/bin/unbundle.sh  /usr/bin/unbundle.sh" >> $froot/debian/
 echo "opt/rocm/$dirname/bin/cloc.sh /usr/bin/cloc.sh" >> $froot/debian/$pkgname.links
 echo "opt/rocm/$dirname/bin/mymcpu  /usr/bin/mymcpu" >> $froot/debian/$pkgname.links
 echo "opt/rocm/$dirname/bin/mygpu  /usr/bin/mygpu" >> $froot/debian/$pkgname.links
+echo "opt/rocm/$dirname/bin/hcc2version /usr/bin/hcc2version" >> $froot/debian/$pkgname.links
 echo "opt/rocm/$dirname" > $froot/debian/$pkgname.install
 echo "usr/share/doc/$dirname" >> $froot/debian/$pkgname.install
 

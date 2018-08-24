@@ -15,6 +15,7 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   project(hcc2utils)
 endif()
+add_custom_target(hcc2utils ALL)
 
 find_package(LLVM QUIET CONFIG
   PATHS
@@ -67,7 +68,34 @@ mark_as_advanced(
   HCC2_LIBDIR
   HCC2_MAIN_INCDIR)
 
-add_custom_target(hcc2utils ALL)
+string(LENGTH ${LLVM_PACKAGE_VERSION} vlen)
+math(EXPR vstart "${vlen}-5")
+string(SUBSTRING ${LLVM_PACKAGE_VERSION} ${vstart} 5 version_str)
+
+#FIXME:  This could be a loop
+add_custom_command( OUTPUT cloc.sh
+   COMMAND /bin/cp -p ${CMAKE_CURRENT_SOURCE_DIR}/bin/cloc.sh ${CMAKE_CURRENT_BINARY_DIR}/cloc.sh
+   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/cloc.sh)
+# edit in place to preserve permissions
+add_custom_command( OUTPUT cloc.sh.phantom
+   COMMAND /bin/sed -i -e "s/X\\.Y\\-Z/${version_str}/" ${CMAKE_CURRENT_BINARY_DIR}/cloc.sh > cloc.sh.phantom
+   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/cloc.sh)
+
+add_custom_command( OUTPUT mymcpu
+   COMMAND /bin/cp -p ${CMAKE_CURRENT_SOURCE_DIR}/bin/mymcpu ${CMAKE_CURRENT_BINARY_DIR}/mymcpu
+   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/mymcpu)
+add_custom_command( OUTPUT mymcpu.phantom
+   COMMAND /bin/sed -i -e "s/X\\.Y\\-Z/${version_str}/" ${CMAKE_CURRENT_BINARY_DIR}/mymcpu > mymcpu.phantom
+   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/mymcpu)
+
+add_custom_command( OUTPUT hcc2version
+   COMMAND /bin/cp -p ${CMAKE_CURRENT_SOURCE_DIR}/bin/hcc2version ${CMAKE_CURRENT_BINARY_DIR}/hcc2version
+   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/hcc2version)
+add_custom_command( OUTPUT hcc2version.phantom
+   COMMAND /bin/sed -i -e "s/X\\.Y\\-Z/${version_str}/" ${CMAKE_CURRENT_BINARY_DIR}/hcc2version > hcc2version.phantom
+   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/hcc2version)
+
+add_custom_target(utils_scripts ALL DEPENDS cloc.sh.phantom mymcpu.phantom hcc2version.phantom)
 
 # We need prepare-builtins in the HCC2 distribution to build bc libs for components
 list(APPEND CMAKE_MODULE_PATH ${LLVM_CMAKE_DIR})
@@ -82,8 +110,9 @@ target_link_libraries(prepare-builtins ${llvm_libs})
 install(PROGRAMS 
    ${CMAKE_CURRENT_SOURCE_DIR}/bin/bundle.sh
    ${CMAKE_CURRENT_SOURCE_DIR}/bin/unbundle.sh
-   ${CMAKE_CURRENT_SOURCE_DIR}/bin/cloc.sh
-   ${CMAKE_CURRENT_SOURCE_DIR}/bin/mymcpu
+   ${CMAKE_CURRENT_BINARY_DIR}/cloc.sh
+   ${CMAKE_CURRENT_BINARY_DIR}/mymcpu
+   ${CMAKE_CURRENT_BINARY_DIR}/hcc2version
    ${CMAKE_CURRENT_SOURCE_DIR}/bin/mygpu
    ${CMAKE_CURRENT_SOURCE_DIR}/bin/make_header_from_ll_defines.sh
    ${CMAKE_CURRENT_BINARY_DIR}/prepare-builtins
