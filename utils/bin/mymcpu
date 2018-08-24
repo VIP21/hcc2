@@ -114,6 +114,12 @@ function code2gpu(){
       ;;
       "gtx980")   gpuname="sm_35"
       ;;
+# FIXME: Andrey, Remove this comment
+# after you check that I have the sm numbers correct
+      "gtx1080")   gpuname="sm_62"
+      ;;
+      "gt730")   gpuname="sm_60"
+      ;;
       "")  gpuname="sm_35"
       ;;
       *) gpuname="unknown" 
@@ -153,6 +159,12 @@ function nvid2code(){
       "10de:11b4") codename="k4200"
       ;;
       "10de:13c0") codename="gtx980"
+      ;;
+# FIXME: Andrey remove this comment 
+#        after checking that these codenames are correct
+      "10de:1b80") codename="gtx1080"
+      ;;
+      "10de:1287") codename="gt730"
       ;;
       *) codename="$1" 
       ;;
