@@ -14,6 +14,7 @@ TESTS_DIR = \
     issue_001 \
     issue_002 \
     issue_apps_001 \
+    math_sqrt_float \
     nativetests \
     nested_loop \
     pfspecifier \
