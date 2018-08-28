@@ -8,6 +8,6 @@ TESTSRC_ALL  = $(TESTSRC_MAIN) $(TESTSRC_AUX)
 CLANG        = clang
 OMP_BIN      = $(HCC2)/bin/$(CLANG)
 CC           = $(OMP_BIN) $(VERBOSE)
-EXTRA_CFLAGS = -DUSE_MPI=0
+EXTRA_CFLAGS = -DUSE_MPI=0 -lm
 
 include ../Makefile.rules
