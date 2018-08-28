@@ -23,9 +23,9 @@ Note: There is no committment to complete any or all items
 006.d  _X_ Remove include in cuda-open examples (Jan 0.5-2)
 
 007  ___ Test cloc.sh examples and updates version number and help.  (0.5-3 Greg) 
-007.b  ___ Add 'build_utils.sh install' after "build_atmi.sh install" to get
+007.b  _X_ Add 'build_utils.sh install' after "build_atmi.sh install" to get
            hcc2 version of cloc.sh scripts.  (0.5-3)
-007.c ___ Can we get a cmake option for atmi to not install scripts? (Ashwin)
+007.c _X_ Can we get a cmake option for atmi to not install scripts? (Ashwin)
 
 008  ___ Fix driver to allow for multiple offload targets frmo 
          different archs.  Multiple offload targets already work 
@@ -46,7 +46,8 @@ Note: There is no committment to complete any or all items
          for any of the available offload images.
 012.b ___ Need to get hip build and install not to depend on HCC compiler.
          Greg Emailed Sam about this. We may remove hipcc from install.
-         (Greg 0.5-3)
+         (Greg 0.5-4) Deferred to 0.5-4. Just state in release notes
+         not to use hipcc.
 
 013  _X_ Get stream example working (Greg and Jan 0.5-2)
 013.b  _X_ Remove vectorization warnings with SIMD. 
@@ -57,7 +58,7 @@ Note: There is no committment to complete any or all items
 
 015  ___ Test on carrizo and good HSA installed kaveris  
 
-016  ___ Test SpecAccel benchmark (Andrey requires 013)
+016  ___ Test SpecAccel benchmark (Andrey requires 013) (Andrey 0.5-4)
 
 017  ___ Review READMEs for all examples. Requires 040.
 
@@ -75,11 +76,12 @@ Note: There is no committment to complete any or all items
 020 _X_  Get status of Chip's OpenMP Apps on AMDGPU and Nvidia (Andrey)
 020.b ___ Get all proxy apps working on amdgcn including update of Makefiles.
          This requires crticial item 039. (Greg 0.5-3)
+         Still need to fix snap execution.
 
 024 _X_  Move to latest version of hip development repository (0.5-2)
 024.b _X_ Install entire HIP repository
 
-026 ___  Move to latest version of rocm-device-libs (Greg 0.5-3)
+026 ___  Move to latest version of rocm-device-libs (Greg 0.5-4) deferred to 0.5-4
 
 027 _X_  Fix build_hip.sh script to get version from the version file in this bin directory.
 027.b _X_  Fix build_hip.sh script to build and install ALL HIP components. 
@@ -94,7 +96,10 @@ Note: There is no committment to complete any or all items
 
 030 ___ Fix llc taking a long time. 
  
-031 ___ Replace __smid to some type of blockid (Ashwin 0.5-3)
+031 ___ Replace __smid to some type of blockid (Ashwin 0.5-X) defer to 0.5-X
+        Ashwin talking with Brian about this. We need to understand the
+        impact of work group migration to smid AND to openmp runtime getting
+        a different smid.
 
 032 ___ Add current directory to include search path
         DEFER till problem returns.
@@ -112,30 +117,33 @@ Note: There is no committment to complete any or all items
         dwarf debugging for both nvptx and amdgcn.  The -g option 
         will still generate dwarf debug information for the host. 
 
-036 _x_ Fix issue_apps_001, find missing functions for lulesh in smoke test issue  .
-        Current fail is on last link step. Lets change this to compile only smoke test
-        (Andrey 0.5-3)
+036 _x_ Fix issue_apps_001, find missing functions for lulesh in smoke test issue.
+        Current fail is on last link step.(Andrey 0.5-3)
+036.b ___ Remove issue_apps_001 from general smoke makefile. (Andrey 0.5-3)
 
-037 ___ Check the output of smoketest pfspecifier.  Are values correct?
+
+037 _X_ Check the output of smoketest pfspecifier.  Are values correct?
 037.b ___ Add new smoke test for "char* hello="Hello %s\n"; printf(hello,"World");
         (Andrey 0.5-3)
 037.c _X_ Add floating point smoke test that really uses -lm (Andrey 0.5-3)
           This is math_sqrt_float.  Getting this working requires 039.
 
-038 ___ Have everyone test mygpu and mymcpu test on all amd and nvidia cards
+038 _X_ Have everyone test mygpu and mymcpu test on all amd and nvidia cards
         and ensure all the tables are up to date.  Should we change 
         terminolgy for mygpu from gpu to offload-arch?  Maybe improve the help 
         text for these scripts.  (all 0.5-3)
 
-039 ___ CRITICAL: Fix the OpenMP driver so linker flags (-lm -letc) are not treated  
+039 _X_ CRITICAL: Fix the OpenMP driver so linker flags (-lm -letc) are not treated
         as input files. This is a problem in Driver.cpp ActionBuilder (greg 0.5-3) 
-039.b ___ Remove hard coded -lm from Gnu.cpp. (Greg 0.5-3)
+039.b _X_ Remove hard coded -lm from Gnu.cpp. (Greg 0.5-3)
 
 040 ___ Change the examples makefiles for openmp to use environment variable HCC2_GPU.
         in the same way we updated the proxy makefiles.  This is the common stanza
         we would like people to use in their makefiles.  Lets clearly document this in 
         the hcc2/examples/openmp/README.md.  We need a slightly different stanza
         for c++.  That is, change CFLAGS and CC to CXXFLAGS and CXX.  (Andrey 0.5-3)
+040.b ___ Add debug to other proxy apps.  (Andrey 0.5-3)
+
 ----------
   HCC2 ?= /opt/rocm/hcc2
   HCC2_GPU ?= gfx803
@@ -159,13 +167,32 @@ Note: There is no committment to complete any or all items
         in the trunk from last release to current trunk in 
         openmp/libomptarget/deviceRLTS/nvptx   ?? Does this warrent any changes to 
         openmp/libomptarget/deviceRLTS/amdgcn.  (Greg 0.5-3)
+
 042.b ___ Likewise we need to review any new logic in 
         openmp/libomptarget/plugins/cuda      ?? Does this warrent any changes to 
         openmp/libomptarget/plugins/hsa  (Ashwin 0.5-3)
 
+043 ___  Fix the bundle and unbundle scripts to properly handle .o files that have
+         a combination of device bc and host .o (ELF).
+
+044 ___ fix writeIndex_amode Makefile or source
+
          
-Completed TODOS for 0.5-3: 010, 014, 020, 034, 036, 041
-Remaining TODOS for 0.5-3: 007, 020.b, 026, 027.c, 031, 053, 014, 031, 037, 038, 039, 040, 042
+Completed TODOS for 0.5-3: 010, 014, 020, 034, 036, 041, 007.b, 007.c, 027, 027.b,
+                           037, 037.c, 038, 039, 039.b
+
+Remaining TODOS for 0.5-3: 007, 020.b, 036.b, 037.b, 040, 040.b, 042, 042.b
+  007    Test cloc.sh , Greg
+  020.b  Get snap execution running, Greg
+  036.b  Remove issue_apps_001 from makefile, Andrey
+  037.b  Add new smoke test, Andrey
+  040    Update openmp examples README.md, Andrey
+  040.b  Add debug to other proxy apps, Andrey
+  042    Review nvptx deviceRTLs logic, Greg
+  042.b  Review cuda plugin logic , Greg
+
+Deferred to 0.5-4: 026, 031, 012.b
+
 Goal is to get 0.5-3 out by end of August. 
 
 100 ___ Move this list to Git Issues when things slow down.
