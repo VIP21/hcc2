@@ -5,7 +5,7 @@
 #
 # Written by Greg Rodgers Gregory.Rodgers@amd.com
 
-PROGVERSION=X.Y-Z
+PROGVERSION=0.5-3
 
 # Copyright (c) 2016 ADVANCED MICRO DEVICES, INC.  
 # 
@@ -114,6 +114,8 @@ function code2gpu(){
       ;;
       "gtx980")   gpuname="sm_35"
       ;;
+      "gtx1060")   gpuname="sm_61"
+      ;;
       "gtx1080")   gpuname="sm_61"
       ;;
       "gt730")   gpuname="sm_35"
@@ -157,6 +159,8 @@ function nvid2code(){
       "10de:11b4") codename="k4200"
       ;;
       "10de:13c0") codename="gtx980"
+      ;;
+      "10de:1c03") codename="gtx1060"
       ;;
       "10de:1b80") codename="gtx1080"
       ;;
