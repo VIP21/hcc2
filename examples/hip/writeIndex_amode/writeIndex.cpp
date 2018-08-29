@@ -29,7 +29,7 @@
 __device__ long long int *stuff;
 
 __global__ void writeIndex(int *b) {
-  int i = hipBlockIdx_x;
+  int i = blockIdx.x;
   //  printf("i = %d\n",i);
   if (i < N) {
     b[i] = i;
