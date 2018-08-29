@@ -17,6 +17,7 @@ TESTS_DIR = \
     nativetests \
     nested_loop \
     pfspecifier \
+    pfspecifier_str \
     reduce \
     reduction \
     schedule \
