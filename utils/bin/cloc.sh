@@ -54,8 +54,7 @@ function usage(){
    cloc.sh: Compile a cl or cu file into an HSA Code object file (.hsaco)  
             using the HCC2 compiler. An hsaco file contains the amdgpu 
             isa that can be loaded by the HSA Runtime.
-            As of amdcloc 1.3.1, use of cuda is only experimental.  
-            Generated kernels from cuda will not execute. 
+            The creation of hsaco for cuda kernels is experimental.
 
    Usage: cloc.sh [ options ] filename.cl
 
@@ -75,6 +74,7 @@ function usage(){
     -hcc2      <path>           $HCC2 or /opt/rocm/hcc2
     -libgcn    <path>           $DEVICELIB or $HCC2/lib/libdevice
     -cuda-path <path>           $CUDA_PATH or /usr/local/cuda
+    -atmipath  <path>           $ATMI_PATH or /opt/rocm/hcc2
     -mcpu      <cputype>        Default= value returned by mygpu
     -bclib     <bcfile>         Add a bc library for llvm-link
     -clopts    <compiler opts>  Addtional options for cl frontend
@@ -89,9 +89,9 @@ function usage(){
     cloc.sh whybother.cu      /* creates whybother.hsaco             */
 
    Note: Instead of providing these command line options:
-     -hcc2, -libgcn, -cuda-path, -mcpu, or -clopts
+     -hcc2, -libgcn, -cuda-path, -atmipath -mcpu, -clopts, or -cuopts
      you may set these environment variables, respectively:
-     HCC2, DEVICELIB, CUDA_PATH, LC_MCPU, or CLOPTS
+     HCC2, DEVICELIB, CUDA_PATH, ATMI_PATH, LC_MCPU, CLOPTS, or CUOPTS
 
    Command line options will take precedence over environment variables. 
 
@@ -228,7 +228,7 @@ HCC2=${HCC2:-/opt/rocm/hcc2}
 DEVICELIB=${DEVICELIB:-$HCC2/lib/libdevice}
 TARGET_TRIPLE=${TARGET_TRIPLE:-amdgcn-amd-amdhsa}
 CUDA_PATH=${CUDA_PATH:-/usr/local/cuda}
-#ATMI_PATH=${ATMI_PATH:-/opt/rocm/atmi}
+ATMI_PATH=${ATMI_PATH:-/opt/rocm/hcc2}
 
 # Determine which gfx processor to use, default to Fiji (gfx803)
 if [ ! $LC_MCPU ] ; then 
@@ -241,8 +241,7 @@ fi
 
 LLVMOPT=${LLVMOPT:-2}
 
-CUOPTS=${CUOPTS:- -S -emit-llvm --cuda-device-only -nocudalib -O$LLVMOP --cuda-gpu-arch=$LC_MCPU --cuda-path=$CUDA_PATH -include $HCC2/lib/clang/6.0.0/include/__clang_cuda_builtin_vars.h}
-
+CUOPTS=${CUOPTS:- -fcuda-rdc --cuda-device-only -Wno-unused-value --hip-auto-headers=cuda_open -O$LLVMOPT --cuda-gpu-arch=$LC_MCPU}
 
 if [ $VV ]  ; then 
    VERBOSE=true
@@ -250,43 +249,32 @@ fi
 
 BCFILES=""
 
+# Check if user supplied libgcn has libdevice convention
 GCNDEVICE=`echo $DEVICELIB | grep libdevice`
 
 if [ -z $GCNDEVICE ]; then
-  #This is a temporary setting
-  if [ -f $ATMI_PATH/lib/atmi.amdgcn.bc ]; then
-    BCFILES="$BCFILES $ATMI_PATH/lib/atmi.amdgcn.bc"
-  fi
-  gpunum=`$cdir/mygpu -n`
-  BCFILES="$BCFILES $DEVICELIB/lib/opencl.amdgcn.bc"
-  BCFILES="$BCFILES $DEVICELIB/lib/ocml.amdgcn.bc"
-  BCFILES="$BCFILES $DEVICELIB/lib/ockl.amdgcn.bc"
-  BCFILES="$BCFILES $DEVICELIB/lib/oclc_isa_version_${gpunum}.amdgcn.bc"
-  BCFILES="$BCFILES $DEVICELIB/lib/irif.amdgcn.bc"
+  # Here a User supplied libgcn does not have libdevice convention
+  DEVICELIBDIR=$DEVICELIB
 else
-  if [ -f $ATMI_PATH/lib/libdevice/libatmi-$LC_MCPU.bc ]; then
-    BCFILES="$BCFILES $ATMI_PATH/lib/libdevice/libatmi-$LC_MCPU.bc"
-  fi
+  # This is the default path. bc files are found with libdevice convention
+  # $HCC2/lib/libdevice/$LC-MCPU/
+  DEVICELIBDIR=$DEVICELIB/$LC_MCPU
+fi
 
-  #when atmi is built, the hcc2-rt may not be built yet,
-  if [ -f $HCC2/lib/libdevice/libicuda2gcn-$LC_MCPU.bc ]; then
-    BCFILES="$BCFILES $HCC2/lib/libdevice/libicuda2gcn-$LC_MCPU.bc"
+BCFILES="$BCFILES $DEVICELIBDIR/cuda2gcn.amdgcn.bc"
+BCFILES="$BCFILES $DEVICELIBDIR/hip.amdgcn.bc"
+BCFILES="$BCFILES $DEVICELIBDIR/hc.amdgcn.bc"
+BCFILES="$BCFILES $DEVICELIBDIR/opencl.amdgcn.bc"
+BCFILES="$BCFILES $DEVICELIBDIR/ocml.amdgcn.bc"
+BCFILES="$BCFILES $DEVICELIBDIR/ockl.amdgcn.bc"
+BCFILES="$BCFILES $DEVICELIBDIR/oclc_isa_version.amdgcn.bc"
+BCFILES="$BCFILES $DEVICELIBDIR/irif.amdgcn.bc"
+if [ -f $ATMI_PATH/lib/libdevice/$LC_MCPU/libatmi.bc ]; then
+    BCFILES="$BCFILES $ATMI_PATH/lib/libdevice/$LC_MCPU/libatmi.bc"
+else 
+  if [ -f $DEVICELIBDIR/libatmi.bc ]; then
+    BCFILES="$BCFILES $DEVICELIBDIR/libatmi.bc"
   fi
-  #when atmi is built, the hip-rt may not be built yet,
-  if [ -f $HCC2/lib/libdevice/$LC_MCPU/libhiprt.bc ]; then
-    BCFILES="$BCFILES $HCC2/lib/libdevice/$LC_MCPU/libhiprt.bc"
-  fi
-
-  #make the cuda lib optional at this stage, it is configured when build libamdgcn
-  if [ -f $DEVICELIB/$LC_MCPU/cuda2gcn.amdgcn.bc ]; then
-    BCFILES="$BCFILES $DEVICELIB/$LC_MCPU/cuda2gcn.amdgcn.bc"
-  fi
-  BCFILES="$BCFILES $DEVICELIB/$LC_MCPU/hc.amdgcn.bc"
-  BCFILES="$BCFILES $DEVICELIB/$LC_MCPU/opencl.amdgcn.bc"
-  BCFILES="$BCFILES $DEVICELIB/$LC_MCPU/ocml.amdgcn.bc"
-  BCFILES="$BCFILES $DEVICELIB/$LC_MCPU/ockl.amdgcn.bc"
-  BCFILES="$BCFILES $DEVICELIB/$LC_MCPU/oclc_isa_version.amdgcn.bc"
-  BCFILES="$BCFILES $DEVICELIB/$LC_MCPU/irif.amdgcn.bc"
 fi
 
 if [ $EXTRABCLIB ] ; then 
@@ -431,11 +419,8 @@ rc=0
       # Run 4 steps, clang,link,opt,llc
       if [ $CUDACLANG ] ; then 
          [ $VV ] && echo 
-         [ $VERBOSE ] && echo "#Step:  cuda-clang	cu --> ll  ..."
-         runcmd "$HCC2/bin/$CMD_CLC -o $TMPDIR/$FNAME.ll $INDIR/$FILENAME"
-         [ $VV ] && echo 
-         [ $VERBOSE ] && echo "#Step:  LLVMIR assemble  ll --> bc ..."
-         runcmd "$HCC2/bin/$CMD_ASM -o $TMPDIR/$FNAME.bc $TMPDIR/$FNAME.ll"
+         [ $VERBOSE ] && echo "#Step:  cuda-clang	cu --> bc  ..."
+         runcmd "$HCC2/bin/$CMD_CLC -o $TMPDIR/$FNAME.bc $INDIR/$FILENAME"
       else 
          [ $VV ] && echo 
          [ $VERBOSE ] && echo "#Step:  Compile cl	cl --> bc ..."
