@@ -22,7 +22,9 @@ Note: There is no committment to complete any or all items
 006.c  ___ Explain hip automatic with cuda_open in examples/cuda-open (Jan)
 006.d  _X_ Remove include in cuda-open examples (Jan 0.5-2)
 
-007  ___ Test cloc.sh examples and updates version number and help.  (0.5-3 Greg) 
+007  _X_ Test cloc.sh examples and updates version number and help. (0.5-3 Greg)
+         Updates to cloc.sh fix cuda compilation.  Also fixed the example.
+
 007.b  _X_ Add 'build_utils.sh install' after "build_atmi.sh install" to get
            hcc2 version of cloc.sh scripts.  (0.5-3)
 007.c _X_ Can we get a cmake option for atmi to not install scripts? (Ashwin)
@@ -74,7 +76,7 @@ Note: There is no committment to complete any or all items
           (Greg 0.5-2) 
 
 020 _X_  Get status of Chip's OpenMP Apps on AMDGPU and Nvidia (Andrey)
-020.b ___ Get all proxy apps working on amdgcn including update of Makefiles.
+020.b _X_ Get all proxy apps working on amdgcn including update of Makefiles.
          This requires crticial item 039. (Greg 0.5-3)
          Still need to fix snap execution.
 
@@ -119,11 +121,11 @@ Note: There is no committment to complete any or all items
 
 036 _x_ Fix issue_apps_001, find missing functions for lulesh in smoke test issue.
         Current fail is on last link step.(Andrey 0.5-3)
-036.b ___ Remove issue_apps_001 from general smoke makefile. (Andrey 0.5-3)
+036.b _X_ Remove issue_apps_001 from general smoke makefile. (Andrey 0.5-3)
 
 
 037 _X_ Check the output of smoketest pfspecifier.  Are values correct?
-037.b ___ Add new smoke test for "char* hello="Hello %s\n"; printf(hello,"World");
+037.b _X_ Add new smoke test for "char* hello="Hello %s\n"; printf(hello,"World");
         (Andrey 0.5-3)
 037.c _X_ Add floating point smoke test that really uses -lm (Andrey 0.5-3)
           This is math_sqrt_float.  Getting this working requires 039.
@@ -144,6 +146,8 @@ Note: There is no committment to complete any or all items
         for c++.  That is, change CFLAGS and CC to CXXFLAGS and CXX.  (Andrey 0.5-3)
 040.b ___ Add debug to other proxy apps.  (Andrey 0.5-3)
 
+041 ___ Fix new smoke test pfspecifier_str.c (Greg 0.5-4)
+
 ----------
   HCC2 ?= /opt/rocm/hcc2
   HCC2_GPU ?= gfx803
@@ -163,36 +167,51 @@ Note: There is no committment to complete any or all items
 
 041 _X_ Fix warning on build_openmp.sh that only occurs on debug build (Jan 0.5-3)
 
-042 ___ As a result of 034, we need to carefully compare any new logic introduced 
+042 _X_ As a result of 034, we need to carefully compare any new logic introduced 
         in the trunk from last release to current trunk in 
         openmp/libomptarget/deviceRLTS/nvptx   ?? Does this warrent any changes to 
         openmp/libomptarget/deviceRLTS/amdgcn.  (Greg 0.5-3)
+        Reviewed, no changes made.
 
-042.b ___ Likewise we need to review any new logic in 
+042.b _X_ Likewise we need to review any new logic in 
         openmp/libomptarget/plugins/cuda      ?? Does this warrent any changes to 
-        openmp/libomptarget/plugins/hsa  (Ashwin 0.5-3)
+        openmp/libomptarget/plugins/hsa  (Greg 0.5-3)
+        Reviewed, no changes made however, we did update cuda plugin to
+        support a kernel launch trace. See 046. We also added 045.b as a future
+        workitem to document how number of teams and threads are set at launch time.
 
 043 ___  Fix the bundle and unbundle scripts to properly handle .o files that have
          a combination of device bc and host .o (ELF).
 
-044 ___ fix writeIndex_amode Makefile or source
+044 _X_ fix writeIndex_amode Makefile or source (Andrey 0.5-3)
+        Greg fixed the source.
 
+045 ___ Increase GV_Threads for AMDGCN in GpuGridValues.h and use GpuGridValues.h
+        in setting compile time constants in deviceRTLs/amdgcn/src/option.
+        Requires a detailed review of device RTL constants MAX_THREADS_PER_TEAM
+        WARPSIZE, MAX_SHARED_ARGS, OMP_STATE_COUNT, and especially MAX_SM which
+        is currently 64.  We may want to add a MAX_SM to GpuGridValues.h
+045.b ___ write a doc on GPU Grid constants that clearly explains the logic
+        to determine the number of teams and threads for kernel launch.
+
+046 _X_ Create a kernel launch trace facility LIBOMPTARGET_KERNEL_DEBUG not
+        tied to using debug library builds. (Greg 0.5-3)
+
+047 ___ Change all the examples and the recommended Makefile stanza to set HCC2_GPU
+        based on returned value of $HCC2/bin/mygpu, requires 040 and 038.
+        We should only set to a default value gfx803 if mygpu returns unknown
+        AND user does not have environment variable HCC2_GPU set to something else.
+
+048 ___ Fix device name in snap.  It currently always prints "Quadro".
          
 Completed TODOS for 0.5-3: 010, 014, 020, 034, 036, 041, 007.b, 007.c, 027, 027.b,
-                           037, 037.c, 038, 039, 039.b
+                           037, 037.c, 038, 039, 039.b, 046, 020.b , 042, 042.b, 007,
+                           036.b, 037.b, 044
 
-Remaining TODOS for 0.5-3: 007, 020.b, 036.b, 037.b, 040, 040.b, 042, 042.b
-  007    Test cloc.sh , Greg
-  020.b  Get snap execution running, Greg
-  036.b  Remove issue_apps_001 from makefile, Andrey
-  037.b  Add new smoke test, Andrey
+Remaining TODOS for 0.5-3:  040, 040.b,
+  # These may already be done.  Just need confirm from Andrey
   040    Update openmp examples README.md, Andrey
   040.b  Add debug to other proxy apps, Andrey
-  042    Review nvptx deviceRTLs logic, Greg
-  042.b  Review cuda plugin logic , Greg
 
-Deferred to 0.5-4: 026, 031, 012.b
-
-Goal is to get 0.5-3 out by end of August. 
 
 100 ___ Move this list to Git Issues when things slow down.
