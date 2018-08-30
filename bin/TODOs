@@ -94,8 +94,6 @@ Note: There is no committment to complete any or all items
 
 029 _X_ Improve performance of end-of-kernel services buffer management (Ashwin 0.5-2)
 
-029 ___ Fix driver for make -S and -c for amdgcn.  Works for nvidia cuda. 
-
 030 ___ Fix llc taking a long time. 
  
 031 ___ Replace __smid to some type of blockid (Ashwin 0.5-X) defer to 0.5-X
@@ -148,6 +146,8 @@ Note: There is no committment to complete any or all items
 
 041 ___ Fix new smoke test pfspecifier_str.c (Greg 0.5-4)
 
+042 ___ Fix driver for make -S and -c for amdgcn.  Works for nvidia cuda.
+
 ----------
   HCC2 ?= /opt/rocm/hcc2
   HCC2_GPU ?= gfx803
@@ -196,6 +196,7 @@ Note: There is no committment to complete any or all items
 
 046 _X_ Create a kernel launch trace facility LIBOMPTARGET_KERNEL_DEBUG not
         tied to using debug library builds. (Greg 0.5-3)
+046.b ___ Add execution mode to the kernel trace, "SPMD", "GENR", "NONE"
 
 047 ___ Change all the examples and the recommended Makefile stanza to set HCC2_GPU
         based on returned value of $HCC2/bin/mygpu, requires 040 and 038.
@@ -203,15 +204,23 @@ Note: There is no committment to complete any or all items
         AND user does not have environment variable HCC2_GPU set to something else.
 
 048 ___ Fix device name in snap.  It currently always prints "Quadro".
-         
-Completed TODOS for 0.5-3: 010, 014, 020, 034, 036, 041, 007.b, 007.c, 027, 027.b,
-                           037, 037.c, 038, 039, 039.b, 046, 020.b , 042, 042.b, 007,
-                           036.b, 037.b, 044
+        Consider new device hcc2_omp_ API to query device name and memory.
 
-Remaining TODOS for 0.5-3:  040, 040.b,
-  # These may already be done.  Just need confirm from Andrey
-  040    Update openmp examples README.md, Andrey
-  040.b  Add debug to other proxy apps, Andrey
+049 ___ Add mlink-bit-code clang cc1 options for some bc libraries to speed up gpu
+        phase link time.
+
+050 ___ Replace call to select_outline with a call to the actual function in
+        our custom linker for gpu phase linking.
+
+051 ___ Remove the cp commands from the HIP driver that save generated bc files
+        to /tmp or just put "#if 0" around them.
+
+052 ___ Create libm.bc for both amdgcn and nvptx whose interface is the
+        standard math library inteface for -lm.  The amdgcn version will call
+        ocml functions.  The nvptx will call the __sm__ intrinsics .  This will
+        remove need to define functions in header files.  bc libraries that
+        are identified via the -lX interface are good candidates for mlink-bit-code.
+        See 049.
 
 
 100 ___ Move this list to Git Issues when things slow down.
