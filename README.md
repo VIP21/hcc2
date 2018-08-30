@@ -1,4 +1,4 @@
-HCC2 - V 0.5-2
+HCC2 - V 0.5-3
 ==============
 
 hcc2:  Heterogeneous Compiler Collection (Version 2). 
@@ -69,35 +69,40 @@ Software License Agreement.
 On Ubuntu 16.04 LTS (xenial), run these commands:
 
 ```
-wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-2/hcc2_0.5-2_amd64.deb
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-3/hcc2_0.5-3_amd64.deb
 sudo dpkg -P hcc2
 sudo dpkg -P libamdgcn
 sudo dpkg -P amdcloc
 sudo dpkg -P mymcpu
-sudo dpkg -i hcc2_0.5-2_amd64.deb
+sudo dpkg -i hcc2_0.5-3_amd64.deb
 ```
 The "dpkg -P" commands are used to delete previous versions of hcc2, libamdgcn, amdcloc, and mymcpu which may conflict with the installation.  If these are not installed it is ok to just let the "dpkg -P" commands fail.
 
 HCC2 does not conflict with the production HCC. There is no reason to delete HCC to use HCC2. The HCC2 bin directory (which includes the standard clang and llvm binaries) is not intended to be in your PATH for typical operation.
 
-The rpms for release 0.5-2 are not available yet. When it is available, run these commands.
+For rpm-based Linux distributions, use this rpm
 ```
-wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-2/hcc2-0.5-2.x86_64.rpm
-sudo rpm -i hcc2-0.5-2.x86_64.rpm
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-3/hcc2-0.5-3.x86_64.rpm
+sudo rpm -i hcc2-0.5-3.x86_64.rpm
 ```
+Build and install from sources is possible.  However, the source build for HCC2 is complex for three reasons.  
+- Many repos are required .  There is a script to ensure you have all repos and checkout the correct branch. 
+- Requires that both the Cuda SDK and ROCm are installed. 
+- It is a bootstrapped build where the built compiler is used to build library components. 
 
-Build and install from sources is possible, though due to many different repos involved it is a complex build. For details on the source build see [README](bin/README).
+For details on the source build see [README](bin/README).
 
 ## HCC2 Limitations
 
 <A NAME="Limitations">
-There are too many to mention at this time.  Hey, this is a prototype.  Here are some limitations. 
+
+See the release notes in github.  Here are some limitations. 
 
 ```
  - target teams distribute reduce does not work
  - Dwarf debugging is turned off for GPUs. -g will turn on host level debugging only.
  - Some simd constructs fail to vectorize on both host and GPUs.  
  - There are debug versions of the runtime libraries.  However, these use printf on the device
-   which currently print when the kernel terminates.  Not a great debug feature if the GPU 
+   which currently print when the kernel terminates.  So it is not a very useful debug feature if the GPU 
    kernel crashes. 
 ```
