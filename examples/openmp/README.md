@@ -20,15 +20,11 @@ env OFFLOAD_DEBUG=1 make
 env OFFLOAD_DEBUG=1 make run
 ```
 
-To compile and run the reduction example on Fiji card manually for x86_64 machine:
+To compile and run the reduction example:
 
 ```
-env LIBRARY_PATH=/opt/rocm/hcc2/lib/libdevice:/opt/rocm/hcc2/lib:/opt/rocm/libamdgcn/gfx803/lib \
-PATH=/opt/rocm/hcc2/bin:$PATH \
-/opt/rocm/hcc2/bin/clang -O3 -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn--cuda \
-                         --cuda-gpu-arch=gfx803 -I/opt/rocm/hcc2/include  -L/opt/rocm/hcc2/lib \
-                         -L/opt/rocm/hcc2/lib/libdevice reduction.c -o reduction
-env LD_LIBRARY_PATH=/opt/rocm/hcc2/lib  ./reduction
+cd reduction
+make run
 The result is correct = 499999500000!
 ```
 
@@ -36,18 +32,20 @@ The result is correct = 499999500000!
 
 Even though only a single offload target is currently supported, you can still see how bundling works.
 
-Except for the final binary, all intermediate objects are bundles.
+Except for the final binary, the intermediate objects are bundles.
 For example, run the command:
 
 ```
 cd vmulsum
-make .ll
+make vmul.o
+make vsum.o
+make main.o
 ```
 
-This will create one LLVM IR .ll file for each of the sources. However each of these is really a BUNDLE of 2 LLVM IR .ll files; one for host and one for the target offload. You can see these by editing any of the files, or you can unbundle them unbundle.sh utility script as follows:
+This will create one object file for each of the sources.  However each of these is really a BUNDLE of 2 objects,  one for host and one for the target offload. You can see these by editing any of the files, or you can unbundle them unbundle.sh utility script as follows:
 
 ```
-/opt/rocm/hcc2/bin/unbundle.sh vmul.ll
+/opt/rocm/hcc2/bin/unbundle.sh vmul.o
 ```
 
 This will create host and device files.
