@@ -8,21 +8,18 @@
 TESTNAME = vmulsum
 TESTSRC  = main.c vsum.c vmul.c
 
-ifeq ($(HCC2),)
-  HCC2 = /opt/rocm/hcc2
-endif
-ifeq ($(LIBAMDGCN),)
-  LIBAMDGCN = /opt/rocm/libamdgcn
-endif
-ifeq ($(OMPRT),)
-  OMPRT = $(HCC2)
-endif
-ifeq ($(ATMI),)
-  ATMI = $(HCC2)
-endif
+HCC2           ?= /opt/rocm/hcc2
+HCC2_GPU       ?= gfx803
+HCC2_CPUTARGET ?= x86_64-pc-linux-gnu
 
-ifeq ($(CUDA),)
-  CUDA = /usr/local/cuda
+LIBAMDGCN      ?= $(HCC2)
+OMPRT          ?= $(HCC2)
+ATMI           ?= $(HCC2)
+
+ifeq (sm_,$(findstring sm_,$(HCC2_GPU)))
+  HCC2_GPUTARGET = nvptx64-nvidia-cuda
+else
+  HCC2_GPUTARGET = amdgcn-amd-amdhsa
 endif
 
 ifeq ($(OFFLOAD_DEBUG),1)
@@ -50,37 +47,19 @@ ATMI_LIB_BC  = $(ATMI)/lib$(DEBUG)/libdevice
 
 CC           = $(HCC2)/bin/clang
 
-UNAMEP=$(shell uname -p)
-
-ifeq ($(HOST_TARGET),)
-  HOST_TARGET = $(UNAMEP)-pc-linux-gnu
-endif
-
-ifeq ($(DEVICE_ARCH),)
-  DEVICE_ARCH = $(shell $(HCC2)/bin/mygpu)
-endif
-
-ifeq ($(findstring gfx,$(DEVICE_ARCH)),)
-  DEVICE_TARGET = nvptx64-nvidia-cuda
-else
-  DEVICE_TARGET = amdgcn-amd-amdhsa
-endif
-
-CFLAGS = -O3 -target $(HOST_TARGET) -fopenmp -fopenmp-targets=$(DEVICE_TARGET) -Xopenmp-target=$(DEVICE_TARGET) -march=$(DEVICE_ARCH) -I$(OMPRT_INC) 
+CFLAGS = -O3 -target $(HCC2_CPUTARGET) -fopenmp -fopenmp-targets=$(HCC2_GPUTARGET) -Xopenmp-target=$(HCC2_GPUTARGET) -march=$(HCC2_GPU) -I$(OMPRT_INC)
 LFLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC)
 
-ifeq ($(findstring amdgcn,$(DEVICE_TARGET)),)
-
+ifeq (sm_,$(findstring sm_,$(HCC2_GPU)))
+  CUDA   ?= /usr/local/cuda
+  UNAMEP = $(shell uname -p)
   CFLAGS += -I$(CUDA)/include 
   LFLAGS += -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart
   CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib:$(LIBRARY_PATH) PATH=$(HCC2)/bin:$(PATH)
   RUNENV = env LD_LIBRARY_PATH=$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib:$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
-
 else
-
-  CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(ATMI_LIB_BC):$(ATMI_LIB):$(LIBAMDGCN)/$(DEVICE_ARCH)/lib:$(LIBRARY_PATH) PATH=$(HCC2)/bin:$(PATH)
+  CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(ATMI_LIB_BC):$(ATMI_LIB):$(LIBAMDGCN)/$(HCC2_GPU)/lib:$(LIBRARY_PATH) PATH=$(HCC2)/bin:$(PATH)
   RUNENV = env LD_LIBRARY_PATH=$(OMPRT_LIB):$(ATMI_LIB):$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
-
 endif
 
 CFLAGS += $(EXTRA_CFLAGS)
@@ -113,8 +92,8 @@ help:
 	@echo
 	@echo "Source[s]:		$(TESTSRC)"
 	@echo "Application binary:    	$(TESTNAME)"
-	@echo "Offload target		$(DEVICE_TARGET)"
-	@echo "CUDA installation 	$(CUDA)"
+	@echo "Offload target:		$(HCC2_GPUTARGET)"
+	@echo "CUDA installation:	$(CUDA)"
 	@echo "HCC2 compiler: 		$(CC)"
 	@echo "Compile flags:		$(CFLAGS)"
 	@echo "Link flags:		$(LFLAGS)"
@@ -135,21 +114,19 @@ help:
 	@echo " make help"
 	@echo
 	@echo "Environment variables to control compile & execution:"
-	@echo "  DEVICE_TARGET=<target>  offload target, default=amdgcn--cuda"
-	@echo "  DEVICE_ARCH=<arch>      offload sub-target, default=gfx803"
-	@echo "  CUDA=<dir>              CUDA install dir, default=/usr/local/cuda"
-	@echo "  HCC2=<dir>              HCC2 install dir, default=/opt/rocm/hcc2"
-	@echo "  LIBAMDGCN=<dir>         device libs, default=/opt/rocm/libamdgcn"
+	@echo "  HCC2_GPU=<arch>          offload architecture, default=gfx803"
+	@echo "  CUDA=<dir>               CUDA install dir, default=/usr/local/cuda"
+	@echo "  HCC2=<dir>               HCC2 install dir, default=/opt/rocm/hcc2"
 	@echo
 	@echo "Auxiliary Environment variables to control compile & execution:"
-	@echo "  EXTRA_CFLAGS=<args>   compilation extra arguments"
-	@echo "  OFFLOAD_DEBUG=n       if n=1, compile and run in Debug mode"
-	@echo "  VERBOSE=n             if n=1, add verbose output"
-	@echo "  TEMPS=1               do not delete intermediate files"
-	@echo "  UNAMEP=<arch>         host arch, default=x86_64"
-	@echo "  HOST_TARGET=<target>  host target, default=x86_64-pc-linux-gnu"
-	@echo "  ATMI=<dir>            ATMI install dir, default=$(HCC2)"
-	@echo "  OMPRT=<dir>           OMPRT install dir, default=$(HCC2)"
+	@echo "  EXTRA_CFLAGS=<args>      compilation extra arguments"
+	@echo "  OFFLOAD_DEBUG=n          if n=1, compile and run in Debug mode"
+	@echo "  VERBOSE=n                if n=1, add verbose output"
+	@echo "  TEMPS=1                  do not delete intermediate files"
+	@echo "  HCC2_CPUTARGET=<target>  host target, default=x86_64-pc-linux-gnu"
+	@echo "  LIBAMDGCN=<dir>          device libs, default=/opt/rocm/libamdgcn"
+	@echo "  ATMI=<dir>               ATMI install dir, default=$(HCC2)"
+	@echo "  OMPRT=<dir>              OMPRT install dir, default=$(HCC2)"
 	@echo
 
 # Cleanup anything this makefile can create
