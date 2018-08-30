@@ -7,7 +7,7 @@ This is README.md for https:/github.com/ROCM-Developer-Tools/hcc2 .  This is the
 
 HCC2 is an experimental PROTOTYPE that is intended to support multiple programming models including OpenMP 4.5+, C++ parallel extentions (original HCC), HIP, and cuda clang.  It supports offloading to multiple GPU acceleration targets(multi-target).  It also supports different host platforms such as AMD64, PPC64LE, and AARCH64. (multi-platform). 
 
-The bin directory of this repository contains a README and build scripts needed to build HCC2. However, we recommend that you install from the debian or rpm packages provided as described below.
+The bin directory of this repository contains a README and build scripts needed to build and install HCC2. However, we recommend that you install from the debian or rpm packages described below.
 
 Attention Users!  Use this repository for issues. Do not put issues in the source code repositories.  Before creating an issue, you may want to see the developers list of TODOs.  See link below.
 
@@ -87,8 +87,8 @@ sudo rpm -i hcc2-0.5-3.x86_64.rpm
 ```
 Build and install from sources is possible.  However, the source build for HCC2 is complex for three reasons.  
 - Many repos are required .  There is a script to ensure you have all repos and checkout the correct branch. 
-- Requires that both the Cuda SDK and ROCm are installed. 
-- It is a bootstrapped build where the built compiler is used to build library components. 
+- Requires that both the Cuda SDK and ROCm are installed regardless of which graphic cards you have.
+- It is a bootstrapped build.  The built and installed LLVM compiler is used to build library components. 
 
 For details on the source build see [README](bin/README).
 
