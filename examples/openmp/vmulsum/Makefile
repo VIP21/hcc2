@@ -1,20 +1,21 @@
 #-----------------------------------------------------------------------
 #
 #  Makefile: Cuda clang demo Makefile for both amdgcn and nvptx targets.
-#            amdgcn targets begin with gfx. nvptx targets begin with sm_
+#            amdgcn GPU targets begin with "gfx". nvptx targets begin
+#            with sm_.  Example: To build and run on k4000 do this:
 #
-#  Run "make help" to see how to use this Makefile
+#            export HCC2_GPU=sm_30
+#            make run
+#
+#  Run "make help" to see other options for this Makefile
 
 TESTNAME = vmulsum
 TESTSRC  = main.c vsum.c vmul.c
 
 HCC2           ?= /opt/rocm/hcc2
-HCC2_GPU       ?= gfx803
+HCC2_GPU       ?= gfx803   # Default HCC2_GPU is gfx803 which is fiji
 HCC2_CPUTARGET ?= x86_64-pc-linux-gnu
-
-LIBAMDGCN      ?= $(HCC2)
-OMPRT          ?= $(HCC2)
-ATMI           ?= $(HCC2)
+CC              = $(HCC2)/bin/clang
 
 ifeq (sm_,$(findstring sm_,$(HCC2_GPU)))
   HCC2_GPUTARGET = nvptx64-nvidia-cuda
@@ -22,116 +23,92 @@ else
   HCC2_GPUTARGET = amdgcn-amd-amdhsa
 endif
 
+# Sorry, clang openmp requires these complex options
+CFLAGS = -O3 -target $(HCC2_CPUTARGET) -fopenmp -fopenmp-targets=$(HCC2_GPUTARGET) -Xopenmp-target=$(HCC2_GPUTARGET) -march=$(HCC2_GPU)
+
 ifeq ($(OFFLOAD_DEBUG),1)
   $(info    DEBUG Mode ON)
-  DEBUG   = -debug
-  SET_DEVICE_DEBUG = LIBOMPTARGET_DEBUG=1
+  CCENV  = env LIBRARY_PATH=$(HCC2)/lib-debug
+  RUNENV = LIBOMPTARGET_DEBUG=1
 endif
 
 ifeq ($(VERBOSE),1)
   $(info    Compilation VERBOSE Mode ON)
-  VERBOSE = -v
+  CFLAGS += -v
 endif
 
 ifeq ($(TEMPS),1)
   $(info    Compilation and linking save-temp Mode ON)
-  VERBOSE += -save-temps -fopenmp-dump-offload-linker-script
+  CFLAGS += -save-temps -fopenmp-dump-offload-linker-script
 endif
-
-OMPRT_INC    = $(OMPRT)/include
-OMPRT_LIB    = $(OMPRT)/lib$(DEBUG)
-OMPRT_LIB_BC = $(OMPRT)/lib$(DEBUG)/libdevice
-
-ATMI_LIB     = $(ATMI)/lib$(DEBUG)
-ATMI_LIB_BC  = $(ATMI)/lib$(DEBUG)/libdevice
-
-CC           = $(HCC2)/bin/clang
-
-CFLAGS = -O3 -target $(HCC2_CPUTARGET) -fopenmp -fopenmp-targets=$(HCC2_GPUTARGET) -Xopenmp-target=$(HCC2_GPUTARGET) -march=$(HCC2_GPU) -I$(OMPRT_INC)
-LFLAGS = -L$(OMPRT_LIB) -L$(OMPRT_LIB_BC)
 
 ifeq (sm_,$(findstring sm_,$(HCC2_GPU)))
   CUDA   ?= /usr/local/cuda
   UNAMEP = $(shell uname -p)
-  CFLAGS += -I$(CUDA)/include 
   LFLAGS += -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart
-  CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib:$(LIBRARY_PATH) PATH=$(HCC2)/bin:$(PATH)
-  RUNENV = env LD_LIBRARY_PATH=$(OMPRT_LIB):$(CUDA)/targets/$(UNAMEP)-linux/lib:$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
-else
-  CCENV  = env LIBRARY_PATH=$(OMPRT_LIB_BC):$(OMPRT_LIB):$(ATMI_LIB_BC):$(ATMI_LIB):$(LIBAMDGCN)/$(HCC2_GPU)/lib:$(LIBRARY_PATH) PATH=$(HCC2)/bin:$(PATH)
-  RUNENV = env LD_LIBRARY_PATH=$(OMPRT_LIB):$(ATMI_LIB):$(LD_LIBRARY_PATH) $(SET_DEVICE_DEBUG)
 endif
 
 CFLAGS += $(EXTRA_CFLAGS)
 
 # ----- Demo compile and link in one step, no object code saved
 $(TESTNAME): $(TESTSRC)
-	$(CCENV)  $(CC) $(VERBOSE) $(CFLAGS) $(LFLAGS) $^ -o $@
+	$(CCENV) $(CC) $(CFLAGS) $(LFLAGS) $^ -o $@
 
 run: $(TESTNAME)
-	$(RUNENV) ./$(TESTNAME) 2>&1 | tee $@.log
+	$(RUNENV) ./$(TESTNAME)
 
 #  ----   Demo compile and link in two steps, object saved
-.o: $(TESTSRC)
-	$(CCENV)  $(CC) $(VERBOSE) -c $(CFLAGS) $^
-
-obin:	.o
-	$(CCENV)  $(CC) $(VERBOSE) $(CFLAGS) $(LFLAGS) $(addsuffix .o, $(basename $(TESTSRC))) -o obin
+main.o: main.c
+	$(CCENV) $(CC) -c $(CFLAGS) $^ -o $@
+vsum.o: vsum.c
+	$(CCENV) $(CC) -c $(CFLAGS) $^ -o $@
+vmul.o: vmul.c
+	$(CCENV) $(CC) -c $(CFLAGS) $^ -o $@
+obin:	main.o vsum.o vmul.o
+	$(CCENV) $(CC) $(CFLAGS) $(LFLAGS) $^ -o $@
 
 run_obin: obin
-	$(RUNENV) ./obin 2>&1 | tee $@.log
-
-#  ----   Demo compile to intermediates LLVMIR or assembly
-.ll: $(TESTSRC)
-	$(CCENV)  $(CC) $(VERBOSE) -c -S -emit-llvm $(CFLAGS) $^
-
-.s: $(TESTSRC)
-	$(CCENV)  $(CC) $(VERBOSE) -c -S $(CFLAGS) $^
+	$(RUNENV) ./obin
 
 help:
 	@echo
 	@echo "Source[s]:		$(TESTSRC)"
 	@echo "Application binary:    	$(TESTNAME)"
-	@echo "Offload target:		$(HCC2_GPUTARGET)"
-	@echo "CUDA installation:	$(CUDA)"
+	@echo "Target GPU:		$(HCC2_GPU)"
+	@echo "Target triple:		$(HCC2_GPUTARGET)"
 	@echo "HCC2 compiler: 		$(CC)"
 	@echo "Compile flags:		$(CFLAGS)"
-	@echo "Link flags:		$(LFLAGS)"
+ifeq (sm_,$(findstring sm_,$(HCC2_GPU)))
+	@echo "CUDA installation:	$(CUDA)"
+endif
 	@echo
-	@echo "This Makefile supports these demos using these extra flags"
+	@echo "This Makefile supports these targets:"
 	@echo
-	@echo " make .ll		// compile steps only       : -c -S -emit-llvm "
-	@echo " make .s		// compile & backend steps  : -c -S "
-	@echo " make .o		// compile, be, & assemble  : -c  "
-	@echo " make obin         	// Link pass only           : "
-	@echo " make run_obin     	// Execute obin "
+	@echo " make			// Builds $(TESTNAME) "
+	@echo " make run		// Executes $(TESTNAME) "
 	@echo
-	@echo " make			// Build $(TESTNAME), all steps "
-	@echo " make run		// Execute $(TESTNAME) "
+	@echo " make main.o"
+	@echo " make vsum.o"
+	@echo " make vmul.o"
+	@echo " make obin		// Link object files to build binary "
+	@echo " make run_obin		// Execute obin "
 	@echo
 	@echo " make clean"
-	@echo " make clean_log"
 	@echo " make help"
 	@echo
-	@echo "Environment variables to control compile & execution:"
-	@echo "  HCC2_GPU=<arch>          offload architecture, default=gfx803"
-	@echo "  CUDA=<dir>               CUDA install dir, default=/usr/local/cuda"
-	@echo "  HCC2=<dir>               HCC2 install dir, default=/opt/rocm/hcc2"
-	@echo
-	@echo "Auxiliary Environment variables to control compile & execution:"
-	@echo "  EXTRA_CFLAGS=<args>      compilation extra arguments"
-	@echo "  OFFLOAD_DEBUG=n          if n=1, compile and run in Debug mode"
-	@echo "  VERBOSE=n                if n=1, add verbose output"
-	@echo "  TEMPS=1                  do not delete intermediate files"
-	@echo "  HCC2_CPUTARGET=<target>  host target, default=x86_64-pc-linux-gnu"
-	@echo "  LIBAMDGCN=<dir>          device libs, default=/opt/rocm/libamdgcn"
-	@echo "  ATMI=<dir>               ATMI install dir, default=$(HCC2)"
-	@echo "  OMPRT=<dir>              OMPRT install dir, default=$(HCC2)"
+	@echo "Environment variables used by this Makefile:"
+	@echo "  HCC2_GPU=<GPU>       Target GPU, e.g sm_30, default=gfx803. To build for"
+	@echo "                       Nvidia GPUs, set HCC2_GPU=sm_60 or appropriate sm_"
+	@echo "  HCC2=<dir>           HCC2 install dir, default=/opt/rocm/hcc2"
+	@echo "  EXTRA_CFLAGS=<args>  extra arguments for compiler"
+	@echo "  OFFLOAD_DEBUG=n      if n=1, compile and run in Debug mode"
+	@echo "  VERBOSE=n            if n=1, add verbose output"
+	@echo "  TEMPS=1              do not delete intermediate files"
+ifeq (sm_,$(findstring sm_,$(HCC2_GPU)))
+	@echo "  CUDA=<dir>           CUDA install dir, default=/usr/local/cuda"
+endif
 	@echo
 
 # Cleanup anything this makefile can create
 clean:
-	rm -f $(TESTNAME) obin *.i *.ii *.bc *.lk a.out-* *.ll *.s *.o *.log
-
-clean_log:
-	rm -f *.log
+	rm -f $(TESTNAME) obin *.i *.ii *.bc *.lk a.out-* *.ll *.s *.o *.cubin
