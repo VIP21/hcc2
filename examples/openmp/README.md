@@ -34,7 +34,7 @@ The result is correct = 499999500000!
 
 ## Bundling
 
-This demonstration shows how intermediate .o object files are actually bundles of multiple files. A .o bundle contains a host object file and an object file for each offload architecture. The unbundle.sh bash script provided with hcc2 examines the bundled .o file to create the proper call to the clang-offload-bundler tool.  
+This demonstration shows how intermediate .o object files are actually bundles of multiple files. A .o bundle contains a host object file and an object file for each offload architecture. The unbundle.sh bash script provided with HCC2 examines the bundled .o file to create the proper call to the clang-offload-bundler tool.
 
 The makefiles provided in the openmp examples demonstrate two build schemes. The default make creates the executable with a single command as shown above.  The make target "make obin" compiles each source into .o files and then links these into the executable "obin".  In this demonstration, we create the intermediate .o files and the obin executable. Then we use the unbundle.sh script to show the contents of just one of the .o files. Then we rebuild that .o file for Nvidia sm_30 GPUs to show how the .o bundle is different. 
 
