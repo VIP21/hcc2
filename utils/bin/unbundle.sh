@@ -28,13 +28,26 @@ else
    fi
 fi
 
+ftypeout=$ftype
+
 for tname in $tnames ; do 
    mname=${tname%.$ftype}
    if [ "$ftype" == "o" ] ; then 
-      otargets=`strings $tname | grep "__CLANG_OFFLOAD_BUNDLE" `
-      for longtarget in $otargets ; do 
-         targets="$targets ${longtarget:24}"
+      otargets=`strings $tname | grep "openmp-"`
+      for longtarget in $otargets ; do
+         if [ "${longtarget:0:22}" == "__CLANG_OFFLOAD_BUNDLE" ] ; then
+            targets="$targets ${longtarget:24}"
+         else
+            targets="$targets $longtarget"
+         fi
       done
+      host=`strings $tname | grep "host-"`
+      if [ "${longtarget:0:22}" == "__CLANG_OFFLOAD_BUNDLE" ] ; then
+         host=${host:24}
+      else
+         host=${host%*BC}
+      fi
+      targets="$targets $host"
    else
       if [ "$ftype" != "bc" ] ; then 
          targets=`grep "__CLANG_OFFLOAD_BUNDLE____START__" $tname | cut -d" " -f3`
@@ -54,16 +67,22 @@ for tname in $tnames ; do
    fnamelist=""
    for target in $targets ; do 
       targetlist=$targetlist$sepchar$target
+      if [ "$ftype" == "o" ] ; then
+         if [ "${target:0:6}" == "openmp" ] && [ "${target:7:6}" == "amdgcn" ] ; then
+            ftypeout="bc"
+         fi
+      fi
       fnamelist=$fnamelist$sepchar${tname}.$target
       sepchar=","
    done
    if [ "$targetlist" != "" ] ; then 
-      echo $EXECBIN -unbundle -type=$ftype -inputs=$tname -targets=$targetlist -outputs=$fnamelist
-      $EXECBIN -unbundle -type=$ftype -inputs=$tname -targets=$targetlist -outputs=$fnamelist
+      cmd="$EXECBIN -unbundle -type=$ftypeout -inputs=$tname -targets=$targetlist -outputs=$fnamelist"
+      echo $cmd
+      $cmd
       if [ $? != 0 ] ; then 
          echo "ERROR: $EXECBIN failed."
          echo "       The failed command was:"
-         echo $EXECBIN -unbundle -type=$ftype -inputs=$tname -targets=$targetlist -outputs=$fnamelist
+         echo $cmd
          exit 1
       fi
    fi
