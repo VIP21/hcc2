@@ -137,12 +137,12 @@ Note: There is no committment to complete any or all items
         as input files. This is a problem in Driver.cpp ActionBuilder (greg 0.5-3) 
 039.b _X_ Remove hard coded -lm from Gnu.cpp. (Greg 0.5-3)
 
-040 ___ Change the examples makefiles for openmp to use environment variable HCC2_GPU.
+040 _X_ Change the examples makefiles for openmp to use environment variable HCC2_GPU.
         in the same way we updated the proxy makefiles.  This is the common stanza
         we would like people to use in their makefiles.  Lets clearly document this in 
         the hcc2/examples/openmp/README.md.  We need a slightly different stanza
         for c++.  That is, change CFLAGS and CC to CXXFLAGS and CXX.  (Andrey 0.5-3)
-040.b ___ Add debug to other proxy apps.  (Andrey 0.5-3)
+040.b _X_ Add debug to other proxy apps.  (Andrey 0.5-3)
 
 041 ___ Fix new smoke test pfspecifier_str.c (Greg 0.5-4)
 
@@ -221,6 +221,12 @@ Note: There is no committment to complete any or all items
         remove need to define functions in header files.  bc libraries that
         are identified via the -lX interface are good candidates for mlink-bit-code.
         See 049.
+
+053 ___ Add C++ test to examples/openmp (Andrey 0.5-4)
+
+054 ___ Implement functionality to compare the execution results with the golded
+        file in Makefiles for test/smoke. This will help to verify the results and
+        automate the testing (Andrey)
 
 
 100 ___ Move this list to Git Issues when things slow down.
