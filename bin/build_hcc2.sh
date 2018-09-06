@@ -20,7 +20,7 @@ LLD_REPO_NAME=${LLD_REPO_NAME:-lld}
 LLVM_REPO_NAME=${LLVM_REPO_NAME:-llvm}
 RT_REPO_NAME=${RT_REPO_NAME:-openmp}
 BUILD_HCC2=${BUILD_HCC2:-$HCC2_REPOS}
-REPO_BRANCH=${REPO_BRANCH:-HCC2-180821}
+REPO_BRANCH=${REPO_BRANCH:-HCC2-180906}
 
 if [ "$SUDO" == "set" ]  || [ "$SUDO" == "yes" ] || [ "$SUDO" == "YES" ] ; then
    SUDO="sudo"
@@ -71,7 +71,7 @@ PROC=`uname -p`
 GCC=`which gcc`
 GCPLUSCPLUS=`which g++`
 if [ "$PROC" == "ppc64le" ] ; then 
-   COMPILERS="-DCMAKE_C_COMPILER=/usr/bin/gcc-6 -DCMAKE_CXX_COMPILER=/usr/bin/g++-6"
+   COMPILERS="-DCMAKE_C_COMPILER=/usr/bin/gcc-7 -DCMAKE_CXX_COMPILER=/usr/bin/g++-7"
 else
    COMPILERS="-DCMAKE_C_COMPILER=$GCC -DCMAKE_CXX_COMPILER=$GCPLUSCPLUS"
 fi
@@ -231,6 +231,9 @@ fi
 NUM_THREADS=
 if [ ! -z `which "getconf"` ]; then
    NUM_THREADS=$(`which "getconf"` _NPROCESSORS_ONLN)
+   if [ "$PROC" == "ppc64le" ] ; then
+      NUM_THREADS=$(( NUM_THREADS / 2))
+   fi
 fi
 
 # Skip synchronization from git repos if nocmake or install are specified

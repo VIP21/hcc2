@@ -54,10 +54,15 @@ hcc2 (0.5-3) UNRELEASED; urgency=medium
   *   Lower the thread_limit to 512 for amdgcn. Can still have many teams.
   *   Created a new kernel launch trace option with envvar LIBOMPTARGET_KERNEL_DEBUG
   *   Cleaned up some compilation warnings in the build of openmp libraries
-  *   Removed c++ delete functions from the libomptarget device runtime from amdgcn and nvptx. These should not be generated on the device.
+  *   Removed c++ delete functions from the libomptarget device runtime.
+  *     Destructors should not be generated on the device pass. 
   *   Now building HCC2 with a public available version of ATMI.
-  *   add addrspace cast in emitGenericVarsProlog because some of the captured variables may be from a kernel arg in address space 1, so we need to cast to generic.  This fixes some of the OPenMP Proxy apps.
-  *   fix driver error when extra libs are specified on the command line such as -lm. Now applications that need standard host libraries should run.
+  *   Add addrspace cast in emitGenericVarsProlog because some of the captured 
+  *     variables may be from a kernel arg in address space 1, so we need to cast 
+  *     to generic.  This fixes some of the OPenMP Proxy apps.
+  *   Fix driver error when extra libs are specified on the command line such as -lm. 
+  *     Now applications that need standard host libraries should run.
+  *   Cleaned up example openmp makefiles and the README for openmp examples.
+  *   Fixed the unbundle.sh script to work with amdgcn .o files. 
   *
-
- -- Greg Rodgers <Gregory.Rodgers@amd.com>  Wed, 29 Aug 2018 15:07:38 -0500
+ -- Greg Rodgers <Gregory.Rodgers@amd.com>  Fri, 31 Aug 2018 06:22:47 -0500

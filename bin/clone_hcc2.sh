@@ -78,19 +78,19 @@ COBRANCH="master"
 #clone_or_pull
 
 reponame="openmp"
-COBRANCH="HCC2-180821"
+COBRANCH="HCC2-180906"
 clone_or_pull
 
 reponame="llvm"
-COBRANCH="HCC2-180821"
+COBRANCH="HCC2-180906"
 clone_or_pull
 
 reponame="clang"
-COBRANCH="HCC2-180821"
+COBRANCH="HCC2-180906"
 clone_or_pull
 
 reponame="lld"
-COBRANCH="HCC2-180821"
+COBRANCH="HCC2-180906"
 clone_or_pull
 
 reponame="hip"
