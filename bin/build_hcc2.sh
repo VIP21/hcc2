@@ -285,10 +285,6 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
          echo ln -sf $BUILD_DIR/$LLD_REPO_NAME ld
          ln -sf $BUILD_DIR/$LLD_REPO_NAME ld
       fi
-      if [ ! -L $BUILD_DIR/$LLVM_REPO_NAME/tools/hc ] ; then
-         echo ln -sf $BUILD_DIR/$HCC2_REPO_NAME/hc hc
-         ln -sf $BUILD_DIR/$HCC2_REPO_NAME/hc hc
-      fi
    fi
 
 else
