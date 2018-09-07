@@ -6,20 +6,20 @@ Note: There is no committment to complete any or all items
       on this list.  But you can see we are making progress.
 
 001  _X_ Fix smoke tests vmulsum, and assertok_error (0.5-1)
-001.b  ___ Fix smoke tests reduce , requires trunk updates
+001.b  ___ [BUG] Fix smoke tests reduce , requires trunk updates
            to support TARGET TEAMS DISTRIBUTE REDUCE
  
 002  _X_ Move to trunk branches for 180727  (0.5-1)
 
 003  _X_ Fix problem with missing omp.h on nvidia smoke tests (0.5-1)
 
-004  ___ Run smoke tests in debug mode and get them working. Depends on 029
+004  ___ [DEBUG] Run smoke tests in debug mode and get them working. Depends on 029
 
 005  _X_ demo use of debugging runtime in at least one openmp example (0.5-2 Andrey)
 
-006  ___ Explain hip automatic mode in at least one hip example (0.5-2 Greg)
+006  ___ [DOC] Explain hip automatic mode in at least one hip example (0.5-4 Greg)
 006.b  ___ Fix HIP automatic mode with updated HIP repository. 
-006.c  ___ Explain hip automatic with cuda_open in examples/cuda-open (Jan)
+006.c  ___ [DOC] Explain hip automatic with cuda_open in examples/cuda-open (Jan)
 006.d  _X_ Remove include in cuda-open examples (Jan 0.5-2)
 
 007  _X_ Test cloc.sh examples and updates version number and help. (0.5-3 Greg)
@@ -29,24 +29,25 @@ Note: There is no committment to complete any or all items
            hcc2 version of cloc.sh scripts.  (0.5-3)
 007.c _X_ Can we get a cmake option for atmi to not install scripts? (Ashwin)
 
-008  ___ Fix driver to allow for multiple offload targets frmo 
+008  ___ [DRIVER] Fix driver to allow for multiple offload targets for
          different archs.  Multiple offload targets already work 
          if on the same arch
 
-009  ___ Fix vprintfl to only use a single atomic. Requires changes
+009  ___ [SERVICES] Fix vprintfl to only use a single atomic. Requires changes
          to the hsa plugin.  Requires 029
 
 010  _X_ Get a public version of the ATMI source code available (Ashwin)
          Note: ATMI libs and devicelibs are built into the release. 
          This is only a problem for people building from source. (0.5-3 Ashwin)
 
-011  ___ Merge hip, cuda2gcn, and some functions from libomptarget
+011  ___ [LIB] Merge hip, cuda2gcn, and some functions from libomptarget
          somewhere in libomptarget/deviceRTLs but not in amdgcn/src. 
+         (Jan)
 
-012  ___ Check install and applcation build on systems WITHOUT cuda or rocm. 
+012  ___ [BUILD] Check install and applcation build on systems WITHOUT cuda or rocm.
          Make sure runtime gives a good message if no available runtime 
          for any of the available offload images.
-012.b ___ Need to get hip build and install not to depend on HCC compiler.
+012.b ___ [BUILD] Need to get hip build and install not to depend on HCC compiler.
          Greg Emailed Sam about this. We may remove hipcc from install.
          (Greg 0.5-4) Deferred to 0.5-4. Just state in release notes
          not to use hipcc.
@@ -58,11 +59,11 @@ Note: There is no committment to complete any or all items
 
 014  _X_ test proxy apps (requires 013) (Andrey 0.5-3) see item 020.
 
-015  ___ Test on carrizo and good HSA installed kaveris  
+015  ___ [TEST] Test on carrizo and good HSA installed kaveris
 
-016  ___ Test SpecAccel benchmark (Andrey requires 013) (Andrey 0.5-4)
+016  ___ [TEST] Test SpecAccel benchmark (Andrey requires 013) (Andrey 0.5-4)
 
-017  ___ Review READMEs for all examples. Requires 040.
+017  ___ [DOC] Review READMEs for all examples. Requires 040.
 
 018  _X_ Check the bug report message in hcc2. llvm is 
          “PLEASE submit a bug report to http://llvm.org/bugs/” 
@@ -83,28 +84,28 @@ Note: There is no committment to complete any or all items
 024 _X_  Move to latest version of hip development repository (0.5-2)
 024.b _X_ Install entire HIP repository
 
-026 ___  Move to latest version of rocm-device-libs (Greg 0.5-4) deferred to 0.5-4
+026 ___  [BUILD] Move to latest version of rocm-device-libs (Greg 0.5-4) deferred to 0.5-4
 
 027 _X_  Fix build_hip.sh script to get version from the version file in this bin directory.
 027.b _X_  Fix build_hip.sh script to build and install ALL HIP components. 
          (Greg)
-027.c ___  Since hipcc requires HCC, we may want to remove this from install (? 0.5.3)
+027.c ___  [BUILD] Since hipcc requires HCC, we may want to remove this from install
+           (Greg 0.5-4)
 
-028 ___ Update services to use asynchronous streams instead of end-of-kernel services. 
+028 ___ [SERVICES] Update services to use asynchronous streams instead of
+                   end-of-kernel services.
 
 029 _X_ Improve performance of end-of-kernel services buffer management (Ashwin 0.5-2)
 
-030 ___ Fix llc taking a long time. 
- 
-031 ___ Replace __smid to some type of blockid (Ashwin 0.5-X) defer to 0.5-X
+031 ___ [LIB] Replace __smid to some type of blockid (Ashwin 0.5-X) defer to 0.5-X
         Ashwin talking with Brian about this. We need to understand the
         impact of work group migration to smid AND to openmp runtime getting
         a different smid.
 
-032 ___ Add current directory to include search path
+032 ___ [DRIVER] Add current directory to include search path
         DEFER till problem returns.
 
-033 ___ Test eigen with hip clang , not with hipcc.
+033 ___ [TEST] Test eigen with hip clang , not with hipcc.
 
 034 _X_ Use cherry picking process to build future dev releases (0.5-3 Greg)
 034.b _X_ Create branches HCC2.180821 with development updates 
@@ -133,7 +134,7 @@ Note: There is no committment to complete any or all items
         terminolgy for mygpu from gpu to offload-arch?  Maybe improve the help 
         text for these scripts.  (all 0.5-3)
 
-039 _X_ CRITICAL: Fix the OpenMP driver so linker flags (-lm -letc) are not treated
+039 _X_ [BUG] Fix the OpenMP driver so linker flags (-lm -letc) are not treated
         as input files. This is a problem in Driver.cpp ActionBuilder (greg 0.5-3) 
 039.b _X_ Remove hard coded -lm from Gnu.cpp. (Greg 0.5-3)
 
@@ -144,27 +145,6 @@ Note: There is no committment to complete any or all items
         for c++.  That is, change CFLAGS and CC to CXXFLAGS and CXX.  (Andrey 0.5-3)
 040.b _X_ Add debug to other proxy apps.  (Andrey 0.5-3)
 
-041 ___ Fix new smoke test pfspecifier_str.c (Greg 0.5-4)
-
-042 ___ Fix driver for make -S and -c for amdgcn.  Works for nvidia cuda.
-
-----------
-  HCC2 ?= /opt/rocm/hcc2
-  HCC2_GPU ?= gfx803
-  HCC2_GPUTARGET = amdgcn-amd-amdhsa
-  ifeq (sm_,$(findstring sm_,$(HCC2_GPU)))
-    HCC2_GPUTARGET = nvptx64-nvidia-cuda
-  endif
-  HCC2_CPUTARGET ?= x86_64-pc-linux-gnu
-  CFLAGS = -O3 -target $(HCC2_CPUTARGET) -fopenmp -fopenmp-targets=$(HCC2_GPUTARGET) -Xopenmp-target=$(HCC2_GPUTARGET) -march=$(HCC2_GPU) 
-  CC = $(HCC2)/bin/clang
-  LDFLAGS = -fopenmp -fopenmp-targets=$(HCC2_GPUTARGET) -target $(HCC2_CPUTARGET)
-  ifeq (nvptx,$(findstring nvptx,$(HCC2_GPUTARGET)))
-    CUDA ?= /usr/local/cuda
-    LDFLAGS += -L$(CUDA)/lib64 -lcuda -lcudart -lelf -lffi
-  endif
-----------
-
 041 _X_ Fix warning on build_openmp.sh that only occurs on debug build (Jan 0.5-3)
 
 042 _X_ As a result of 034, we need to carefully compare any new logic introduced 
@@ -172,61 +152,119 @@ Note: There is no committment to complete any or all items
         openmp/libomptarget/deviceRLTS/nvptx   ?? Does this warrent any changes to 
         openmp/libomptarget/deviceRLTS/amdgcn.  (Greg 0.5-3)
         Reviewed, no changes made.
-
 042.b _X_ Likewise we need to review any new logic in 
         openmp/libomptarget/plugins/cuda      ?? Does this warrent any changes to 
         openmp/libomptarget/plugins/hsa  (Greg 0.5-3)
         Reviewed, no changes made however, we did update cuda plugin to
         support a kernel launch trace. See 046. We also added 045.b as a future
         workitem to document how number of teams and threads are set at launch time.
+042.c ___ [OMP] Reconcile new logic in deviceRTLS/nvptx and plugins/cuda in
+          deviceRTLS/amdgcn and plugins/hsa respectively after 0.5.3 180821.
+          (Greg 0.5-4)
 
-043 ___  Fix the bundle and unbundle scripts to properly handle .o files that have
-         a combination of device bc and host .o (ELF).
+043 _X_  Fix the bundle and unbundle scripts to properly handle .o files that have
+         a combination of device bc and host .o (ELF). (Greg 0.5-3). 
+         We also updated examples/openmp/README.md to demonstrate how
+         unbundle.sh works on .o files. 
 
 044 _X_ fix writeIndex_amode Makefile or source (Andrey 0.5-3)
         Greg fixed the source.
 
-045 ___ Increase GV_Threads for AMDGCN in GpuGridValues.h and use GpuGridValues.h
+045 ___ [DRIVER] Increase GV_Threads for AMDGCN in GpuGridValues.h and use GpuGridValues.h
         in setting compile time constants in deviceRTLs/amdgcn/src/option.
         Requires a detailed review of device RTL constants MAX_THREADS_PER_TEAM
         WARPSIZE, MAX_SHARED_ARGS, OMP_STATE_COUNT, and especially MAX_SM which
         is currently 64.  We may want to add a MAX_SM to GpuGridValues.h
-045.b ___ write a doc on GPU Grid constants that clearly explains the logic
+        (Greg 0.5-4)
+
+045.b ___ [DOC] write a doc on GPU Grid constants that clearly explains the logic
         to determine the number of teams and threads for kernel launch.
+        Document should explain the use of LIBOMPTARGET_KERNEL_TRACE
+        Requires 046.b.
 
 046 _X_ Create a kernel launch trace facility LIBOMPTARGET_KERNEL_DEBUG not
         tied to using debug library builds. (Greg 0.5-3)
-046.b ___ Add execution mode to the kernel trace, "SPMD", "GENR", "NONE"
+046.b ___ [DEBUG] Add execution mode to the kernel trace, "SPMD", "GENR", "NONE".
+         Per discussion with Chip, add requested num_threads and requested
+         num_teams and hightlight when different.  Remember the spec requires
+         that the actual num_threads and num_teams cannot be more than requested. 
+         However, hardware capabilities often restrict it to less than requested, 
+         especially num_threads. This fix will be done with TODO 045. 
+         Also, change the env var name to LIBOMPTARGET_KERNEL_TRACE.
+         We want to restrict _DEBUG environment variables to those that 
+         require a build with debug libs. 
+         (Greg 0.5-4)
+ 
+047 ___ [LIB] Fix device name in snap.  It currently always prints "Quadro".
+        Consider new device hcc2_omp_ API to query device name and memory.
+        See if there is something in the openmp 5 spec for this.
 
-047 ___ Change all the examples and the recommended Makefile stanza to set HCC2_GPU
+048 ___ [TEST/DOC] Improve mymcpu/mygpu scripts.  Find some source of lspci codes
+        for GPU devices that provides a mapping of lspci codes to codenames
+        and then find a way to map these codenames to gpu names (sm_XX, gfxYYY etc.)
+        Also, lets add the execution of mymcpu/mygpu as a best practice
+        install process so users.
+
+049 ___ [DOC] Change all the examples and the recommended Makefile stanza to set HCC2_GPU
         based on returned value of $HCC2/bin/mygpu, requires 040 and 038.
         We should only set to a default value gfx803 if mygpu returns unknown
         AND user does not have environment variable HCC2_GPU set to something else.
+        Do not do this till we get more confidence in complete tables for GPUs for
+        nvidia and radeon GPUs.  Requires 048.
 
-048 ___ Fix device name in snap.  It currently always prints "Quadro".
-        Consider new device hcc2_omp_ API to query device name and memory.
-
-049 ___ Add mlink-bit-code clang cc1 options for some bc libraries to speed up gpu
-        phase link time.
-
-050 ___ Replace call to select_outline with a call to the actual function in
+050 ___ [DRIVER] Replace call to select_outline with a call to the actual function in
         our custom linker for gpu phase linking.
 
-051 ___ Remove the cp commands from the HIP driver that save generated bc files
-        to /tmp or just put "#if 0" around them.
+051 ___ [DRIVER] Remove the cp commands from the HIP driver that save generated bc
+        files to /tmp or just put "#if 0" around them.  (Greg 0.5.4)
 
-052 ___ Create libm.bc for both amdgcn and nvptx whose interface is the
-        standard math library inteface for -lm.  The amdgcn version will call
-        ocml functions.  The nvptx will call the __sm__ intrinsics .  This will
-        remove need to define functions in header files.  bc libraries that
-        are identified via the -lX interface are good candidates for mlink-bit-code.
-        See 049.
+052 ___ [LIB] Implement the first Device BC Library to be abbreviated "DBCL"
+        Create libm.bc as a DBCL for both amdgcn and nvptx whose interface is the
+        standard math library found in  math.h and cmath.h.
+        The libm.bc DBCL will support the -lm command line option.
+        The amdgcn version of libm.bc will call ocml functions.
+        The nvptx will call the __sm__ intrinsics.  This will remove the current need
+        to define functions in header files.
+        Here is a very cool idea.  Let's demo the construction of libm.bc as an
+        example in examples/lib/libm. Then we would add the following to build_libdevice.sh
+        to make sure libm.bc is built into the HCC2 installation.
 
-053 ___ Add C++ test to examples/openmp (Andrey 0.5-4)
+           cp -rp $HCC2_REPO_NAME/examples/lib/libm $tmpdir
+           cd $tmpdir
+           export INSTALL_PATH=$HCC2
+           make
+           sudo make install
 
-054 ___ Implement functionality to compare the execution results with the golded
+        The libm example should support both -lm and -lmfast.
+        This removes additional cmake complexity in our dev repos and provides an example
+        for other device library providers to emulate in how to build DBCL.
+        We may want to find another example host libs such as -lblas or -latomic
+        to build consistent DBCLs.  Any suggestions?
+        We want something to demonstrate the ability to build both architecture-specific
+        and GPU-specific libraries. Having a makefile install will also demonstrate
+        the libdevice naming convention lib<suffix/libdevice/<gpuname>/libX.bc.
+        It will also demonstrate how to build debug libraries.
+052.b ___ [DOC] Document strategy for Device BC Libraries DBCL in examples/lib/README.MD
+052.c ___ [DRIVER] Add mlink-bit-code clang cc1 options for DBCLs to speed
+        up device link phase time and implement the new DBCL strategy.
+        DBCL libraries will be inlined as part of the cc1 compile phase using
+        the -mlink-bit-code cc1 flag. It is ok to have the output of the cc1 device
+        pass be GPU-specific since the driver creates one device pass per requested GPU.
+030 ___ [DRIVER] Fix llc taking a long time. See if DBCLs and -mlink-bit-code improve.
+
+053 ___ [DOC] Add C++ test to examples/openmp (Andrey 0.5-4)
+
+054 ___ [TEST] Implement functionality to compare the execution results with the golded
         file in Makefiles for test/smoke. This will help to verify the results and
         automate the testing (Andrey)
+
+055 ___ [BUG] Fix new smoke test pfspecifier_str.c (Greg 0.5-4)
+
+056 ___ [DRIVER] Fix driver for make -S and -c for amdgcn.  Works for nvidia cuda.
+
+058 ___ [BUILD] Document HCC2 component build strategy that will include
+        how we integrate OpenCL runtime and orignal HCC as components to the
+        HCC2 build.
 
 
 100 ___ Move this list to Git Issues when things slow down.
