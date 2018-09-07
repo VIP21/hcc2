@@ -226,10 +226,11 @@ Note: There is no committment to complete any or all items
         The nvptx will call the __sm__ intrinsics.  This will remove the current need
         to define functions in header files.
         Here is a very cool idea.  Let's demo the construction of libm.bc as an
-        example in examples/lib/libm. Then we would add the following to build_libdevice.sh
+        example in examples/libdevice/libm
+        Then we would add the following to build_libdevice.sh
         to make sure libm.bc is built into the HCC2 installation.
 
-           cp -rp $HCC2_REPO_NAME/examples/lib/libm $tmpdir
+           cp -rp $HCC2_REPO_NAME/examples/libdevice/libm $tmpdir
            cd $tmpdir
            export INSTALL_PATH=$HCC2
            make
@@ -244,7 +245,7 @@ Note: There is no committment to complete any or all items
         and GPU-specific libraries. Having a makefile install will also demonstrate
         the libdevice naming convention lib<suffix/libdevice/<gpuname>/libX.bc.
         It will also demonstrate how to build debug libraries.
-052.b ___ [DOC] Document strategy for Device BC Libraries DBCL in examples/lib/README.MD
+052.b ___ [DOC] Document DBCL strategy in examples/libdevice/README.md
 052.c ___ [DRIVER] Add mlink-bit-code clang cc1 options for DBCLs to speed
         up device link phase time and implement the new DBCL strategy.
         DBCL libraries will be inlined as part of the cc1 compile phase using
