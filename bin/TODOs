@@ -158,9 +158,10 @@ Note: There is no committment to complete any or all items
         Reviewed, no changes made however, we did update cuda plugin to
         support a kernel launch trace. See 046. We also added 045.b as a future
         workitem to document how number of teams and threads are set at launch time.
-042.c ___ [OMP] Reconcile new logic in deviceRTLS/nvptx and plugins/cuda in
+042.c _X_ [OMP] Reconcile new logic in deviceRTLS/nvptx and plugins/cuda in
           deviceRTLS/amdgcn and plugins/hsa respectively after 0.5.3 180821.
-          (Greg 0.5-4)
+          (Greg 0.5-4)  commit fd23577c966ead6b451d2bfe6b75a6a04386bbfe updates
+          deviceRTLs/amdgcn.  There are no changes in the cuda plugin to reconcile.
 
 043 _X_  Fix the bundle and unbundle scripts to properly handle .o files that have
          a combination of device bc and host .o (ELF). (Greg 0.5-3). 
@@ -216,7 +217,7 @@ Note: There is no committment to complete any or all items
         our custom linker for gpu phase linking.
 
 051 ___ [DRIVER] Remove the cp commands from the HIP driver that save generated bc
-        files to /tmp or just put "#if 0" around them.  (Greg 0.5.4)
+        files to /tmp or just put "#if 0" around them.  (Greg 0.5-4)
 
 052 ___ [LIB] Implement the first Device BC Library to be abbreviated "DBCL"
         Create libm.bc as a DBCL for both amdgcn and nvptx whose interface is the
@@ -245,13 +246,29 @@ Note: There is no committment to complete any or all items
         and GPU-specific libraries. Having a makefile install will also demonstrate
         the libdevice naming convention lib<suffix/libdevice/<gpuname>/libX.bc.
         It will also demonstrate how to build debug libraries.
-052.b ___ [DOC] Document DBCL strategy in examples/libdevice/README.md
+        (Jan 0.5-4)
+052.b _X_ [DOC] Document DBCL strategy in examples/libdevice/README.md
+        (Greg 0.5-4)
 052.c ___ [DRIVER] Add mlink-bit-code clang cc1 options for DBCLs to speed
         up device link phase time and implement the new DBCL strategy.
         DBCL libraries will be inlined as part of the cc1 compile phase using
         the -mlink-bit-code cc1 flag. It is ok to have the output of the cc1 device
         pass be GPU-specific since the driver creates one device pass per requested GPU.
-030 ___ [DRIVER] Fix llc taking a long time. See if DBCLs and -mlink-bit-code improve.
+        (Greg 0.5-4)
+052.d ___ Update document with feedback from Wednesday morning multi-company meeting.
+        Update description of what happens when unused host libraries are specified.
+        That is, when there is a header files and a -l options is specified.
+        A good example is #include "mpi.h" with -lmpi.  There are two scenarios
+        to document.
+           1. What happens when the device code never uses an mpi function.
+              Should we generate warnings in the clang driver?
+           2. What happens when a user accidentally does not delete the use
+              of a host function in his device code.  Where is the fail message?
+              How can we generate warnings in the clang driver?
+              Should we introduce a new option that requires a DBCL?
+
+030 ___ [DRIVER] Fix llc taking a long time. See if DBCLs from TODO 052
+        and -mlink-bit-code improve overall compilation time.
 
 053 ___ [DOC] Add C++ test to examples/openmp (Andrey 0.5-4)
 
