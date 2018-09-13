@@ -280,6 +280,10 @@ Note: There is no committment to complete any or all items
 
 056 ___ [DRIVER] Fix driver for make -S and -c for amdgcn.  Works for nvidia cuda.
 
+057 ___ [DRIVER?] Big performance difference for test application with and without save-temps. 
+        With --save-temps	34.66ms
+        Without --save-temps	57.04ms
+
 058 ___ [BUILD] Document HCC2 component build strategy that will include
         how we integrate OpenCL runtime and orignal HCC as components to the
         HCC2 build.
