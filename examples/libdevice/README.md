@@ -162,7 +162,7 @@ Q: What happens when a user code uses a function in a library that is
    only available on a certain GPU?  Example: fast_sqrt().  
 A: The library implementor should surround the implementation with 
    the particulare macro ifdef for that GPU.  For nvptx they use
-   __CUDA_ARCH__ .  For amdgcn, use __AMDGCN__.  
+   __NVPTX__ .  For amdgcn, use __AMDGCN__.
    #ifdef  __AMDGCN__  && ( __AMDGCN__ == 1000 )
    double fast_sqrt(double __a) { ... }
    #endif
