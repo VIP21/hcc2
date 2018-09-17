@@ -95,7 +95,12 @@ add_custom_command( OUTPUT hcc2version.phantom
    COMMAND /bin/sed -i -e "s/X\\.Y\\-Z/${version_str}/" ${CMAKE_CURRENT_BINARY_DIR}/hcc2version > hcc2version.phantom
    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/hcc2version)
 
-add_custom_target(utils_scripts ALL DEPENDS cloc.sh.phantom mymcpu.phantom hcc2version.phantom)
+# mymcpu reads the codename by searching for pciid from this generated gputable. 
+add_custom_command( OUTPUT gputable.txt
+   COMMAND /bin/cp -p ${CMAKE_CURRENT_SOURCE_DIR}/bin/gputable.txt ${CMAKE_CURRENT_BINARY_DIR}/gputable.txt
+   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/gputable.txt)
+
+add_custom_target(utils_scripts ALL DEPENDS cloc.sh.phantom mymcpu.phantom hcc2version.phantom gputable.txt)
 
 # We need prepare-builtins in the HCC2 distribution to build bc libs for components
 list(APPEND CMAKE_MODULE_PATH ${LLVM_CMAKE_DIR})
@@ -112,6 +117,7 @@ install(PROGRAMS
    ${CMAKE_CURRENT_SOURCE_DIR}/bin/unbundle.sh
    ${CMAKE_CURRENT_BINARY_DIR}/cloc.sh
    ${CMAKE_CURRENT_BINARY_DIR}/mymcpu
+   ${CMAKE_CURRENT_BINARY_DIR}/gputable.txt
    ${CMAKE_CURRENT_BINARY_DIR}/hcc2version
    ${CMAKE_CURRENT_SOURCE_DIR}/bin/mygpu
    ${CMAKE_CURRENT_SOURCE_DIR}/bin/make_header_from_ll_defines.sh
