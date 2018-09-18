@@ -30,10 +30,15 @@ fi
 
 INSTALL_DIR=${INSTALL_LIBDEVICE:-"${HCC2}/lib/libdevice"}
 
+
 LLVM_BUILD=$HCC2
 SOURCEDIR=$HCC2_REPOS/$HCC2_LIBDEVICE_REPO_NAME
 
 MCPU_LIST=${GFXLIST:-"gfx700 gfx701 gfx801 gfx803 gfx900"}
+
+# build_libdevice now builds cross-platform DBCLs for libm
+NVPTXGPUS=${NVPTXGPUS:-30,35,50,60}
+LIBM_DIR="$HCC2_REPOS/$HCC2_REPO_NAME/examples/libdevice/libm"
 
 REPO_BRANCH=${REPO_BRANCH:-HCC2-180619}
 #  Check the repositories exist and are on the correct branch
@@ -196,6 +201,17 @@ if [ "$1" != "install" ] ; then
       fi
    done
    cleanup_sedfiles
+#  Now build the math lib
+   cd $LIBM_DIR
+   for gpu in $MCPU_LIST ; do
+      HCC2_GPU=$gpu make
+   done
+   origIFS=$IFS
+   IFS=","
+   for gpu in $NVPTXGPUS ; do
+      HCC2_GPU="sm_$gpu" make
+   done
+   IFS=$origIFS
    echo 
    echo "  Done with all makes"
    echo "  Please run ./build_libdevice.sh install "
@@ -237,6 +253,13 @@ if [ "$1" == "install" ] ; then
 
    done
    cleanup_sedfiles
+
+   echo
+   echo "INSTALLING DBCL libm from $LIBM_DIR/build "
+   echo "rsync -av $LIBM_DIR/build/libdevice $HCC2/lib"
+   $SUDO rsync -av $LIBM_DIR/build/libdevice $HCC2/lib
+   echo "rsync -av $LIBM_DIR/build/libdevice $HCC2/lib-debug"
+   $SUDO rsync -av $LIBM_DIR/build/libdevice $HCC2/lib-debug
 
    # rocm-device-lib cmake installs to lib dir, move all bc files up one level
    # and cleanup unused oclc_isa_version bc files and link correct one
