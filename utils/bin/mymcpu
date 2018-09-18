@@ -136,6 +136,12 @@ function code2gpu(){
       ;;
       "gt730")   gpuname="sm_35"
       ;;
+      "p100")   gpuname="sm_60"
+      ;;
+      "gv100")   gpuname="sm_70"
+      ;;
+      "v100")   gpuname="sm_70"
+      ;;
       "")  gpuname="sm_35"
       ;;
       *) gpuname="unknown" 
