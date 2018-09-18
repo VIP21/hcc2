@@ -84,7 +84,7 @@ Note: There is no committment to complete any or all items
 024 _X_  Move to latest version of hip development repository (0.5-2)
 024.b _X_ Install entire HIP repository
 
-026 ___  [BUILD] Move to latest version of rocm-device-libs (Greg 0.5-4) deferred to 0.5-4
+026 _X_  [BUILD] Move to latest version of rocm-device-libs (Greg 0.5-4) deferred to 0.5-4
 
 027 _X_  Fix build_hip.sh script to get version from the version file in this bin directory.
 027.b _X_  Fix build_hip.sh script to build and install ALL HIP components. 
@@ -249,13 +249,13 @@ Note: There is no committment to complete any or all items
         (Jan 0.5-4)
 052.b _X_ [DOC] Document DBCL strategy in examples/libdevice/README.md
         (Greg 0.5-4)
-052.c ___ [DRIVER] Add mlink-bit-code clang cc1 options for DBCLs to speed
+052.c _X_ [DRIVER] Add mlink-bit-code clang cc1 options for DBCLs to speed
         up device link phase time and implement the new DBCL strategy.
         DBCL libraries will be inlined as part of the cc1 compile phase using
         the -mlink-bit-code cc1 flag. It is ok to have the output of the cc1 device
         pass be GPU-specific since the driver creates one device pass per requested GPU.
         (Greg 0.5-4)
-052.d ___ Update document with feedback from Wednesday morning multi-company meeting.
+052.d _X_ Update document with feedback from Wednesday morning multi-company meeting.
         Update description of what happens when unused host libraries are specified.
         That is, when there is a header files and a -l options is specified.
         A good example is #include "mpi.h" with -lmpi.  There are two scenarios
@@ -266,6 +266,9 @@ Note: There is no committment to complete any or all items
               of a host function in his device code.  Where is the fail message?
               How can we generate warnings in the clang driver?
               Should we introduce a new option that requires a DBCL?
+        See the README.md in hcc2/examples/libdevice.
+052.e ___ Make -Wno-bc-notfound a default to turn off warnings when user specifies
+        -l when there is no bc library, e.g. -lmpi currently gets a warning
 
 030 ___ [DRIVER] Fix llc taking a long time. See if DBCLs from TODO 052
         and -mlink-bit-code improve overall compilation time.

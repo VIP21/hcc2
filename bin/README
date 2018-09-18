@@ -46,7 +46,7 @@ $HOME/git/hcc2/llvm               %rocdev/llvm             HCC2-180906
 $HOME/git/hcc2/lld                %rocdev/lld              HCC2-180906
 $HOME/git/hcc2/openmp             %rocdev/openmp           HCC2-180906 ***
 $HOME/git/hcc2/hip                %rocdev/hip              HCC2.180805
-$HOME/git/hcc2/rocm-device-libs   %roc/rocm-device-libs    HCC2-180619
+$HOME/git/hcc2/rocm-device-libs   %roc/rocm-device-libs    HCC2-180918
 $HOME/git/hcc2/atmi               %roc/atmi                atmi-0.5
 $HOME/git/hcc2/openmpapps         %roclib/openmpapps       HCC2-0.5
 

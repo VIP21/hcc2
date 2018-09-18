@@ -104,7 +104,7 @@ repo_web_location=$GITROC
 
 # This repo is used to build /opt/rocm/libamdgcn
 reponame="rocm-device-libs"
-COBRANCH="HCC2-180619"
+COBRANCH="HCC2-180918"
 clone_or_pull
 
 # This is the ATMI repo for ATMI 0.4 in development

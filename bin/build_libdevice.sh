@@ -40,7 +40,7 @@ MCPU_LIST=${GFXLIST:-"gfx700 gfx701 gfx801 gfx803 gfx900"}
 NVPTXGPUS=${NVPTXGPUS:-30,35,50,60}
 LIBM_DIR="$HCC2_REPOS/$HCC2_REPO_NAME/examples/libdevice/libm"
 
-REPO_BRANCH=${REPO_BRANCH:-HCC2-180619}
+REPO_BRANCH=${REPO_BRANCH:-HCC2-180918}
 #  Check the repositories exist and are on the correct branch
 function checkrepo(){
    cd $REPO_DIR
