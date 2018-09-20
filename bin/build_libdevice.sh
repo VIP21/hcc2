@@ -28,7 +28,8 @@ if [ "$BUILD_DIR" != "$HCC2_REPOS" ] ; then
    COPYSOURCE=true
 fi
 
-INSTALL_DIR=${INSTALL_LIBDEVICE:-"${HCC2}/lib/libdevice"}
+INSTALL_ROOT_DIR=${INSTALL_LIBDEVICE:-"${HCC2}"}
+INSTALL_DIR=$INSTALL_ROOT_DIR/lib/libdevice
 
 
 LLVM_BUILD=$HCC2
@@ -256,10 +257,10 @@ if [ "$1" == "install" ] ; then
 
    echo
    echo "INSTALLING DBCL libm from $LIBM_DIR/build "
-   echo "rsync -av $LIBM_DIR/build/libdevice $HCC2/lib"
-   $SUDO rsync -av $LIBM_DIR/build/libdevice $HCC2/lib
-   echo "rsync -av $LIBM_DIR/build/libdevice $HCC2/lib-debug"
-   $SUDO rsync -av $LIBM_DIR/build/libdevice $HCC2/lib-debug
+   echo "rsync -av $LIBM_DIR/build/libdevice $INSTALL_ROOT_DIR/lib"
+   $SUDO rsync -av $LIBM_DIR/build/libdevice $INSTALL_ROOT_DIR/lib
+   echo "rsync -av $LIBM_DIR/build/libdevice $INSTALL_ROOT_DIR/lib-debug"
+   $SUDO rsync -av $LIBM_DIR/build/libdevice $INSTALL_ROOT_DIR/lib-debug
 
    # rocm-device-lib cmake installs to lib dir, move all bc files up one level
    # and cleanup unused oclc_isa_version bc files and link correct one
