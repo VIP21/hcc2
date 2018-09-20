@@ -1,7 +1,6 @@
 #ifndef __SIMPLE_MATRIX_H
 #define __SIMPLE_MATRIX_H
 
-#include <vector>
 #include <iostream>
 #include <cstdlib>
 
