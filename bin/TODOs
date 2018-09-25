@@ -91,6 +91,11 @@ Note: There is no committment to complete any or all items
          (Greg)
 027.c ___  [BUILD] Since hipcc requires HCC, we may want to remove this from install
            (Greg 0.5-4)
+027.d ___ [BUILD] What will it take to build_hip.sh without ROCm.  We may need to 
+          do a source build of hsaruntime and the thunk library.  To support U of D 
+          OpenMP test team, we need to build from source without ROCm. 
+027.e ___ Ensure proper use and initialization of CUDA env variable in build_openmp.sh
+
 
 028 ___ [SERVICES] Update services to use asynchronous streams instead of
                    end-of-kernel services.
@@ -200,11 +205,11 @@ Note: There is no committment to complete any or all items
         Consider new device hcc2_omp_ API to query device name and memory.
         See if there is something in the openmp 5 spec for this.
 
-048 ___ [TEST/DOC] Improve mymcpu/mygpu scripts.  Find some source of lspci codes
+048 _X_ [TEST/DOC] Improve mymcpu/mygpu scripts.  Find some source of lspci codes
         for GPU devices that provides a mapping of lspci codes to codenames
         and then find a way to map these codenames to gpu names (sm_XX, gfxYYY etc.)
         Also, lets add the execution of mymcpu/mygpu as a best practice
-        install process so users.
+        install process so users.(Greg 0.5-4).
 
 049 ___ [DOC] Change all the examples and the recommended Makefile stanza to set HCC2_GPU
         based on returned value of $HCC2/bin/mygpu, requires 040 and 038.
@@ -291,5 +296,10 @@ Note: There is no committment to complete any or all items
         how we integrate OpenCL runtime and orignal HCC as components to the
         HCC2 build.
 
+059 __ [DOC] Add instructions to install rpm/deb without root access to install 
+       to a different location than /opt/rocm/hcc2.  U of D. (0.5-4)
+
+060 ___ Add U of D to hcc2 dev team.  They are building an OpenMP test suite for all 
+        functionality. 
 
 100 ___ Move this list to Git Issues when things slow down.
