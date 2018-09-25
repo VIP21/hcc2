@@ -1,4 +1,4 @@
-HCC2 - V 0.5-3
+HCC2 - V 0.5-4
 ==============
 
 hcc2:  Heterogeneous Compiler Collection (Version 2). 
@@ -66,8 +66,10 @@ Software License Agreement.
 ## HCC2 Install
 
 <A NAME="Install">
-On Ubuntu 16.04 LTS (xenial), run these commands:
 
+### Debian/Ubunutu install
+
+On Ubuntu 16.04 LTS (xenial), run these commands:
 ```
 wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-3/hcc2_0.5-3_amd64.deb
 sudo dpkg -P hcc2
@@ -80,10 +82,26 @@ The "dpkg -P" commands are used to delete previous versions of hcc2, libamdgcn, 
 
 HCC2 does not conflict with the production HCC. There is no reason to delete HCC to use HCC2. The HCC2 bin directory (which includes the standard clang and llvm binaries) is not intended to be in your PATH for typical operation.
 
+### RPM Install
 For rpm-based Linux distributions, use this rpm
 ```
 wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-3/hcc2-0.5-3.x86_64.rpm
 sudo rpm -i hcc2-0.5-3.x86_64.rpm
+
+### No root Install
+
+The current packages list no dependencies.
+By default they install content to release directory /opt/rocm/hcc2_0.X-Y and a symbolink is created at /opt/rocm/hcc2 to the release directory. This requires root access.  You can use the --prefix option of the rpm install command to change the location so as not to require root access. 
+
+```
+wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-3/hcc2-0.5-3.x86_64.rpm
+mkdir -p /tmp/rocm/hcc2
+rpm -i hcc2-0.5-3.x86_64.rpm --prefix=$HOME/rocm/hcc2
+```
+Then permanently set the environment variable HCC2 to $HOME/rocm/hcc2.  For example in .bash_profile add the command export HCC2=$HOME/rocm/hcc2
+
+
+### Source Install
 ```
 Build and install from sources is possible.  However, the source build for HCC2 is complex for three reasons.  
 - Many repos are required .  There is a script to ensure you have all repos and checkout the correct branch. 
