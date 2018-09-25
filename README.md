@@ -87,6 +87,7 @@ For rpm-based Linux distributions, use this rpm
 ```
 wget https://github.com/ROCm-Developer-Tools/hcc2/releases/download/rel_0.5-3/hcc2-0.5-3.x86_64.rpm
 sudo rpm -i hcc2-0.5-3.x86_64.rpm
+```
 
 ### No root Install
 
