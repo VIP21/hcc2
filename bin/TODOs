@@ -302,4 +302,6 @@ Note: There is no committment to complete any or all items
 060 ___ Add U of D to hcc2 dev team.  They are building an OpenMP test suite for all 
         functionality. 
 
+061 ___ [BUILD] Add sm_70 to default list of NVPTXGPU. (0.5-4)
+
 100 ___ Move this list to Git Issues when things slow down.
