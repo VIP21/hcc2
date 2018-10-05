@@ -39,16 +39,16 @@ ifeq ($(CUDA),)
 CUDA = /usr/local/cuda
 endif
 ifeq ($(TARGETS),)
-TARGETS =--offload-arch=gfx803
+TARGETS =--offload-arch=sm_60
 endif
-
 CC       =$(HCC2)/bin/clang++
-CFLAGS   =--hip-auto-headers=cuda_open
 
 # Add cudart only if we have an Nvidia sm_ target
 ifeq (sm_,$(findstring sm_,$(TARGETS)))
   LFLAGS +=-L$(CUDA)/targets/x86_64-linux/lib -lcudart -Wl,-rpath,$(CUDA)/targets/x86_64-linux/lib
-  CFLAGS +=-I$(CUDA)/include
+  CFLAGS +=-include hip/nvcc_detail/hip_runtime.h -I$(CUDA)/include
+else
+  CFLAGS  +=--hip-auto-headers=cuda_open
 endif
 
 # ----- Demo compile and link in one step, no object code saved
