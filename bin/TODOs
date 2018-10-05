@@ -252,8 +252,9 @@ Note: There is no committment to complete any or all items
         the libdevice naming convention lib<suffix/libdevice/<gpuname>/libX.bc.
         It will also demonstrate how to build debug libraries.
         (Jan 0.5-4)
-052.b _X_ [DOC] Document DBCL strategy in examples/libdevice/README.md
-        (Greg 0.5-4)
+052.b ___ [DOC] Simplify libdevice/README.md and refer to a new detailed paper called 
+          "Device Library Methodologies for Clang"
+         (Greg 0.5-4)
 052.c _X_ [DRIVER] Add mlink-bit-code clang cc1 options for DBCLs to speed
         up device link phase time and implement the new DBCL strategy.
         DBCL libraries will be inlined as part of the cc1 compile phase using
@@ -274,6 +275,7 @@ Note: There is no committment to complete any or all items
         See the README.md in hcc2/examples/libdevice.
 052.e ___ Make -Wno-bc-notfound a default to turn off warnings when user specifies
         -l when there is no bc library, e.g. -lmpi currently gets a warning
+052.f __ Write paper called "Device Library Methodolgies for Clang"
 
 030 ___ [DRIVER] Fix llc taking a long time. See if DBCLs from TODO 052
         and -mlink-bit-code improve overall compilation time.
@@ -284,7 +286,12 @@ Note: There is no committment to complete any or all items
         file in Makefiles for test/smoke. This will help to verify the results and
         automate the testing (Andrey)
 
-055 ___ [BUG] Fix new smoke test pfspecifier_str.c (Greg 0.5-4)
+055 _X_ [BUG] Fix new smoke test pfspecifier_str.c (Greg 0.5-4)
+055.b ___ [BUG] Fix compilation of deviceRTL in debug mode where printf
+                contains variable length strings. (Greg 0.5-4)
+055.c ___ [TEST] make smoke test pfspecifier_str.c more difficult by using a variable
+            length string like that found in libcall.cu. This should cause 
+            pfsecifier_str.c to fail until I push my fix for 055.b.  (Andrey0.5-4)
 
 056 ___ [DRIVER] Fix driver for make -S and -c for amdgcn.  Works for nvidia cuda.
 
@@ -304,7 +311,10 @@ Note: There is no committment to complete any or all items
 
 061 ___ [BUILD] Add sm_70 to default list of NVPTXGPU. (0.5-4)
 
-062 ___ Check that the cuda examples run on nvidia hardware. (0.5-4) Added for Scott.
+062 ___ [TEST] (Jan 0.5-4) Create a new examples directory called "cuda" (for Scott).
+        The original directory cuda-open should be for amdgcn targets by default.  
+        Examples in cuda directory will not work on amdgcn. 
+        Examples in cuda-open will use host hip API with native cuda kernels. 
 
 063 ___ [TEST] Example of linking .a archive of bundled .o (Andrey)
 
