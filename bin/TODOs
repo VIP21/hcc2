@@ -306,4 +306,8 @@ Note: There is no committment to complete any or all items
 
 062 ___ Check that the cuda examples run on nvidia hardware. (0.5-4) Added for Scott.
 
+063 ___ [TEST] Example of linking .a archive of bundled .o (Andrey)
+
+064 ___ [TEST] Example of meaningful usage of task in target region (Andrey)
+
 100 ___ Move this list to Git Issues when things slow down.
