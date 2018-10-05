@@ -39,9 +39,8 @@ ifeq ($(CUDA),)
 CUDA = /usr/local/cuda
 endif
 ifeq ($(TARGETS),)
-TARGETS =--offload-arch=gfx803
+TARGETS =--offload-arch=sm_60
 endif
-
 CC       =$(HCC2)/bin/clang++
 
 # Add cudart only if we have an Nvidia sm_ target
