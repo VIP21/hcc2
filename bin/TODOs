@@ -320,4 +320,6 @@ Note: There is no committment to complete any or all items
 
 064 ___ [TEST] Example of meaningful usage of task in target region (Andrey)
 
+065 ___ [BUILD] Add gfx906 to default GFXLIST, as well as check its support in the clang/llvm
+
 100 ___ Move this list to Git Issues when things slow down.
