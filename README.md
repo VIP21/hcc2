@@ -5,7 +5,7 @@ hcc2:  Heterogeneous Compiler Collection (Version 2).
 
 This is README.md for https:/github.com/ROCM-Developer-Tools/hcc2 .  This is the base repository for HCC2,  Use this for issues, documentation, packaging, examples, build.  
 
-HCC2 is an experimental PROTOTYPE that is intended to support multiple programming models including OpenMP 4.5+, C++ parallel extentions (original HCC), HIP, and cuda clang.  It supports offloading to multiple GPU acceleration targets(multi-target).  It also supports different host platforms such as AMD64, PPC64LE, and AARCH64. (multi-platform). 
+HCC2 is an experimental PROTOTYPE that is intended to support multiple programming models including OpenMP 4.5+, C++ parallel extentions (original HCC), HIP, and cuda clang.  It supports offloading to multiple GPU acceleration targets (multi-target).  It also supports different host platforms such as AMD64, PPC64LE, and AARCH64 (multi-platform). 
 
 The bin directory of this repository contains a README and build scripts needed to build and install HCC2. However, we recommend that you install from the debian or rpm packages described below.
 
