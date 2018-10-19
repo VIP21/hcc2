@@ -4,9 +4,18 @@ all: $(TESTNAME)
 
 .PRECIOUS: %.o %.ll %.ll.s %.s %.s.o
 
+.PHONY: prerequisites
+
+ifneq ($(SCRIPT_INIT),)
+prerequisites:
+	@echo "<<< $(SCRIPT_INIT) <<<"
+	. ./$(SCRIPT_INIT)
+	@echo ">>> $(SCRIPT_INIT) >>>"
+endif
+
 # ----- Demo compile and link in one step, no object code saved
-$(TESTNAME): $(TESTSRC_ALL)
-	$(SETENV) $(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(OMP_FLAGS) $(LINK_FLAGS) $^ -o $@
+$(TESTNAME): prerequisites $(TESTSRC_ALL)
+	$(SETENV) $(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(OMP_FLAGS) $(LINK_FLAGS) $(wordlist 2,$(words $^),$^) -o $@
 
 run: $(TESTNAME)
 	$(RUNENV) $(RUNPROF) ./$(TESTNAME) 2>&1 | tee $@.log
@@ -26,7 +35,7 @@ obin: $(TESTNAME).o
 run_obin: obin
 	$(RUNENV) $(RUNPROF) ./obin 2>&1 | tee $@.log
 
-help: 
+help:
 	@echo
 	@echo "Compiler: 	        $(OMP_BIN)"
 	@echo "LLLVM Tool Chain:	$(HCC2)/bin"
@@ -127,7 +136,7 @@ endif
 	$(SETENV) $(CC) -c $(OMP_FLAGS) $^ -o $@
 
 sbin: $(addsuffix .s.o, $(TESTNAMES_ALL))
-	$(SETENV) $(CC) $(OMP_FLAGS) $(LINK_FLAGS) $^ -o $@ 
+	$(SETENV) $(CC) $(OMP_FLAGS) $(LINK_FLAGS) $^ -o $@
 
 run_sbin: sbin
 	$(RUNENV) $(RUNPROF) ./sbin 2>&1 | tee $@.log
