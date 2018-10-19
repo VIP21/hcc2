@@ -1,0 +1,16 @@
+include ../Makefile.defs
+
+TESTNAME        = liba_init
+TESTSRC_MAIN    =
+TESTSRC_AUX     = func_1v.c func_2v.c func_3v.c
+TESTSRC_ALL     = $(TESTSRC_MAIN) $(TESTSRC_AUX)
+SCRIPT_INIT	=
+
+CLANG           = clang
+OMP_BIN         = $(HCC2)/bin/$(CLANG)
+CC              = $(OMP_BIN) $(VERBOSE)
+EXTRA_CFLAGS    = -emit-llvm
+EXTRA_LDFLAGS	=
+EXTRA_OMP_FLAGS =
+
+include ../Makefile.rules
