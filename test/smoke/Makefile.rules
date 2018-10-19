@@ -6,7 +6,7 @@ all: $(TESTNAME)
 
 # ----- Demo compile and link in one step, no object code saved
 $(TESTNAME): $(TESTSRC_ALL)
-	$(SETENV) $(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(OMP_FLAGS) $(LINK_FLAGS) $^ -o $@ 
+	$(SETENV) $(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(OMP_FLAGS) $(LINK_FLAGS) $^ -o $@
 
 run: $(TESTNAME)
 	$(RUNENV) $(RUNPROF) ./$(TESTNAME) 2>&1 | tee $@.log
@@ -73,9 +73,9 @@ help:
 	@echo
 	@echo " Compile Flags:        $(CFLAGS) $(EXTRA_CFLAGS)"
 	@echo
-	@echo " OMP Compile Flags:    $(OMP_FLAGS)"
+	@echo " OMP Compile Flags:    $(OMP_FLAGS) $(EXTRA_OMP_FLAGS)"
 	@echo
-	@echo " Link Flags:           $(LINK_FLAGS)"
+	@echo " Link Flags:           $(LINK_FLAGS) $(EXTRA_LDFLAGS)"
 	@echo
 
 #  ----   Demo compilation to LLVM IR and backend steps

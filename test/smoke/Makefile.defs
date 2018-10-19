@@ -61,8 +61,8 @@ endif
 
 ifeq ($(OMP_FLAGS),)
 OMP_FLAGS = -target $(HOST_TARGET) -fopenmp $(TARGET)
-OMP_FLAGS += $(EXTRA_OMP_FLAGS)
 endif
+OMP_FLAGS += $(EXTRA_OMP_FLAGS)
 
 ifeq ($(VERBOSE),1)
   $(info    Compilation and linking VERBOSE Mode ON)
@@ -81,14 +81,16 @@ CFLAGS = -O2
 endif
 
 ifeq ($(findstring amdgcn,$(OMP_FLAGS)),)
-LINK_FLAGS = -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart  -L$(HCC2)/lib-debug -lomp
+LINK_FLAGS = -L$(CUDA)/targets/$(UNAMEP)-linux/lib -lcudart -L$(HCC2)/lib-debug -lomp
 else
 LINK_FLAGS =
 endif
+LINK_FLAGS += $(EXTRA_LDFLAGS)
+
 
 CUDA      = /usr/local/cuda
 
 RUNPROF =  $(CUDA)/bin/nvprof 
-RUNPROF =  
+RUNPROF =
 
 RUNENV   = env $(SET_DEVICE_DEBUG) $(TKILL)

@@ -99,7 +99,7 @@ help:
 	@echo
 	@echo " Compile Flags:        $(CFLAGS) $(EXTRA_CFLAGS)"
 	@echo
-	@echo " OMP Compile Flags:    $(OMP_FLAGS)"
+	@echo " OMP Compile Flags:    $(OMP_FLAGS) $(EXTRA_OMP_FLAGS)"
 	@echo
-	@echo " Link Flags:           $(LINK_FLAGS)"
+	@echo " Link Flags:           $(LINK_FLAGS) $(EXTRA_LDFLAGS)"
 	@echo
