@@ -37,11 +37,11 @@ run_obin: obin
 
 help:
 	@echo
-	@echo "Compiler: 	        $(OMP_BIN)"
-	@echo "LLLVM Tool Chain:	$(HCC2)/bin"
-	@echo "Offload Targets: 	$(TARGET)"
+	@echo "Compiler:		$(OMP_BIN)"
+	@echo "LLVM Tool Chain:	$(HCC2)/bin"
+	@echo "Offload Targets:	$(TARGET)"
 	@echo "Host Targe:		$(HOST_TARGET)"
-	@echo "Application Binary:    	$(TESTNAME)"
+	@echo "Application Binary:	$(TESTNAME)"
 	@echo 
 	@echo "This Makefile supports the following flags:"
 	@echo 
@@ -143,7 +143,7 @@ run_sbin: sbin
 
 # Cleanup anything this makefile can create
 clean:
-	rm -f $(TESTNAME) llbin sbin obin *.i *.ii *.bc *.lk a.out-* *.ll *.s *.o *.log
+	rm -f $(TESTNAME) $(TESTNAME).a llbin sbin obin *.i *.ii *.bc *.lk a.out-* *.ll *.s *.o *.log
 
 clean_log:
 	rm -f *.log
