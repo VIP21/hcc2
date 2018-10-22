@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstdlib>
 
+#pragma omp declare target
 template <typename T> class Simple_Matrix
 {
  private:
@@ -144,13 +145,14 @@ Simple_Matrix<T> Simple_Matrix<T>::operator*(const Simple_Matrix<T>& rmatrix)
     {
       for (unsigned k=0; k < n_cols; k++)
       {
-//        result(i,j) += this->matrix[i*n_cols+k] * rmatrix(k,j);
-        result.matrix[i*n_rows+j] += this->matrix[i*n_cols+k] * rmatrix.matrix[k*n_rows+j];
+        result(i,j) += this->matrix[i*n_cols+k] * rmatrix(k,j);
+//        result.matrix[i*n_rows+j] += this->matrix[i*n_cols+k] * rmatrix.matrix[k*n_rows+j];
       }
     }
   }
 
   return result;
 }
+#pragma omp end declare target
 
 #endif
