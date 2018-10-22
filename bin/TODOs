@@ -309,14 +309,14 @@ Note: There is no committment to complete any or all items
 060 ___ Add U of D to hcc2 dev team.  They are building an OpenMP test suite for all 
         functionality. 
 
-061 ___ [BUILD] Add sm_70 to default list of NVPTXGPU. (0.5-4)
+061 _X_ [BUILD] Add sm_70 to default list of NVPTXGPU. (0.5-4)
 
 062 ___ [TEST] (Jan 0.5-4) Create a new examples directory called "cuda" (for Scott).
         The original directory cuda-open should be for amdgcn targets by default.  
         Examples in cuda directory will not work on amdgcn. 
         Examples in cuda-open will use host hip API with native cuda kernels. 
 
-063 ___ [TEST] Example of linking .a archive of bundled .o (Andrey)
+063 _X_ [TEST] Example of linking .a archive of bundled .o (Andrey)
 
 064 ___ [TEST] Example of meaningful usage of task in target region (Andrey)
 

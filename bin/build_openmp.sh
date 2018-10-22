@@ -12,7 +12,7 @@ OPENMP_REPO_NAME=${OPENMP_REPO_NAME:-openmp}
 REPO_BRANCH=${REPO_BRANCH:-HCC2-180906}
 
 # We can now provide a list of sm architectures, but they must support long long maxAtomic 
-NVPTXGPUS=${NVPTXGPUS:-30,35,50,60}
+NVPTXGPUS=${NVPTXGPUS:-30,35,50,60,70}
 # Also provide a list of GFX processors to build for
 GFXLIST=${GFXLIST:-"gfx700 gfx701 gfx801 gfx803 gfx900"}
 export GFXLIST

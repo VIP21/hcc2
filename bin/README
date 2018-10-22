@@ -63,7 +63,7 @@ for other environment variables that you may override including repo names.
 HCC2              /opt/rocm/hcc2           *
 CUDA              /usr/local/cuda          *
 HCC2_REPOS        /home/$USER/git/hcc2
-NVPTXGPUS         30,35,50,60
+NVPTXGPUS         30,35,50,60,70
 BUILD_TYPE        Release
 SUDO              set
 
@@ -76,7 +76,7 @@ Here is a sample for your .bash_profile
 SUDO="disable"
 HCC2=$HOME/install/hcc2
 BUILD_TYPE=Debug
-NVPTXGPUS=30,35,50,60,65
+NVPTXGPUS=30,35,50,60,70
 export SUDO HCC2 NVPTXGPUS BUILD_TYPE
 
 The build scripts will build from the source directories identified by the 
@@ -106,7 +106,7 @@ Subsequent calls will pull the latest updates.
 
 To build hcc2, you MUST have the Nvidia CUDA SDK version 8 installed because
 HCC2 can build  applications for NVIDIA GPUs. We have not done testing for CUDA
-version 9.  The current default list of Nvidia subarchs is "30,35,50,60".
+version 9.  The current default list of Nvidia subarchs is "30,35,50,60,70".
 For example, that will support application builds with --offload-arch=sm_30
 and --offload-arch=sm_60 etc.
 This can be changed with the NVPTXGPUS environment variable.
