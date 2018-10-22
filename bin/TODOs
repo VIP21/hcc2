@@ -275,7 +275,7 @@ Note: There is no committment to complete any or all items
         See the README.md in hcc2/examples/libdevice.
 052.e ___ Make -Wno-bc-notfound a default to turn off warnings when user specifies
         -l when there is no bc library, e.g. -lmpi currently gets a warning
-052.f __ Write paper called "Device Library Methodolgies for Clang"
+052.f ___ Write paper called "Device Library Methodolgies for Clang"
 
 030 ___ [DRIVER] Fix llc taking a long time. See if DBCLs from TODO 052
         and -mlink-bit-code improve overall compilation time.
@@ -289,7 +289,7 @@ Note: There is no committment to complete any or all items
 055 _X_ [BUG] Fix new smoke test pfspecifier_str.c (Greg 0.5-4)
 055.b ___ [BUG] Fix compilation of deviceRTL in debug mode where printf
                 contains variable length strings. (Greg 0.5-4)
-055.c ___ [TEST] make smoke test pfspecifier_str.c more difficult by using a variable
+055.c _X_ [TEST] make smoke test pfspecifier_str.c more difficult by using a variable
             length string like that found in libcall.cu. This should cause 
             pfsecifier_str.c to fail until I push my fix for 055.b.  (Andrey0.5-4)
 
