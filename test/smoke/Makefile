@@ -13,6 +13,7 @@ TESTS_DIR = \
     helloworld \
     issue_001 \
     issue_002 \
+    liba_bundled \
     math_sqrt_float \
     nativetests \
     nested_loop \
