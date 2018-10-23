@@ -38,7 +38,16 @@ SOURCEDIR=$HCC2_REPOS/$HCC2_LIBDEVICE_REPO_NAME
 MCPU_LIST=${GFXLIST:-"gfx700 gfx701 gfx801 gfx803 gfx900"}
 
 # build_libdevice now builds cross-platform DBCLs for libm
-NVPTXGPUS=${NVPTXGPUS:-30,35,50,60,70}
+# Only Cuda 9 and above supports sm_70
+NVPTXGPUS_DEFAULT="30,35,50,60"
+if [ -f /usr/local/cuda/version.txt ] ; then
+  if [ `head -1 /usr/local/cuda/version.txt | cut -d " " -f 3 | cut -d "." -f 1` -ge 9 ] ; then
+    NVPTXGPUS_DEFAULT+=",70"
+  fi
+fi
+
+NVPTXGPUS=${NVPTXGPUS:-"${NVPTXGPUS_DEFAULT}"}
+
 LIBM_DIR="$HCC2_REPOS/$HCC2_REPO_NAME/examples/libdevice/libm"
 
 REPO_BRANCH=${REPO_BRANCH:-HCC2-180918}

@@ -12,7 +12,16 @@ OPENMP_REPO_NAME=${OPENMP_REPO_NAME:-openmp}
 REPO_BRANCH=${REPO_BRANCH:-HCC2-180906}
 
 # We can now provide a list of sm architectures, but they must support long long maxAtomic 
-NVPTXGPUS=${NVPTXGPUS:-30,35,50,60,70}
+# Only Cuda 9 and above supports sm_70
+NVPTXGPUS_DEFAULT="30,35,50,60"
+if [ -f /usr/local/cuda/version.txt ] ; then
+  if [ `head -1 /usr/local/cuda/version.txt | cut -d " " -f 3 | cut -d "." -f 1` -ge 9 ] ; then
+    NVPTXGPUS_DEFAULT+=",70"
+  fi
+fi
+
+NVPTXGPUS=${NVPTXGPUS:-"${NVPTXGPUS_DEFAULT}"}
+
 # Also provide a list of GFX processors to build for
 GFXLIST=${GFXLIST:-"gfx700 gfx701 gfx801 gfx803 gfx900"}
 export GFXLIST
