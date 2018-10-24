@@ -280,7 +280,7 @@ Note: There is no committment to complete any or all items
 030 ___ [DRIVER] Fix llc taking a long time. See if DBCLs from TODO 052
         and -mlink-bit-code improve overall compilation time.
 
-053 ___ [DOC] Add C++ test to examples/openmp (Andrey 0.5-4)
+053 _X_ [DOC] Add C++ test to examples/openmp (Andrey 0.5-4)
 
 054 ___ [TEST] Implement functionality to compare the execution results with the golded
         file in Makefiles for test/smoke. This will help to verify the results and
