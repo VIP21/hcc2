@@ -10,6 +10,7 @@ TESTS_DIR = \
     devices \
     firstprivate \
     function \
+    function_overload \
     helloworld \
     issue_001 \
     issue_002 \

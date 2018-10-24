@@ -64,7 +64,7 @@ int main(){
       a_d[i]=a_f[i]=a_i[i]=i+1;
       b_d[i]=b_f[i]=b_i[i]=i+2;
       validate_i[i]=a_i[i]*b_i[i];
-      validate_f[i]=a_f[i]*b_f[i]+1;
+      validate_f[i]=a_f[i]*b_f[i];
       validate_d[i]=a_d[i]*b_d[i];
     }
 
