@@ -11,6 +11,7 @@ TESTS_DIR = \
     firstprivate \
     function \
     function_overload \
+    function_template \
     helloworld \
     issue_001 \
     issue_002 \
