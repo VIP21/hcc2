@@ -291,9 +291,12 @@ Note: There is no committment to complete any or all items
                 contains variable length strings. (Greg 0.5-4)
 055.c _X_ [TEST] make smoke test pfspecifier_str.c more difficult by using a variable
             length string like that found in libcall.cu. This should cause 
-            pfsecifier_str.c to fail until I push my fix for 055.b.  (Andrey0.5-4)
+            pfsecifier_str.c to fail until I push my fix for 055.b.  (Andrey 0.5-4)
 
 056 ___ [DRIVER] Fix driver for make -S and -c for amdgcn.  Works for nvidia cuda.
+056.a ___ [DRIVER] Double check and fix if needed the behaviour of -S, -emit-llvm and 
+        -c flags combinations. At the moment -c alone doesn't produce bundled .o files,
+        but along with either -S or -emmit-llvm it does (Greg 0.5-4)
 
 057 ___ [DRIVER?] Big performance difference for test application with and without save-temps. 
         With --save-temps	34.66ms
@@ -321,5 +324,10 @@ Note: There is no committment to complete any or all items
 064 ___ [TEST] Example of meaningful usage of task in target region (Andrey)
 
 065 ___ [BUILD] Add gfx906 to default GFXLIST, as well as check its support in the clang/llvm
+
+066 ___ [BUG] Undefined refernce to cbrt() in lulesh-mp4 (Grge 0.5-4)
+
+067 ___ [DRIVER] Fix issue#9 - add support to link with archive of bundled .o-files (lib.a). 
+        The issue can be reproduced using test/smoke/liba_bundled (Grge 0.5-4)
 
 100 ___ Move this list to Git Issues when things slow down.

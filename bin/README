@@ -63,11 +63,12 @@ for other environment variables that you may override including repo names.
 HCC2              /opt/rocm/hcc2           *
 CUDA              /usr/local/cuda          *
 HCC2_REPOS        /home/$USER/git/hcc2
-NVPTXGPUS         30,35,50,60,70
+NVPTXGPUS         30,35,50,60,70           **
 BUILD_TYPE        Release
 SUDO              set
 
- * The clang driver uses these environment variables to find device libraries.
+  * The clang driver uses these environment variables to find device libraries.
+ ** The sm_70 (70 in NVPTXGPUS) requires CUDA 9 and above.
 
 If you do not have root access to your machine, you can override the above by setting
 the values in your .bashrc or .bash_profile to build your HOME directory.
