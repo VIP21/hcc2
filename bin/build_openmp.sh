@@ -120,6 +120,9 @@ checkrepo
 
 CUDAH=`find /usr/local/cuda/targets -type f -name "cuda.h" 2>/dev/null`
 if [ "$CUDAH" == "" ] ; then
+   CUDAH=`find /usr/local/cuda/include -type f -name "cuda.h" 2>/dev/null`
+fi
+if [ "$CUDAH" == "" ] ; then
    echo
    echo "ERROR:  THE cuda.h FILE WAS NOT FOUND"
    echo "        A CUDA installation is necessary to build libomptarget deviceRTLs"
