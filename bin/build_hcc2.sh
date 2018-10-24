@@ -318,7 +318,7 @@ if [ "$1" != "nocmake" ] && [ "$1" != "install" ] ; then
    echo
    echo " -----Running cmake ---- " 
    echo cmake $MYCMAKEOPTS  $BUILD_DIR/$LLVM_REPO_NAME
-   cmake $MYCMAKEOPTS  $BUILD_DIR/$LLVM_REPO_NAME 2>&1 | tee /tmp/cmake.out
+   cmake $MYCMAKEOPTS  $BUILD_DIR/$LLVM_REPO_NAME 2>&1
    if [ $? != 0 ] ; then 
       echo "ERROR cmake failed. Cmake flags"
       echo "      $MYCMAKEOPTS"
