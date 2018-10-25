@@ -10,7 +10,7 @@ CLANG           = clang++
 OMP_BIN         = $(HCC2)/bin/$(CLANG)
 CC              = $(OMP_BIN) $(VERBOSE)
 EXTRA_CFLAGS    =
-EXTRA_LDFLAGS   = -lm
+EXTRA_LDFLAGS   =
 EXTRA_OMP_FLAGS =
 
 include ../Makefile.rules
